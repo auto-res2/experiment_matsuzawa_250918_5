@@ -35,7 +35,10 @@ def setup_dirs():
 def load_models_for_evaluation(config, device):
     art_dir = config['training']['artifacts_dir']
 
-    safety_head = SafetyUnifiedHead().to(device)
+    # Get encoder dimension from the model to ensure compatibility
+    sbert_model = SentenceTransformer(config['models']['encoder_model'], device=device)
+    encoder_dim = sbert_model.get_sentence_embedding_dimension()
+    safety_head = SafetyUnifiedHead(encoder_dim=encoder_dim).to(device)
     safety_head.load_state_dict(
         torch.load(os.path.join(art_dir, 'safety_head.pt'), map_location=device, weights_only=False)
     )
