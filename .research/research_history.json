@@ -6,5 +6,82 @@
     "TTA optimization",
     "Online adaptation acceleration",
     "Test-Time learning rate adaptation"
+  ],
+  "research_study_list": [
+    {
+      "title": "Improved Test-Time Adaptation for Domain Generalization"
+    },
+    {
+      "title": "Active Test-Time Adaptation: Theoretical Analyses and An Algorithm"
+    },
+    {
+      "title": "Persistent Test-time Adaptation in Recurring Testing Scenarios"
+    },
+    {
+      "title": "Test Time Adaptation via Conjugate Pseudo-labels"
+    },
+    {
+      "title": "TTT++: When Does Self-Supervised Test-Time Training Fail or Thrive?"
+    },
+    {
+      "title": "Test-Time Training with Self-Supervision for Generalization under Distribution Shifts"
+    },
+    {
+      "title": "Tent: Fully Test-Time Adaptation by Entropy Minimization"
+    },
+    {
+      "title": "Robust Test-Time Adaptation in Dynamic Scenarios"
+    },
+    {
+      "title": "What How and When Should Object Detectors Update in Continually Changing Test Domains?"
+    },
+    {
+      "title": "NOTE: Robust Continual Test-time Adaptation Against Temporal Correlation"
+    },
+    {
+      "title": "Improved Test-Time Adaptation for Domain Generalization"
+    },
+    {
+      "title": "Test Time Adaptation via Conjugate Pseudo-labels"
+    },
+    {
+      "title": "Active Test-Time Adaptation: Theoretical Analyses and An Algorithm"
+    },
+    {
+      "title": "Diffusion-TTA: Test-time Adaptation of Discriminative Models via Generative Feedback"
+    },
+    {
+      "title": "TinyTTA: Efficient Test-time Adaptation via Early-exit Ensembles on Edge Devices"
+    },
+    {
+      "title": "A simpler approach to accelerated optimization: iterative averaging meets optimism"
+    },
+    {
+      "title": "A simple but strong baseline for online continual learning: Repeated Augmented Rehearsal"
+    },
+    {
+      "title": "Knowledge-Adaptation Priors"
+    },
+    {
+      "title": "Evaluation of Test-Time Adaptation Under Computational Time Constraints"
+    },
+    {
+      "title": "Efficient Non-stationary Online Learning by Wavelets with Applications to Online Distribution Shift Adaptation"
+    },
+    {
+      "title": "Test-Time Training with Self-Supervision for Generalization under Distribution Shifts"
+    },
+    {
+      "title": "Test Time Adaptation With Regularized Loss for Weakly Supervised Salient Object Detection"
+    },
+    {
+      "title": "TTN: A Domain-Shift Aware Batch Normalization in Test-Time Adaptation"
+    },
+    {
+      "title": "Towards Stable Test-time Adaptation in Dynamic Wild World"
+    },
+    {
+      "title": "Towards Stable Test-time Adaptation in Dynamic Wild World"
+    }
   ]
 }
