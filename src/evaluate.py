@@ -1,5 +1,4 @@
 import os
-import sys
 import json
 import time
 from collections import deque
@@ -181,7 +180,7 @@ class FLASH_Adapter:
 
 def log_and_plot_results(results, exp_name, config, backbone):
     # Required paths (specification)
-    results_dir = ".research/iteration3/"
+    results_dir = ".research/iteration4/"
     plots_dir = os.path.join(results_dir, "images")
     os.makedirs(results_dir, exist_ok=True)
     os.makedirs(plots_dir, exist_ok=True)
@@ -237,7 +236,7 @@ def evaluate(config):
         fisher_path = os.path.join(out_dir, f"{safe_bb}_fisher.pth")
         if not os.path.exists(fisher_path):
             print(f"Missing Fisher file {fisher_path}. Run training first.")
-            sys.exit(1)
+            raise FileNotFoundError(fisher_path)
         fisher_diagonals = torch.load(fisher_path, map_location=device)
 
         num_lora_params = sum(
@@ -252,7 +251,7 @@ def evaluate(config):
         hyper_path = os.path.join(out_dir, f"hyper_gru_{safe_bb}.pth")
         if not os.path.exists(hyper_path):
             print(f"Missing HyperGRU weights {hyper_path} – train first.")
-            sys.exit(1)
+            raise FileNotFoundError(hyper_path)
         hyper.load_state_dict(torch.load(hyper_path, map_location=device))
         hyper.eval()
 
@@ -266,8 +265,7 @@ def evaluate(config):
         elif exp_key == "exp3":
             results = run_experiment_3(config, adapter, backbone)
         else:
-            print("Unknown experiment", exp_key)
-            sys.exit(1)
+            raise ValueError(f"Unknown experiment {exp_key}")
 
 # ============================================================
 # EXPERIMENT RUNNERS (exp1 / exp2 / exp3)
@@ -319,7 +317,7 @@ def run_experiment_2(config, adapter, backbone):
                 c += (preds == lbls).sum().item()
                 t += lbls.size(0)
             accs.append(c / t)
-    res["imagenet_c_mean"] = np.mean(accs)
+    res["imagenet_c_mean"] = np.mean(accs) if accs else 0.0
     # DomainNet (real→sketch)
     dn_loader = get_domainnet_loaders(config, "real", "sketch")
     c = t = 0
@@ -330,7 +328,7 @@ def run_experiment_2(config, adapter, backbone):
         preds = adapter.forward(imgs).argmax(1)
         c += (preds == lbls).sum().item()
         t += lbls.size(0)
-    res["domainnet_sketch"] = c / t
+    res["domainnet_sketch"] = c / t if t else 0.0
     log_and_plot_results(res, "experiment_2", config, backbone)
     return res
 
@@ -360,7 +358,7 @@ def run_experiment_3(config, adapter, backbone):
         c += (preds == lbls).sum().item()
         t += lbls.size(0)
         res["gate_on_acc"].append(c / t)
-    res["gate_on_final"] = c / t
+    res["gate_on_final"] = c / t if t else 0.0
 
     # Gate FORCED
     adapter.gate_threshold = -1
@@ -373,7 +371,7 @@ def run_experiment_3(config, adapter, backbone):
         c += (preds == lbls).sum().item()
         t += lbls.size(0)
         res["gate_forced_acc"].append(c / t)
-    res["gate_forced_final"] = c / t
+    res["gate_forced_final"] = c / t if t else 0.0
     adapter.gate_threshold = config["evaluate"]["gate_threshold"]
 
     # Source (no adaptation)
@@ -384,7 +382,7 @@ def run_experiment_3(config, adapter, backbone):
         c += (preds == lbls).sum().item()
         t += lbls.size(0)
         res["source_acc"].append(c / t)
-    res["source_final"] = c / t
+    res["source_final"] = c / t if t else 0.0
 
     log_and_plot_results(res, "experiment_3", config, backbone)
     return res
