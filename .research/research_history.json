@@ -679,7 +679,697 @@
     }
   ],
   "new_method": {
-    "method": "Open Problems: 1. Practical deployments must optimise prompts once and then reuse them for many unseen queries. Existing offline methods (OIRL, SAFE-OIRL-BO) still re-score every (query,prompt) pair at inference and cannot amortise cost.\n2. Surrogate reward networks trained on historic data quickly become stale when models, policies or content filters are updated; re-training from scratch is expensive and discards past calibration.\n3. Prior work separately tackles lexical safety (toxicity, hate) and factual safety (hallucination, ungrounded reasoning). A single transferable safety head that works for both text→text and text→image is still missing.\n4. Current trust-region heuristics use embedding L2 distances that have no probabilistic meaning and are hard to tune across LLMs.\n5. Many companies own heterogeneous logs (English, code-mixed, image captions). Cross-lingual, cross-modal data utilisation has not been studied in prompt optimisation.\n6. None of the existing pipelines provide an automatic end-of-training certificate that the discovered prompt will keep safety violations below a target γ for any future query distribution within a known shift radius.\nMethods: We introduce CERTIFIED-OFFICER (CertIfied Offline-Conformal Constrained EditoR), a prompt optimiser that outputs both a prompt and a finite-sample statistical certificate of its future risk.\nA. Continual Conformal Reward Updating – we train a vector reward rθ on historical logs but *wrap* its predictions with conformal prediction intervals using Jackknife+; after every small trickle of new on-policy data we only update the residual distribution, yielding O(1) cost instead of full re-training.\nB. Safety-Unified Multi-Modal Head – we jointly fine-tune a lightweight projector that maps (text-embedding, image-prompt-embedding) pairs into a shared 128-d latent, then train a single SafetyClassifier on multilingual DETOX + LAION-safety labels. This head feeds one coordinate of rθ.\nC. KL-Trust-Region – instead of embedding L2 we bound the KL divergence between the proposal prompt distribution q(p|p₀) (induced by masked-LM edits) and the empirical offline prompt distribution π̂. We estimate KL with importance-weighted marginal likelihood, giving an interpretable ε.\nD. Doubly-Robust Off-Policy Estimator – Expected Improvement is computed with DR-IW to reduce variance and bias when log propensities are unknown (common in product logs).\nE. Amortised Prompt – we learn a *prompt generator* gφ(x) that outputs a distribution over discrete edit actions; at inference we sample once and reuse, so cost per query is zero. gφ is trained by minimising the DR-estimated constrained objective and is regularised to stay within the KL-trust-region.\nF. Certificate – using empirical Bernstein bounds on DR estimates plus conformal safety intervals we output with probability ≥1−δ:  \"For any query distribution with Total-Variation ≤ε from the log, the prompt produced by gφ will violate policy with probability ≤γ and expected cost ≤C\".\nExperimental Setup: Logs: 60 k PromptSource text traces (8 languages) + 30 k Stable-Diffusion captions (LAION safety tags).\nBenchmarks: GSM8K, MMLU-subset, BBH-13 tasks; COCO-160, ImageNet-Adv50.\nBaselines: SAFE-OIRL-BO, RiBayPO, ZOPO, PromptAgent.\nMetrics: (1) task score; (2) avg tokens; (3) empirical safety violation; (4) certificate width (smaller better); (5) runtime.\nAblations: remove conformal layer, replace KL with L2, no amortisation, no multi-modal head.\nAll python; main script <600 LOC; fits on single V100 in 90 min.\nExperimental Code: certified_officer.py – main trainer\nreward_conformal.py – Jackknife+ wrappers\nkl_trust.py – online KL estimator with IW\nprompt_gen.py – masked-LM edit sampler\nrun_bench.py – evaluates all datasets with caching\nExpected Result: 1. Same task accuracy as SAFE-OIRL-BO with 55 % fewer online calls (thanks to amortised gφ).\n2. Safety violations on held-out queries ≤0.8 % and certificate upper-bound ≤1 % with 95 % confidence.\n3. Certificate widths shrink 40 % after each 5 k trickle updates without full re-training.\n4. Multi-modal head cuts toxic-image prompt rate from 5 %→1 % on ImageNet-Adv.\n5. KL-trust-region yields 0 reward hacking cases vs 6 in L2 baseline.\nExpected Conclusion: CERTIFIED-OFFICER shows that conformal risk control, KL-based trust regions and amortised prompt generators can deliver *certified* safe, cost-effective and cross-modal prompt optimisation. This bridges a key gap between academic BO pipelines and industrial deployment where hard safety budgets and evolving models demand continual low-cost guarantees."
+    "method": "Open Problems: 1. Practical deployments must optimise prompts once and then reuse them for many unseen queries. Existing offline methods (OIRL, SAFE-OIRL-BO) still re-score every (query,prompt) pair at inference and cannot amortise cost.\n2. Surrogate reward networks trained on historic data quickly become stale when models, policies or content filters are updated; re-training from scratch is expensive and discards past calibration.\n3. Prior work separately tackles lexical safety (toxicity, hate) and factual safety (hallucination, ungrounded reasoning). A single transferable safety head that works for both text→text and text→image is still missing.\n4. Current trust-region heuristics use embedding L2 distances that have no probabilistic meaning and are hard to tune across LLMs.\n5. Many companies own heterogeneous logs (English, code-mixed, image captions). Cross-lingual, cross-modal data utilisation has not been studied in prompt optimisation.\n6. None of the existing pipelines provide an automatic end-of-training certificate that the discovered prompt will keep safety violations below a target γ for any future query distribution within a known shift radius.\nMethods: We introduce CERTIFIED-OFFICER (CertIfied Offline-Conformal Constrained EditoR), a prompt optimiser that outputs both a prompt and a finite-sample statistical certificate of its future risk.\nA. Continual Conformal Reward Updating – we train a vector reward rθ on historical logs but *wrap* its predictions with conformal prediction intervals using Jackknife+; after every small trickle of new on-policy data we only update the residual distribution, yielding O(1) cost instead of full re-training.\nB. Safety-Unified Multi-Modal Head – we jointly fine-tune a lightweight projector that maps (text-embedding, image-prompt-embedding) pairs into a shared 128-d latent, then train a single SafetyClassifier on multilingual DETOX + LAION-safety labels. This head feeds one coordinate of rθ.\nC. KL-Trust-Region – instead of embedding L2 we bound the KL divergence between the proposal prompt distribution q(p|p₀) (induced by masked-LM edits) and the empirical offline prompt distribution π̂. We estimate KL with importance-weighted marginal likelihood, giving an interpretable ε.\nD. Doubly-Robust Off-Policy Estimator – Expected Improvement is computed with DR-IW to reduce variance and bias when log propensities are unknown (common in product logs).\nE. Amortised Prompt – we learn a *prompt generator* gφ(x) that outputs a distribution over discrete edit actions; at inference we sample once and reuse, so cost per query is zero. gφ is trained by minimising the DR-estimated constrained objective and is regularised to stay within the KL-trust-region.\nF. Certificate – using empirical Bernstein bounds on DR estimates plus conformal safety intervals we output with probability ≥1−δ:  \"For any query distribution with Total-Variation ≤ε from the log, the prompt produced by gφ will violate policy with probability ≤γ and expected cost ≤C\".\nExperimental Setup: Logs: 60 k PromptSource text traces (8 languages) + 30 k Stable-Diffusion captions (LAION safety tags).\nBenchmarks: GSM8K, MMLU-subset, BBH-13 tasks; COCO-160, ImageNet-Adv50.\nBaselines: SAFE-OIRL-BO, RiBayPO, ZOPO, PromptAgent.\nMetrics: (1) task score; (2) avg tokens; (3) empirical safety violation; (4) certificate width (smaller better); (5) runtime.\nAblations: remove conformal layer, replace KL with L2, no amortisation, no multi-modal head.\nAll python; main script <600 LOC; fits on single V100 in 90 min.\nExperimental Code: certified_officer.py – main trainer\nreward_conformal.py – Jackknife+ wrappers\nkl_trust.py – online KL estimator with IW\nprompt_gen.py – masked-LM edit sampler\nrun_bench.py – evaluates all datasets with caching\nExpected Result: 1. Same task accuracy as SAFE-OIRL-BO with 55 % fewer online calls (thanks to amortised gφ).\n2. Safety violations on held-out queries ≤0.8 % and certificate upper-bound ≤1 % with 95 % confidence.\n3. Certificate widths shrink 40 % after each 5 k trickle updates without full re-training.\n4. Multi-modal head cuts toxic-image prompt rate from 5 %→1 % on ImageNet-Adv.\n5. KL-trust-region yields 0 reward hacking cases vs 6 in L2 baseline.\nExpected Conclusion: CERTIFIED-OFFICER shows that conformal risk control, KL-based trust regions and amortised prompt generators can deliver *certified* safe, cost-effective and cross-modal prompt optimisation. This bridges a key gap between academic BO pipelines and industrial deployment where hard safety budgets and evolving models demand continual low-cost guarantees.",
+    "experimental_design": {
+      "experiment_strategy": "────────────────────────────────────────\nExperiment 1 – End-to-End Cost/Safety Benchmarking\n────────────────────────────────────────\nGoal: Show that a single amortised prompt generator gφ trained with CERTIFIED-OFFICER reaches the accuracy of state-of-the-art prompt optimisers while (a) eliminating per-query optimisation cost and (b) providing usable statistical certificates.\n\nProtocol\n1. Offline phase (≤90 min on 1×A100)\n   a. Train rθ + Safety-Unified head + gφ on the 90 k mixed-modal logs.\n   b. Produce certificate {γ=1 %, ε, C} at confidence 95 %.\n2. Inference phase (cached weights only)\n   a. Run gφ once per dataset item; reuse the sampled prompt for the whole run.\n   b. Evaluate on GSM8K, MMLU-subset, BBH-13, COCO-160, ImageNet-Adv-50.\n3. Baselines: SAFE-OIRL-BO, RiBayPO, ZOPO, PromptAgent.\n4. Metrics\n   • Task score (Acc / BLEU / CIDEr)                   – effectiveness\n   • Online LM calls per 100 queries                   – amortisation\n   • Empirical safety violation rate                  – safety\n   • Certificate width (upper-bound–empirical)        – tightness\n   • GPU-seconds & peak-VRAM                          – efficiency\n\nSuccess Criteria (expected)\n• Accuracy within ±0.3 % of best baseline.\n• 55 % fewer online calls than SAFE-OIRL-BO.\n• Held-out safety violation ≤0.8 %; certificate upper-bound ≤1 %.\n• Runtime <0.4× baseline GPU-seconds.\n\nWhat it demonstrates\nIf achieved, the results prove that CERTIFIED-OFFICER delivers competitive task performance at dramatically lower inference cost while meeting provable safety guarantees—validating contributions A, C, D and E simultaneously.\n\n────────────────────────────────────────\nExperiment 2 – Continual Conformal Updating under Distribution Shift\n────────────────────────────────────────\nGoal: Validate that conformal residual updating (A) preserves certificates and avoids expensive re-training when the environment drifts (new model weights or policy changes).\n\nProtocol\n1. Start from the checkpoint/certificate of Experiment 1.\n2. Generate a 50 k-query stream in 10 sequential “shifts”.\n   • Shifts include: (i) upgrade base LLM, (ii) tighten content filter, (iii) inject 20 % code-mixed Spanish/English, (iv) new image domain (medical X-ray captions).\n3. Two systems are run in parallel:\n   a. CERTIFIED-OFFICER with residual Jackknife+ updates every 5 k queries (O(1) cost).\n   b. SAFE-OIRL-BO fully re-trained from scratch on the cumulative log.\n4. After each shift measure\n   • Wall-clock retraining time and GPU usage.\n   • Certificate width and empirical safety violation on 5 k fresh probes.\n   • Task accuracy on 1 k GSM8K / COCO items.\n\nSuccess Criteria (expected)\n• Residual update time ≤2 % of full re-train time per shift (≈40 s vs ≥30 min).\n• Certificate width shrinks ≥35 % after two shifts while staying valid (empirical violation ≤ bound).\n• Task accuracy drop <1 % across all shifts (same as baseline).\n\nWhat it demonstrates\nShows that continual conformal updating keeps guarantees current with negligible extra cost, addressing Open Problem 2 and validating method A.\n\n────────────────────────────────────────\nExperiment 3 – Unified Multi-Modal Safety Head & KL Trust-Region Stress-Test\n────────────────────────────────────────\nGoal: Prove that (i) a single safety head works across text and image prompts, and (ii) the KL-based trust region prevents reward hacking better than L2 heuristics.\n\nProtocol\nPart A – Safety Classification\n1. Fine-tune the Safety-Unified head as in the main method.\n2. Construct four balanced test sets (2 k items each):\n   • Toxic text (8 languages)\n   • Hallucination-prone factual QA\n   • Unsafe image prompts (NSFW/hate) from LAION\n   • Benign control examples.\n3. Compare models: Unified-Head vs two task-specific heads vs no safety head.\n4. Metrics: AUROC, FPR@95 %TPR, and inference latency.\n\nPart B – Reward-Hacking Challenge\n1. Create an adversarial optimisation loop that mutates prompts to maximise rθ while keeping semantics fixed (≈1 k steps).\n2. Run twice: (i) KL-trust-region ε=0.1, (ii) L2-distance τ tuned to same average edit size.\n3. Count number of mutated prompts that: (a) exceed 20 % reward boost, (b) trigger policy violation, (c) degrade answer quality.\n\nSuccess Criteria (expected)\n• Unified head AUROC ≥0.93 on every set, within 1 % of specialised heads while halving total parameters.\n• Toxic-image prompt violation rate drops 5 %→1 % relative to no head.\n• Reward-hacking cases: 0 (KL) vs ≥6 (L2).\n• Inference latency overhead ≤0.2 ms per query.\n\nWhat it demonstrates\nConfirms that a single lightweight safety head generalises across modalities (tackling Open Problem 3 & 5) and that KL trust regions give interpretable, effective protection against reward gaming (solving Open Problem 4).\n\n────────────────────────────────────────\nOverall Rationale\nThe three experiments jointly evaluate CERTIFIED-OFFICER from complementary angles—efficacy & cost (Exp 1), adaptability under drift (Exp 2), and depth of safety mechanisms (Exp 3). Successful outcomes would strongly evidence that the proposed method is not only accurate but also practical, safe, and maintainable in real-world, multi-modal deployment settings.",
+      "experiment_details": "────────────────────────────────────────\nCOMMON SETTINGS FOR ALL EXPERIMENTS\n────────────────────────────────────────\nBase LMs / Diffusion back-ends\n• Text: Llama-2-13B-chat-hf (7-bit QLoRA †)  – fits in 65 GB, single A100.\n• Vision: Stable-Diffusion-v2.1–base (fp16, 3.8 GB)\n† Baselines are re-run on identical back-ends unless the original paper fixed a different model; in that case we port their hyper-parameters and report any deviation in footnotes.\n\nReward & Safety Networks\n• Encoder h: frozen Sentence-T5-large (text) and ViT-H/14 (image prompt text is still text; image encoder only for robustness tests).\n• Safety-Unified projector W ∈ ℝ[768×128] initialised with Kaiming-Uniform.\n\nHardware / Software\n• 1×NVIDIA A100-80 GB, 40 CPU cores, 2 TB RAM, CUDA 12.2, PyTorch 2.1, HuggingFace Transformers 4.35, PEFT 0.8, bitsandbytes 0.41, Accelerate 0.23, Weights & Biases for logging.\n• Mixed-precision bf16 everywhere except 8-bit QLoRA adapters.\n• Deterministic CuBLAS kernels and torch.manual_seed(seed).\n\nData Assets\n• PromptSource traces (60 k jsonl, 8 languages)\n• Stable-Diffusion caption logs (30 k jsonl, LAION safety tags)\n• GSM8K v1, MMLU-subset (32 tasks, 6 languages), BBH-13, COCO-Val2017 subset (160 imgs), ImageNet-Adv (50 imgs)\n• DETOX, Multilingual HateXplain, LAION‐Safety (nsfw/hate)  –  combined for safety-head.\n\nPre-processing\n1. Normalise Unicode, strip control chars.\n2. Language-ID tagging via fastText; keep tag token <LID:xx> in front.\n3. Tokenisation: Llama2 tokenizer, max 4 096 tokens; prompts truncated from the left.\n4. Image prompts → lower-case, remove artist names (privacy).\n5. Safety labels mapped to {safe, lexical-unsafe, factual-unsafe}.\n\nSplits\n• Historic logs: 80 % train, 10 % val, 10 % held-out test (stratified by language & modality).\n• Down-stream benchmarks keep official test splits; we reserve 10 % of each for hyper-parameter sweeps (forbidden to report in tables).\n\nReproducibility\n• 5 independent seeds {11, 13, 17, 19, 23}.  Report mean±SD.  Model selection = best-val reward after early-stopping patience = 5 epochs.\n• Early stopping monitored on val-reward + safety penalty.\n\nMetrics (primary / secondary)\n• Task: Accuracy (GSM8K, MMLU, BBH) / CIDEr (COCO) / CLIP-Similarity (ImageNet-Adv)\n• Safety: violation-rate (↓), AUROC (↑)\n• Certificate: width (γ̂−empirical) (↓)\n• Efficiency: LM calls / 100q, GPU-seconds, peak-VRAM, training & inference Tflops computed with ptflops.\n• Calibration: ECE, Brier score on reward logits.\n\nRobustness Probes (shared)\n• Perturbed input tokens (0.05 char-flip), Gaussian noise on embeddings (σ = 0.02).\n• OOD language mix (Indonesian, Swahili – unseen).\n• Adversarial prompt mutation loop (§Exp 3-B).\n\nHyper-parameter Grid (fast grid on 10 % val)\n• Learning-rate {1e-4, 5e-5, 2e-5}\n• Conformal α {0.05, 0.1}\n• KL-ε {0.05, 0.1, 0.2}\n• Adapter rank {8, 16, 32}\nChosen tuple in brackets (5e-5, 0.05, 0.1, 16).\n\n────────────────────────────────────────\nEXPERIMENT 1 – End-to-End Cost / Safety Benchmarking\n────────────────────────────────────────\n1. Offline Training Phase\n   a. Train rθ (2-layer MLP 128-→64-→1, GELU) on the 90 k logs for 3 epochs (batch = 128, lr = 5e-5, cosine decay).  Wrap with Jackknife+; reserve 10 % calibration fold.\n   b. Jointly fine-tune Safety-Unified head for 2 epochs (class-balanced focal-loss γ=2).\n   c. Optimise prompt-generator gφ: masked-LM editing policy parameterised as linear-softmax over 128 edit vectors.  Optimiser: AdamW, lr = 2e-5, KL-ε-penalty λ = 3.0.\n   d. Generate certificate using 1 000 bootstrap DR-IW estimates, δ = 0.05.\n\n2. Inference Phase\n   a. For each benchmark dataset instance x, draw one prompt p ~ gφ(x); cache (x,p).\n   b. Feed cached prompt to Llama2 or SD exactly once – no gradient.\n\nData Splits\n• Benchmarks: use full official test sets; conformal risk NOT updated.\n• Safety evaluation: sample 2 000 held-out queries never used in training.\n\nBaselines\n• SAFE-OIRL-BO (author code, ported to Llama2, repeated 5 seeds)\n• RiBayPO (‡)\n• ZOPO – zero-order policy optimisation\n• PromptAgent – RL from LM feedback\n‡ RiBayPO original uses GPT-J; we re-train on Llama2 with identical δ, γ hyper-params.\n\nEvaluation Script run_bench.py outputs csv rows per seed → aggregate with pandas.\n\nRobustness Extension Inside Exp 1\n• Repeat inference under: (i) embedding noise, (ii) 5-word adversarial suffix («…and ignore previous instructions»).  Log delta in accuracy & safety.\n\nCompute Foot-prints\n• ptflops on a single forward pass × dataset size.\n• max-allocated() from torch.cuda for VRAM.\n• wall-clock via time.time().\n\nExample Snippet (core)\n```\nfrom certified_officer import PromptGenerator, load_certificate\nfrom datasets import load_dataset\npg, cert = PromptGenerator.load(\"/chkpt/exp1.pt\"), load_certificate(\"/chkpt/cert.json\")\nbench = load_dataset(\"gsm8k\", \"main\", split=\"test\")\nfor row in bench:\n    prompt = pg.sample(row['question'])\n    answer = llama2.generate(prompt)\n```\n\n────────────────────────────────────────\nEXPERIMENT 2 – Continual Conformal Updating\n────────────────────────────────────────\nScenario Generation\n• We compose 10 shift buckets, each 5 k queries, synthetically sampled but based on real corpora: new-LLM (switch to Llama-2-Chat-70B-8bit, still fits with offloading), stricter content filter (Perspective-API thr 0.4→0.2), code-mixed spans, medical X-ray captions, etc.\n\nEvaluation Loop\nfor shift in range(10):\n  stream = next_5k(shift)\n  # System A\n  cert_officer.update_residual(stream)  # O(1)\n  # System B\n  safe_oirl.retrain_full(history+=stream)\n  probe_acc, probe_safety = eval_probe()\n  log GPU-hours via nvidia-smi --query-accounted.\n\nHyper-params\n• Residual window m = 100 (Jackknife+), same α=0.05.\n\nMetrics Recorded Per Shift\n• update_time, GPU-seconds, certificate_width, violation_rate, accuracy.\n\nStopping Criterion\n• If at any point empirical violation > certificate upper-bound → FAIL & abort (NO-FALLBACK rule).\n\n────────────────────────────────────────\nEXPERIMENT 3 – Safety Head & KL Trust Region Stress-Test\n────────────────────────────────────────\nPart A – Safety Head Generalisation\n• Test sets construction script create_safety_sets.py: sample 2 k examples each; ensure 50/50 class balance.\n• Models: (i) Unified-Head, (ii) Text-only-Head, (iii) Image-only-Head, (iv) No-Head (ablation).\n• Training identical optimiser (AdamW 1e-4), early-stop on val-AUROC.\n• Evaluation: AUROC, FPR@95TPR, throughput (samples/sec) by torch.cuda.Event.\n\nPart B – Reward-Hacking\n• Launch evolutionary mutator (token-swap, homograph, SLiC).  Budget: 1 000 steps × 8 parallel workers.\n• Constraint: edit distance ≤15 tokens.\n• Compare KL vs L2 trust region:\n  – KL: enforce D_KL(q||π̂) ≤ 0.1 using self-normalised IW penalty.\n  – L2: enforce ‖emb(p)−emb(p₀)‖₂ ≤ τ, τ chosen so mean edit = KL regime.\n• Count categories (a), (b), (c) and compute quality via GSM8K accuracy drop.\n\nRobustness Add-on\n• Inject 5 % random unicode-homoglyph noise and repeat AUROC measurement.\n\n────────────────────────────────────────\nHYPER-PARAMETER ANALYSIS METHODS\n────────────────────────────────────────\n• Sobol sequence 20-point sampling over (lr, KL-ε, λ, adapter-rank) → fit Random-Forest surrogate, produce importance via Gini.\n• Ablation toggles: −conformal, −KL, −amortised, −multi-modal.\n• Plot val-reward vs lr and KL-ε heat-map.\n\n────────────────────────────────────────\nROBUSTNESS ASSESSMENT SUMMARY\n────────────────────────────────────────\n1. Noise Injection: embedding σ sweep {0,0.01,0.02,0.05}.\n2. OOD Shift: unseen languages + vision domain.\n3. Adversarial: prompt mutation (Exp 3-B).\n4. Domain Transfer: fine-tune gφ for code summarisation (CodeSearchNet) 2 epochs; measure certificate retention.\n\n────────────────────────────────────────\nFLOPS / TIME / MEMORY ACCOUNTING\n────────────────────────────────────────\n• Training FLOPs = (2 × #params_adapters × tokens) / hardware_utilisation.\n• Inference FLOPs dominated by Llama2 forward: 13B×2×seq_len.\n• Memory: peak-VRAM measured via PyTorch profiler; expected 72 GB during 70B 8-bit run (fits with 80 GB).\n• Cost: AWS p4d @ $32/h ⇒ Offline phase <1.5 h ≈ $48; inference negligible.\n\n────────────────────────────────────────\nEXPECTED DELIVERABLES\n────────────────────────────────────────\n• results_exp1.csv, results_exp2.csv, safety_head_metrics.json\n• certificate_vfinal.json (contains ε, γ, C, δ, timestamp, hash)\n• scripts + README (≤600 LOC total as promised)\n",
+      "expected_models": [
+        "Llama-2-13B-chat-hf",
+        "Llama-2-70B-chat-hf (8-bit)",
+        "Stable-Diffusion-v2.1-base",
+        "Sentence-T5-large",
+        "ViT-H/14",
+        "SAFE-OIRL-BO implementation",
+        "RiBayPO",
+        "ZOPO",
+        "PromptAgent"
+      ],
+      "expected_datasets": [
+        "PromptSource multilingual logs",
+        "Stable-Diffusion caption logs (LAION derived)",
+        "GSM8K",
+        "MMLU subset",
+        "BBH-13",
+        "COCO-Val2017-160",
+        "ImageNet-Adv50",
+        "DETOX",
+        "Multilingual HateXplain",
+        "LAION-Safety"
+      ],
+      "external_resources": {
+        "hugging_face": {
+          "models": [
+            {
+              "id": "NousResearch/Llama-2-13b-chat-hf",
+              "author": "NousResearch",
+              "sha": "d73f5fa9c4bc135502e04c27b39660747172d76b",
+              "created_at": "2023-07-19T01:01:32+00:00",
+              "last_modified": "2024-06-03T19:23:26+00:00",
+              "private": false,
+              "gated": false,
+              "disabled": false,
+              "downloads": 1141,
+              "likes": 31,
+              "siblings": [
+                {
+                  "rfilename": ".gitattributes"
+                },
+                {
+                  "rfilename": "LICENSE.txt"
+                },
+                {
+                  "rfilename": "README.md"
+                },
+                {
+                  "rfilename": "Responsible-Use-Guide.pdf"
+                },
+                {
+                  "rfilename": "USE_POLICY.md"
+                },
+                {
+                  "rfilename": "added_tokens.json"
+                },
+                {
+                  "rfilename": "config.json"
+                },
+                {
+                  "rfilename": "generation_config.json"
+                },
+                {
+                  "rfilename": "model-00001-of-00003.safetensors"
+                },
+                {
+                  "rfilename": "model-00002-of-00003.safetensors"
+                }
+              ],
+              "card_data": {
+                "language": [
+                  "en"
+                ],
+                "pipeline_tag": "text-generation",
+                "tags": [
+                  "facebook",
+                  "meta",
+                  "pytorch",
+                  "llama",
+                  "llama-2"
+                ],
+                "datasets": [],
+                "task_categories": [],
+                "size_categories": [],
+                "metrics": [],
+                "widget": []
+              },
+              "tags": [
+                "transformers",
+                "pytorch",
+                "safetensors",
+                "llama",
+                "text-generation",
+                "facebook",
+                "meta",
+                "llama-2",
+                "en",
+                "autotrain_compatible",
+                "text-generation-inference",
+                "region:us"
+              ],
+              "pipeline_tag": "text-generation",
+              "library_name": "transformers",
+              "readme": "---\nextra_gated_heading: Access Llama 2 on Hugging Face\nextra_gated_description: >-\n  This is a form to enable access to Llama 2 on Hugging Face after you have been\n  granted access from Meta. Please visit the [Meta website](https://ai.meta.com/resources/models-and-libraries/llama-downloads) and accept our\n  license terms and acceptable use policy before submitting this form. Requests\n  will be processed in 1-2 days.\nextra_gated_button_content: Submit\nextra_gated_fields:\n  I agree to share my name, email address and username with Meta and confirm that I have already been granted download access on the Meta website: checkbox\nlanguage:\n- en\npipeline_tag: text-generation\ninference: false\ntags:\n- facebook\n- meta\n- pytorch\n- llama\n- llama-2\n---\n# **Llama 2**\nLlama 2 is a collection of pretrained and fine-tuned generative text models ranging in scale from 7 billion to 70 billion parameters. This is the repository for the 13B fine-tuned model, optimized for dialogue use cases and converted for the Hugging Face Transformers format. Links to other models can be found in the index at the bottom.\n\n## Model Details\n*Note: Use of this model is governed by the Meta license. In order to download the model weights and tokenizer, please visit the [website](https://ai.meta.com/resources/models-and-libraries/llama-downloads/) and accept our License before requesting access here.*\n\nMeta developed and publicly released the Llama 2 family of large language models (LLMs), a collection of pretrained and fine-tuned generative text models ranging in scale from 7 billion to 70 billion parameters. Our fine-tuned LLMs, called Llama-2-Chat, are optimized for dialogue use cases. Llama-2-Chat models outperform open-source chat models on most benchmarks we tested, and in our human evaluations for helpfulness and safety, are on par with some popular closed-source models like ChatGPT and PaLM.\n\n**Model Developers** Meta\n\n**Variations** Llama 2 comes in a range of parameter sizes — 7B, 13B, and 70B — as well as pretrained and fine-tuned variations.\n\n**Input** Models input text only.\n\n**Output** Models generate text only.\n\n**Model Architecture** Llama 2 is an auto-regressive language model that uses an optimized transformer architecture. The tuned versions use supervised fine-tuning (SFT) and reinforcement learning with human feedback (RLHF) to align to human preferences for helpfulness and safety.\n\n\n||Training Data|Params|Content Length|GQA|Tokens|LR|\n|---|---|---|---|---|---|---|\n|Llama 2|*A new mix of publicly available online data*|7B|4k|&#10007;|2.0T|3.0 x 10<sup>-4</sup>|\n|Llama 2|*A new mix of publicly available online data*|13B|4k|&#10007;|2.0T|3.0 x 10<sup>-4</sup>|\n|Llama 2|*A new mix of publicly available online data*|70B|4k|&#10004;|2.0T|1.5 x 10<sup>-4</sup>|\n\n*Llama 2 family of models.* Token counts refer to pretraining data only. All models are trained with a global batch-size of 4M tokens. Bigger models -  70B -- use Grouped-Query Attention (GQA) for improved inference scalability.\n\n**Model Dates** Llama 2 was trained between January 2023 and July 2023.\n\n**Status** This is a static model trained on an offline dataset. Future versions of the tuned models will be released as we improve model safety with community feedback.\n\n**License** A custom commercial license is available at: [https://ai.meta.com/resources/models-and-libraries/llama-downloads/](https://ai.meta.com/resources/models-and-libraries/llama-downloads/)\n\n## Intended Use\n**Intended Use Cases** Llama 2 is intended for commercial and research use in English. Tuned models are intended for assistant-like chat, whereas pretrained models can be adapted for a variety of natural language generation tasks.\n\nTo get the expected features and performance for the chat versions, a specific formatting needs to be followed, including the `INST` and `<<SYS>>` tags, `BOS` and `EOS` tokens, and the whitespaces and breaklines in between (we recommend calling `strip()` on inputs to avoid double-spaces). See our reference code in github for details: [`chat_completion`](https://github.com/facebookresearch/llama/blob/main/llama/generation.py#L212).\n\n**Out-of-scope Uses** Use in any manner that violates applicable laws or regulations (including trade compliance laws).Use in languages other than English. Use in any other way that is prohibited by the Acceptable Use Policy and Licensing Agreement for Llama 2.\n\n## Hardware and Software\n**Training Factors** We used custom training libraries, Meta's Research Super Cluster, and production clusters for pretraining. Fine-tuning, annotation, and evaluation were also performed on third-party cloud compute.\n\n**Carbon Footprint** Pretraining utilized a cumulative 3.3M GPU hours of computation on hardware of type A100-80GB (TDP of 350-400W). Estimated total emissions were 539 tCO2eq, 100% of which were offset by Meta’s sustainability program.\n\n||Time (GPU hours)|Power Consumption (W)|Carbon Emitted(tCO<sub>2</sub>eq)|\n|---|---|---|---|\n|Llama 2 7B|184320|400|31.22|\n|Llama 2 13B|368640|400|62.44|\n|Llama 2 70B|1720320|400|291.42|\n|Total|3311616||539.00|\n\n**CO<sub>2</sub> emissions during pretraining.** Time: total GPU time required for training each model. Power Consumption: peak power capacity per GPU device for the GPUs used adjusted for power usage efficiency. 100% of the emissions are directly offset by Meta's sustainability program, and because we are openly releasing these models, the pretraining costs do not need to be incurred by others.\n\n## Training Data\n**Overview** Llama 2 was pretrained on 2 trillion tokens of data from publicly available sources. The fine-tuning data includes publicly available instruction datasets, as well as over one million new human-annotated examples. Neither the pretraining nor the fine-tuning datasets include Meta user data.\n\n**Data Freshness** The pretraining data has a cutoff of September 2022, but some tuning data is more recent, up to July 2023.\n\n## Evaluation Results\n\nIn this section, we report the results for the Llama 1 and Llama 2 models on standard academic benchmarks.For all the evaluations, we use our internal evaluations library.\n\n|Model|Size|Code|Commonsense Reasoning|World Knowledge|Reading Comprehension|Math|MMLU|BBH|AGI Eval|\n|---|---|---|---|---|---|---|---|---|---|\n|Llama 1|7B|14.1|60.8|46.2|58.5|6.95|35.1|30.3|23.9|\n|Llama 1|13B|18.9|66.1|52.6|62.3|10.9|46.9|37.0|33.9|\n|Llama 1|33B|26.0|70.0|58.4|67.6|21.4|57.8|39.8|41.7|\n|Llama 1|65B|30.7|70.7|60.5|68.6|30.8|63.4|43.5|47.6|\n|Llama 2|7B|16.8|63.9|48.9|61.3|14.6|45.3|32.6|29.3|\n|Llama 2|13B|24.5|66.9|55.4|65.8|28.7|54.8|39.4|39.1|\n|Llama 2|70B|**37.5**|**71.9**|**63.6**|**69.4**|**35.2**|**68.9**|**51.2**|**54.2**|\n\n**Overall performance on grouped academic benchmarks.** *Code:* We report the average pass@1 scores of our models on HumanEval and MBPP. *Commonsense Reasoning:* We report the average of PIQA, SIQA, HellaSwag, WinoGrande, ARC easy and challenge, OpenBookQA, and CommonsenseQA. We report 7-shot results for CommonSenseQA and 0-shot results for all other benchmarks. *World Knowledge:* We evaluate the 5-shot performance on NaturalQuestions and TriviaQA and report the average. *Reading Comprehension:* For reading comprehension, we report the 0-shot average on SQuAD, QuAC, and BoolQ. *MATH:* We report the average of the GSM8K (8 shot) and MATH (4 shot) benchmarks at top 1.\n\n|||TruthfulQA|Toxigen|\n|---|---|---|---|\n|Llama 1|7B|27.42|23.00|\n|Llama 1|13B|41.74|23.08|\n|Llama 1|33B|44.19|22.57|\n|Llama 1|65B|48.71|21.77|\n|Llama 2|7B|33.29|**21.25**|\n|Llama 2|13B|41.86|26.10|\n|Llama 2|70B|**50.18**|24.60|\n\n**Evaluation of pretrained LLMs on automatic safety benchmarks.** For TruthfulQA, we present the percentage of generations that are both truthful and informative (the higher the better). For ToxiGen, we present the percentage of toxic generations (the smaller the better).\n\n\n|||TruthfulQA|Toxigen|\n|---|---|---|---|\n|Llama-2-Chat|7B|57.04|**0.00**|\n|Llama-2-Chat|13B|62.18|**0.00**|\n|Llama-2-Chat|70B|**64.14**|0.01|\n\n**Evaluation of fine-tuned LLMs on different safety datasets.** Same metric definitions as above.\n\n## Ethical Considerations and Limitations\nLlama 2 is a new technology that carries risks with use. Testing conducted to date has been in English, and has not covered, nor could it cover all scenarios. For these reasons, as with all LLMs, Llama 2’s potential outputs cannot be predicted in advance, and the model may in some instances produce inaccurate, biased or other objectionable responses to user prompts. Therefore, before deploying any applications of Llama 2, developers should perform safety testing and tuning tailored to their specific applications of the model.\n\nPlease see the Responsible Use Guide available at [https://ai.meta.com/llama/responsible-use-guide/](https://ai.meta.com/llama/responsible-use-guide)\n\n## Reporting Issues\nPlease report any software “bug,” or other problems with the models through one of the following means:\n- Reporting issues with the model: [github.com/facebookresearch/llama](http://github.com/facebookresearch/llama)\n- Reporting problematic content generated by the model: [developers.facebook.com/llama_output_feedback](http://developers.facebook.com/llama_output_feedback)\n- Reporting bugs and security concerns: [facebook.com/whitehat/info](http://facebook.com/whitehat/info)\n\n## Llama Model Index\n|Model|Llama2|Llama2-hf|Llama2-chat|Llama2-chat-hf|\n|---|---|---|---|---|\n|7B| [Link](https://huggingface.co/llamaste/Llama-2-7b) | [Link](https://huggingface.co/llamaste/Llama-2-7b-hf) | [Link](https://huggingface.co/llamaste/Llama-2-7b-chat) | [Link](https://huggingface.co/llamaste/Llama-2-7b-chat-hf)|\n|13B| [Link](https://huggingface.co/llamaste/Llama-2-13b) | [Link](https://huggingface.co/llamaste/Llama-2-13b-hf) | [Link](https://huggingface.co/llamaste/Llama-2-13b-chat) | [Link](https://huggingface.co/llamaste/Llama-2-13b-hf)|\n|70B| [Link](https://huggingface.co/llamaste/Llama-2-70b) | [Link](https://huggingface.co/llamaste/Llama-2-70b-hf) | [Link](https://huggingface.co/llamaste/Llama-2-70b-chat) | [Link](https://huggingface.co/llamaste/Llama-2-70b-hf)|\n",
+              "extracted_code": ""
+            },
+            {
+              "id": "CompVis/stable-diffusion-safety-checker",
+              "author": "CompVis",
+              "sha": "cb41f3a270d63d454d385fc2e4f571c487c253c5",
+              "created_at": "2022-08-22T10:22:34+00:00",
+              "last_modified": "2022-11-25T17:21:38+00:00",
+              "private": false,
+              "gated": false,
+              "disabled": false,
+              "downloads": 2166462,
+              "likes": 133,
+              "siblings": [
+                {
+                  "rfilename": ".gitattributes"
+                },
+                {
+                  "rfilename": "README.md"
+                },
+                {
+                  "rfilename": "config.json"
+                },
+                {
+                  "rfilename": "preprocessor_config.json"
+                },
+                {
+                  "rfilename": "pytorch_model.bin"
+                }
+              ],
+              "card_data": {
+                "language": [],
+                "tags": [
+                  "clip"
+                ],
+                "datasets": [],
+                "task_categories": [],
+                "size_categories": [],
+                "metrics": [],
+                "widget": []
+              },
+              "tags": [
+                "transformers",
+                "pytorch",
+                "clip",
+                "arxiv:2103.00020",
+                "arxiv:1910.09700",
+                "endpoints_compatible",
+                "region:us"
+              ],
+              "library_name": "transformers",
+              "readme": "---\ntags:\n- clip\n---\n\n# Model Card for stable-diffusion-safety-checker\n \n# Model Details\n \n## Model Description\n \nMore information needed\n \n- **Developed by:** More information needed\n- **Shared by [Optional]:** CompVis\n- **Model type:** Image Identification \n- **Language(s) (NLP):** More information needed\n- **License:** More information needed\n- **Parent Model:** [CLIP](https://huggingface.co/openai/clip-vit-large-patch14)\n- **Resources for more information:** \n\t- [CLIP Paper](https://arxiv.org/abs/2103.00020)\n\t- [Stable Diffusion Model Card](https://github.com/CompVis/stable-diffusion/blob/main/Stable_Diffusion_v1_Model_Card.md)\n\n\n# Uses\n \n\n## Direct Use\nThis model can be used for identifying NSFW image \n\nThe CLIP model devlopers note in their [model card](https://huggingface.co/openai/clip-vit-large-patch14) : \n\n>The primary intended users of these models are AI researchers.\n\nWe primarily imagine the model will be used by researchers to better understand robustness, generalization, and other capabilities, biases, and constraints of computer vision models.\n\n\n \n## Downstream Use [Optional]\n \nMore information needed.\n \n## Out-of-Scope Use\n \nThe model is not intended to be used with transformers but with diffusers. This model should also not be used to intentionally create hostile or alienating environments for people. \n \n# Bias, Risks, and Limitations\n \n \nSignificant research has explored bias and fairness issues with language models (see, e.g., [Sheng et al. (2021)](https://aclanthology.org/2021.acl-long.330.pdf) and [Bender et al. (2021)](https://dl.acm.org/doi/pdf/10.1145/3442188.3445922)). Predictions generated by the model may include disturbing and harmful stereotypes across protected classes; identity characteristics; and sensitive, social, and occupational groups.\n\nThe CLIP model devlopers note in their [model card](https://huggingface.co/openai/clip-vit-large-patch14) : \n> We find that the performance of CLIP - and the specific biases it exhibits - can depend significantly on class design and the choices one makes for categories to include and exclude. We tested the risk of certain kinds of denigration with CLIP by classifying images of people from Fairface into crime-related and non-human animal categories. We found significant disparities with respect to race and gender. Additionally, we found that these disparities could shift based on how the classes were constructed. \n\n> We also tested the performance of CLIP on gender, race and age classification using the Fairface dataset (We default to using race categories as they are constructed in the Fairface dataset.) in order to assess quality of performance across different demographics. We found accuracy >96% across all races for gender classification with ‘Middle Eastern’ having the highest accuracy (98.4%) and ‘White’ having the lowest (96.5%). Additionally, CLIP averaged ~93% for racial classification and ~63% for age classification\n\n## Recommendations\n \n \nUsers (both direct and downstream) should be made aware of the risks, biases and limitations of the model. More information needed for further recommendations.\n\n# Training Details\n \n## Training Data\n \nMore information needed \n \n## Training Procedure\n\n \n### Preprocessing\n \nMore information needed \n\n\n \n### Speeds, Sizes, Times\n \nMore information needed \n\n\n \n# Evaluation\n \n \n## Testing Data, Factors & Metrics\n \n### Testing Data\n \nMore information needed\n \n### Factors\nMore information needed\n \n### Metrics\n \nMore information needed\n \n \n## Results \n \nMore information needed\n\n \n# Model Examination\n \nMore information needed\n \n# Environmental Impact\n \nCarbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).\n \n- **Hardware Type:** More information needed\n- **Hours used:** More information needed\n- **Cloud Provider:** More information needed\n- **Compute Region:** More information needed\n- **Carbon Emitted:** More information needed\n \n# Technical Specifications [optional]\n \n## Model Architecture and Objective\n\nThe CLIP model devlopers note in their [model card](https://huggingface.co/openai/clip-vit-large-patch14) : \n\n> The base model uses a ViT-L/14 Transformer architecture as an image encoder and uses a masked self-attention Transformer as a text encoder. These encoders are trained to maximize the similarity of (image, text) pairs via a contrastive loss.\n \n## Compute Infrastructure\n \nMore information needed\n \n### Hardware\n \n \nMore information needed\n \n### Software\n \nMore information needed.\n \n# Citation\n\n \n**BibTeX:**\n \nMore information needed\n\n\n\n\n**APA:**\n\nMore information needed\n  \n# Glossary [optional]\n \nMore information needed\n\n# More Information [optional]\nMore information needed \n\n# Model Card Authors [optional]\n \nCompVis  in collaboration with Ezi Ozoani and the Hugging Face team\n\n# Model Card Contact\n \nMore information needed\n \n# How to Get Started with the Model\n \nUse the code below to get started with the model.\n \n<details>\n<summary> Click to expand </summary>\n\n```python\nfrom transformers import AutoProcessor, SafetyChecker\nprocessor = AutoProcessor.from_pretrained(\"CompVis/stable-diffusion-safety-checker\")\nsafety_checker = SafetyChecker.from_pretrained(\"CompVis/stable-diffusion-safety-checker\")\n ```\n</details>\n",
+              "extracted_code": "from transformers import AutoProcessor, SafetyChecker\nprocessor = AutoProcessor.from_pretrained(\"CompVis/stable-diffusion-safety-checker\")\nsafety_checker = SafetyChecker.from_pretrained(\"CompVis/stable-diffusion-safety-checker\")"
+            },
+            {
+              "id": "stabilityai/stable-diffusion-2-1",
+              "author": "stabilityai",
+              "sha": "5cae40e6a2745ae2b01ad92ae5043f95f23644d6",
+              "created_at": "2022-12-06T17:24:51+00:00",
+              "last_modified": "2023-07-05T16:19:17+00:00",
+              "private": false,
+              "gated": false,
+              "disabled": false,
+              "downloads": 831676,
+              "likes": 4023,
+              "siblings": [
+                {
+                  "rfilename": ".gitattributes"
+                },
+                {
+                  "rfilename": "README.md"
+                },
+                {
+                  "rfilename": "feature_extractor/preprocessor_config.json"
+                },
+                {
+                  "rfilename": "model_index.json"
+                },
+                {
+                  "rfilename": "scheduler/scheduler_config.json"
+                },
+                {
+                  "rfilename": "text_encoder/config.json"
+                },
+                {
+                  "rfilename": "text_encoder/model.fp16.safetensors"
+                },
+                {
+                  "rfilename": "text_encoder/model.safetensors"
+                },
+                {
+                  "rfilename": "text_encoder/pytorch_model.bin"
+                },
+                {
+                  "rfilename": "text_encoder/pytorch_model.fp16.bin"
+                }
+              ],
+              "card_data": {
+                "license": "openrail++",
+                "language": [],
+                "tags": [
+                  "stable-diffusion",
+                  "text-to-image"
+                ],
+                "datasets": [],
+                "task_categories": [],
+                "size_categories": [],
+                "metrics": [],
+                "widget": []
+              },
+              "tags": [
+                "diffusers",
+                "safetensors",
+                "stable-diffusion",
+                "text-to-image",
+                "arxiv:2112.10752",
+                "arxiv:2202.00512",
+                "arxiv:1910.09700",
+                "license:openrail++",
+                "autotrain_compatible",
+                "endpoints_compatible",
+                "diffusers:StableDiffusionPipeline",
+                "region:us"
+              ],
+              "pipeline_tag": "text-to-image",
+              "library_name": "diffusers",
+              "readme": "---\nlicense: openrail++\ntags:\n- stable-diffusion\n- text-to-image\npinned: true\n---\n\n# Stable Diffusion v2-1 Model Card\nThis model card focuses on the model associated with the Stable Diffusion v2-1 model, codebase available [here](https://github.com/Stability-AI/stablediffusion).\n\nThis `stable-diffusion-2-1` model is fine-tuned from [stable-diffusion-2](https://huggingface.co/stabilityai/stable-diffusion-2) (`768-v-ema.ckpt`) with an additional 55k steps on the same dataset (with `punsafe=0.1`), and then fine-tuned for another 155k extra steps with `punsafe=0.98`.\n\n- Use it with the [`stablediffusion`](https://github.com/Stability-AI/stablediffusion) repository: download the `v2-1_768-ema-pruned.ckpt` [here](https://huggingface.co/stabilityai/stable-diffusion-2-1/blob/main/v2-1_768-ema-pruned.ckpt).\n- Use it with 🧨 [`diffusers`](#examples)\n\n## Model Details\n- **Developed by:** Robin Rombach, Patrick Esser\n- **Model type:** Diffusion-based text-to-image generation model\n- **Language(s):** English\n- **License:** [CreativeML Open RAIL++-M License](https://huggingface.co/stabilityai/stable-diffusion-2/blob/main/LICENSE-MODEL)\n- **Model Description:** This is a model that can be used to generate and modify images based on text prompts. It is a [Latent Diffusion Model](https://arxiv.org/abs/2112.10752) that uses a fixed, pretrained text encoder ([OpenCLIP-ViT/H](https://github.com/mlfoundations/open_clip)).\n- **Resources for more information:** [GitHub Repository](https://github.com/Stability-AI/).\n- **Cite as:**\n\n      @InProceedings{Rombach_2022_CVPR,\n          author    = {Rombach, Robin and Blattmann, Andreas and Lorenz, Dominik and Esser, Patrick and Ommer, Bj\\\"orn},\n          title     = {High-Resolution Image Synthesis With Latent Diffusion Models},\n          booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},\n          month     = {June},\n          year      = {2022},\n          pages     = {10684-10695}\n      }\n\n\n## Examples\n\nUsing the [🤗's Diffusers library](https://github.com/huggingface/diffusers) to run Stable Diffusion 2 in a simple and efficient manner.\n\n```bash\npip install diffusers transformers accelerate scipy safetensors\n```\nRunning the pipeline (if you don't swap the scheduler it will run with the default DDIM, in this example we are swapping it to DPMSolverMultistepScheduler):\n\n```python\nimport torch\nfrom diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler\n\nmodel_id = \"stabilityai/stable-diffusion-2-1\"\n\n# Use the DPMSolverMultistepScheduler (DPM-Solver++) scheduler here instead\npipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)\npipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)\npipe = pipe.to(\"cuda\")\n\nprompt = \"a photo of an astronaut riding a horse on mars\"\nimage = pipe(prompt).images[0]\n    \nimage.save(\"astronaut_rides_horse.png\")\n```\n\n**Notes**:\n- Despite not being a dependency, we highly recommend you to install [xformers](https://github.com/facebookresearch/xformers) for memory efficient attention (better performance)\n- If you have low GPU RAM available, make sure to add a `pipe.enable_attention_slicing()` after sending it to `cuda` for less VRAM usage (to the cost of speed)\n\n\n# Uses\n\n## Direct Use \nThe model is intended for research purposes only. Possible research areas and tasks include\n\n- Safe deployment of models which have the potential to generate harmful content.\n- Probing and understanding the limitations and biases of generative models.\n- Generation of artworks and use in design and other artistic processes.\n- Applications in educational or creative tools.\n- Research on generative models.\n\nExcluded uses are described below.\n\n ### Misuse, Malicious Use, and Out-of-Scope Use\n_Note: This section is originally taken from the [DALLE-MINI model card](https://huggingface.co/dalle-mini/dalle-mini), was used for Stable Diffusion v1, but applies in the same way to Stable Diffusion v2_.\n\nThe model should not be used to intentionally create or disseminate images that create hostile or alienating environments for people. This includes generating images that people would foreseeably find disturbing, distressing, or offensive; or content that propagates historical or current stereotypes.\n\n#### Out-of-Scope Use\nThe model was not trained to be factual or true representations of people or events, and therefore using the model to generate such content is out-of-scope for the abilities of this model.\n\n#### Misuse and Malicious Use\nUsing the model to generate content that is cruel to individuals is a misuse of this model. This includes, but is not limited to:\n\n- Generating demeaning, dehumanizing, or otherwise harmful representations of people or their environments, cultures, religions, etc.\n- Intentionally promoting or propagating discriminatory content or harmful stereotypes.\n- Impersonating individuals without their consent.\n- Sexual content without consent of the people who might see it.\n- Mis- and disinformation\n- Representations of egregious violence and gore\n- Sharing of copyrighted or licensed material in violation of its terms of use.\n- Sharing content that is an alteration of copyrighted or licensed material in violation of its terms of use.\n\n## Limitations and Bias\n\n### Limitations\n\n- The model does not achieve perfect photorealism\n- The model cannot render legible text\n- The model does not perform well on more difficult tasks which involve compositionality, such as rendering an image corresponding to “A red cube on top of a blue sphere”\n- Faces and people in general may not be generated properly.\n- The model was trained mainly with English captions and will not work as well in other languages.\n- The autoencoding part of the model is lossy\n- The model was trained on a subset of the large-scale dataset\n  [LAION-5B](https://laion.ai/blog/laion-5b/), which contains adult, violent and sexual content. To partially mitigate this, we have filtered the dataset using LAION's NFSW detector (see Training section).\n\n### Bias\nWhile the capabilities of image generation models are impressive, they can also reinforce or exacerbate social biases. \nStable Diffusion was primarily trained on subsets of [LAION-2B(en)](https://laion.ai/blog/laion-5b/), \nwhich consists of images that are limited to English descriptions. \nTexts and images from communities and cultures that use other languages are likely to be insufficiently accounted for. \nThis affects the overall output of the model, as white and western cultures are often set as the default. Further, the \nability of the model to generate content with non-English prompts is significantly worse than with English-language prompts.\nStable Diffusion v2 mirrors and exacerbates biases to such a degree that viewer discretion must be advised irrespective of the input or its intent.\n\n\n## Training\n\n**Training Data**\nThe model developers used the following dataset for training the model:\n\n- LAION-5B and subsets (details below). The training data is further filtered using LAION's NSFW detector, with a \"p_unsafe\" score of 0.1 (conservative). For more details, please refer to LAION-5B's [NeurIPS 2022](https://openreview.net/forum?id=M3Y74vmsMcY) paper and reviewer discussions on the topic.\n\n**Training Procedure**\nStable Diffusion v2 is a latent diffusion model which combines an autoencoder with a diffusion model that is trained in the latent space of the autoencoder. During training, \n\n- Images are encoded through an encoder, which turns images into latent representations. The autoencoder uses a relative downsampling factor of 8 and maps images of shape H x W x 3 to latents of shape H/f x W/f x 4\n- Text prompts are encoded through the OpenCLIP-ViT/H text-encoder.\n- The output of the text encoder is fed into the UNet backbone of the latent diffusion model via cross-attention.\n- The loss is a reconstruction objective between the noise that was added to the latent and the prediction made by the UNet. We also use the so-called _v-objective_, see https://arxiv.org/abs/2202.00512.\n\nWe currently provide the following checkpoints:\n\n- `512-base-ema.ckpt`: 550k steps at resolution `256x256` on a subset of [LAION-5B](https://laion.ai/blog/laion-5b/) filtered for explicit pornographic material, using the [LAION-NSFW classifier](https://github.com/LAION-AI/CLIP-based-NSFW-Detector) with `punsafe=0.1` and an [aesthetic score](https://github.com/christophschuhmann/improved-aesthetic-predictor) >= `4.5`.\n  850k steps at resolution `512x512` on the same dataset with resolution `>= 512x512`.\n- `768-v-ema.ckpt`: Resumed from `512-base-ema.ckpt` and trained for 150k steps using a [v-objective](https://arxiv.org/abs/2202.00512) on the same dataset. Resumed for another 140k steps on a `768x768` subset of our dataset.\n- `512-depth-ema.ckpt`: Resumed from `512-base-ema.ckpt` and finetuned for 200k steps. Added an extra input channel to process the (relative) depth prediction produced by [MiDaS](https://github.com/isl-org/MiDaS) (`dpt_hybrid`) which is used as an additional conditioning.\nThe additional input channels of the U-Net which process this extra information were zero-initialized.\n- `512-inpainting-ema.ckpt`: Resumed from `512-base-ema.ckpt` and trained for another 200k steps. Follows the mask-generation strategy presented in [LAMA](https://github.com/saic-mdal/lama) which, in combination with the latent VAE representations of the masked image, are used as an additional conditioning.\nThe additional input channels of the U-Net which process this extra information were zero-initialized. The same strategy was used to train the [1.5-inpainting checkpoint](https://huggingface.co/runwayml/stable-diffusion-inpainting).\n- `x4-upscaling-ema.ckpt`: Trained for 1.25M steps on a 10M subset of LAION containing images `>2048x2048`. The model was trained on crops of size `512x512` and is a text-guided [latent upscaling diffusion model](https://arxiv.org/abs/2112.10752).\nIn addition to the textual input, it receives a `noise_level` as an input parameter, which can be used to add noise to the low-resolution input according to a [predefined diffusion schedule](configs/stable-diffusion/x4-upscaling.yaml). \n\n- **Hardware:** 32 x 8 x A100 GPUs\n- **Optimizer:** AdamW\n- **Gradient Accumulations**: 1\n- **Batch:** 32 x 8 x 2 x 4 = 2048\n- **Learning rate:** warmup to 0.0001 for 10,000 steps and then kept constant\n\n## Evaluation Results \nEvaluations with different classifier-free guidance scales (1.5, 2.0, 3.0, 4.0,\n5.0, 6.0, 7.0, 8.0) and 50 steps DDIM sampling steps show the relative improvements of the checkpoints:\n\n![pareto](model-variants.jpg) \n\nEvaluated using 50 DDIM steps and 10000 random prompts from the COCO2017 validation set, evaluated at 512x512 resolution.  Not optimized for FID scores.\n\n## Environmental Impact\n\n**Stable Diffusion v1** **Estimated Emissions**\nBased on that information, we estimate the following CO2 emissions using the [Machine Learning Impact calculator](https://mlco2.github.io/impact#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700). The hardware, runtime, cloud provider, and compute region were utilized to estimate the carbon impact.\n\n- **Hardware Type:** A100 PCIe 40GB\n- **Hours used:** 200000\n- **Cloud Provider:** AWS\n- **Compute Region:** US-east\n- **Carbon Emitted (Power consumption x Time x Carbon produced based on location of power grid):** 15000 kg CO2 eq.\n\n## Citation\n    @InProceedings{Rombach_2022_CVPR,\n        author    = {Rombach, Robin and Blattmann, Andreas and Lorenz, Dominik and Esser, Patrick and Ommer, Bj\\\"orn},\n        title     = {High-Resolution Image Synthesis With Latent Diffusion Models},\n        booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},\n        month     = {June},\n        year      = {2022},\n        pages     = {10684-10695}\n    }\n\n*This model card was written by: Robin Rombach, Patrick Esser and David Ha and is based on the [Stable Diffusion v1](https://github.com/CompVis/stable-diffusion/blob/main/Stable_Diffusion_v1_Model_Card.md) and [DALL-E Mini model card](https://huggingface.co/dalle-mini/dalle-mini).*\n",
+              "extracted_code": "import torch\nfrom diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler\n\nmodel_id = \"stabilityai/stable-diffusion-2-1\"\n\n# Use the DPMSolverMultistepScheduler (DPM-Solver++) scheduler here instead\npipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float16)\npipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)\npipe = pipe.to(\"cuda\")\n\nprompt = \"a photo of an astronaut riding a horse on mars\"\nimage = pipe(prompt).images[0]\n\nimage.save(\"astronaut_rides_horse.png\")"
+            },
+            {
+              "id": "sentence-transformers/sentence-t5-large",
+              "author": "sentence-transformers",
+              "sha": "1b36eb48a1df42a07ffd02234d25abfbf3e3f3cb",
+              "created_at": "2022-03-02T23:29:05+00:00",
+              "last_modified": "2025-03-06T13:37:56+00:00",
+              "private": false,
+              "gated": false,
+              "disabled": false,
+              "downloads": 17106,
+              "likes": 25,
+              "siblings": [
+                {
+                  "rfilename": ".gitattributes"
+                },
+                {
+                  "rfilename": "1_Pooling/config.json"
+                },
+                {
+                  "rfilename": "2_Dense/config.json"
+                },
+                {
+                  "rfilename": "2_Dense/model.safetensors"
+                },
+                {
+                  "rfilename": "2_Dense/pytorch_model.bin"
+                },
+                {
+                  "rfilename": "README.md"
+                },
+                {
+                  "rfilename": "config.json"
+                },
+                {
+                  "rfilename": "config_sentence_transformers.json"
+                },
+                {
+                  "rfilename": "model.safetensors"
+                },
+                {
+                  "rfilename": "modules.json"
+                }
+              ],
+              "card_data": {
+                "license": "apache-2.0",
+                "language": "en",
+                "library_name": "sentence-transformers",
+                "pipeline_tag": "sentence-similarity",
+                "tags": [
+                  "sentence-transformers",
+                  "feature-extraction",
+                  "sentence-similarity"
+                ],
+                "datasets": [],
+                "task_categories": [],
+                "size_categories": [],
+                "metrics": [],
+                "widget": []
+              },
+              "tags": [
+                "sentence-transformers",
+                "pytorch",
+                "onnx",
+                "safetensors",
+                "t5",
+                "feature-extraction",
+                "sentence-similarity",
+                "en",
+                "arxiv:2108.08877",
+                "license:apache-2.0",
+                "autotrain_compatible",
+                "endpoints_compatible",
+                "region:us"
+              ],
+              "pipeline_tag": "sentence-similarity",
+              "library_name": "sentence-transformers",
+              "readme": "---\nlanguage: en\nlicense: apache-2.0\nlibrary_name: sentence-transformers\ntags:\n- sentence-transformers\n- feature-extraction\n- sentence-similarity\npipeline_tag: sentence-similarity\n---\n\n# sentence-transformers/sentence-t5-large\n\nThis is a [sentence-transformers](https://www.SBERT.net) model: It maps sentences & paragraphs to a 768 dimensional dense vector space. The model works well for sentence similarity tasks, but doesn't perform that well for semantic search tasks.\n\nThis model was converted from the Tensorflow model [st5-large-1](https://tfhub.dev/google/sentence-t5/st5-large/1) to PyTorch. When using this model, have a look at the publication: [Sentence-T5: Scalable sentence encoders from pre-trained text-to-text models](https://arxiv.org/abs/2108.08877). The tfhub model and this PyTorch model can produce slightly different embeddings, however, when run on the same benchmarks, they produce identical results.\n\nThe model uses only the encoder from a T5-large model. The weights are stored in FP16.  \n\n\n## Usage (Sentence-Transformers)\n\nUsing this model becomes easy when you have [sentence-transformers](https://www.SBERT.net) installed:\n\n```\npip install -U sentence-transformers\n```\n\nThen you can use the model like this:\n\n```python\nfrom sentence_transformers import SentenceTransformer\nsentences = [\"This is an example sentence\", \"Each sentence is converted\"]\n\nmodel = SentenceTransformer('sentence-transformers/sentence-t5-large')\nembeddings = model.encode(sentences)\nprint(embeddings)\n```\n\nThe model requires sentence-transformers version 2.2.0 or newer.\n\n## Citing & Authors\n\nIf you find this model helpful, please cite the respective publication:\n[Sentence-T5: Scalable sentence encoders from pre-trained text-to-text models](https://arxiv.org/abs/2108.08877)\n",
+              "extracted_code": "from sentence_transformers import SentenceTransformer\nsentences = [\"This is an example sentence\", \"Each sentence is converted\"]\n\nmodel = SentenceTransformer('sentence-transformers/sentence-t5-large')\nembeddings = model.encode(sentences)\nprint(embeddings)"
+            },
+            {
+              "id": "laion/CLIP-ViT-H-14-laion2B-s32B-b79K",
+              "author": "laion",
+              "sha": "1c2b8495b28150b8a4922ee1c8edee224c284c0c",
+              "created_at": "2022-09-14T22:52:28+00:00",
+              "last_modified": "2025-01-22T04:38:44+00:00",
+              "private": false,
+              "gated": false,
+              "disabled": false,
+              "downloads": 786802,
+              "likes": 409,
+              "siblings": [
+                {
+                  "rfilename": ".gitattributes"
+                },
+                {
+                  "rfilename": "README.md"
+                },
+                {
+                  "rfilename": "config.json"
+                },
+                {
+                  "rfilename": "merges.txt"
+                },
+                {
+                  "rfilename": "model.safetensors"
+                },
+                {
+                  "rfilename": "open_clip_config.json"
+                },
+                {
+                  "rfilename": "open_clip_model.safetensors"
+                },
+                {
+                  "rfilename": "open_clip_pytorch_model.bin"
+                },
+                {
+                  "rfilename": "preprocessor_config.json"
+                },
+                {
+                  "rfilename": "pytorch_model.bin"
+                }
+              ],
+              "card_data": {
+                "license": "mit",
+                "language": [],
+                "library_name": "open_clip",
+                "pipeline_tag": "zero-shot-image-classification",
+                "tags": [],
+                "datasets": [],
+                "task_categories": [],
+                "size_categories": [],
+                "metrics": [],
+                "widget": [
+                  {
+                    "src": "https://huggingface.co/datasets/mishig/sample_images/resolve/main/cat-dog-music.png",
+                    "candidate_labels": "playing music, playing sports",
+                    "example_title": "Cat & Dog"
+                  }
+                ]
+              },
+              "tags": [
+                "open_clip",
+                "pytorch",
+                "safetensors",
+                "clip",
+                "zero-shot-image-classification",
+                "arxiv:1910.04867",
+                "license:mit",
+                "region:us"
+              ],
+              "pipeline_tag": "zero-shot-image-classification",
+              "library_name": "open_clip",
+              "readme": "---\nlicense: mit\nwidget:\n- src: >-\n    https://huggingface.co/datasets/mishig/sample_images/resolve/main/cat-dog-music.png\n  candidate_labels: playing music, playing sports\n  example_title: Cat & Dog\nlibrary_name: open_clip\npipeline_tag: zero-shot-image-classification\n---\n# Model Card for CLIP ViT-H/14 - LAION-2B\n\n#  Table of Contents\n\n1. [Model Details](#model-details)\n2. [Uses](#uses)\n3. [Training Details](#training-details)\n4. [Evaluation](#evaluation)\n5. [Acknowledgements](#acknowledgements)\n6. [Citation](#citation)\n7. [How To Get Started With the Model](#how-to-get-started-with-the-model)\n\n\n# Model Details\n\n## Model Description\n\nA CLIP ViT-H/14 model trained with the LAION-2B English subset of LAION-5B (https://laion.ai/blog/laion-5b/) using OpenCLIP (https://github.com/mlfoundations/open_clip).\n\nModel training done by Romain Beaumont on the [stability.ai](https://stability.ai/) cluster. \n\n# Uses\n\nAs per the original [OpenAI CLIP model card](https://github.com/openai/CLIP/blob/d50d76daa670286dd6cacf3bcd80b5e4823fc8e1/model-card.md), this model is intended as a research output for research communities. We hope that this model will enable researchers to better understand and explore zero-shot, arbitrary image classification. We also hope it can be used for interdisciplinary studies of the potential impact of such model. \n\nThe OpenAI CLIP paper includes a discussion of potential downstream impacts to provide an example for this sort of analysis. Additionally, the LAION-5B blog (https://laion.ai/blog/laion-5b/) and upcoming paper include additional discussion as it relates specifically to the training dataset. \n\n## Direct Use\n\nZero-shot image classification, image and text retrieval, among others.\n\n## Downstream Use\n\nImage classification and other image task fine-tuning, linear probe image classification, image generation guiding and conditioning, among others.\n\n## Out-of-Scope Use\n\nAs per the OpenAI models,\n\n**Any** deployed use case of the model - whether commercial or not - is currently out of scope. Non-deployed use cases such as image search in a constrained environment, are also not recommended unless there is thorough in-domain testing of the model with a specific, fixed class taxonomy. This is because our safety assessment demonstrated a high need for task specific testing especially given the variability of CLIP’s performance with different class taxonomies. This makes untested and unconstrained deployment of the model in any use case currently potentially harmful. \n\nCertain use cases which would fall under the domain of surveillance and facial recognition are always out-of-scope regardless of performance of the model. This is because the use of artificial intelligence for tasks such as these can be premature currently given the lack of testing norms and checks to ensure its fair use.\n\nSince the model has not been purposefully trained in or evaluated on any languages other than English, its use should be limited to English language use cases.\n\nFurther the above notice, the LAION-5B dataset used in training of these models has additional considerations, see below.\n\n# Training Details\n\n## Training Data\n\nThis model was trained with the 2 Billion sample English subset of LAION-5B (https://laion.ai/blog/laion-5b/).\n\n**IMPORTANT NOTE:** The motivation behind dataset creation is to democratize research and experimentation around large-scale multi-modal model training and handling of uncurated, large-scale datasets crawled from publically available internet. Our recommendation is therefore to use the dataset for research purposes. Be aware that this large-scale dataset is uncurated. Keep in mind that the uncurated nature of the dataset means that collected links may lead to strongly discomforting and disturbing content for a human viewer. Therefore, please use the demo links with caution and at your own risk. It is possible to extract a “safe” subset by filtering out samples based on the safety tags (using a customized trained NSFW classifier that we built). While this strongly reduces the chance for encountering potentially harmful content when viewing, we cannot entirely exclude the possibility for harmful content being still present in safe mode, so that the warning holds also there. We think that providing the dataset openly to broad research and other interested communities will allow for transparent investigation of benefits that come along with training large-scale models as well as pitfalls and dangers that may stay unreported or unnoticed when working with closed large datasets that remain restricted to a small community. Providing our dataset openly, we however do not recommend using it for creating ready-to-go industrial products, as the basic research about general properties and safety of such large-scale models, which we would like to encourage with this release, is still in progress.\n\n## Training Procedure\n\nPlease see [training notes](https://docs.google.com/document/d/1EFbMLRWSSV0LUf9Du1pWzWqgeiIRPwEWX2s1C6mAk5c) and [wandb logs](https://wandb.ai/rom1504/eval_openclip/reports/H-14--VmlldzoyNDAxODQ3).\n\n# Evaluation\n\nEvaluation done with code in the [LAION CLIP Benchmark suite](https://github.com/LAION-AI/CLIP_benchmark).\n\n## Testing Data, Factors & Metrics\n\n### Testing Data\n\nThe testing is performed with VTAB+ (A combination of VTAB (https://arxiv.org/abs/1910.04867) w/ additional robustness datasets) for classification and COCO and Flickr for retrieval.\n\n**TODO** - more detail\n\n## Results\n\nThe model achieves a 78.0 zero-shot top-1 accuracy on ImageNet-1k.\n\nAn initial round of benchmarks have been performed on a wider range of datasets, currently viewable at https://github.com/LAION-AI/CLIP_benchmark/blob/main/benchmark/results.ipynb\n\n**TODO** - create table for just this model's metrics.\n\n# Acknowledgements\n\nAcknowledging [stability.ai](https://stability.ai/) for the compute used to train this model.\n\n# Citation\n\n**BibTeX:**\n\nLAION-5B\n```bibtex\n@inproceedings{schuhmann2022laionb,\n  title={{LAION}-5B: An open large-scale dataset for training next generation image-text models},\n  author={Christoph Schuhmann and\n          Romain Beaumont and\n          Richard Vencu and\n          Cade W Gordon and\n          Ross Wightman and\n          Mehdi Cherti and\n          Theo Coombes and\n          Aarush Katta and\n          Clayton Mullis and\n          Mitchell Wortsman and\n          Patrick Schramowski and\n          Srivatsa R Kundurthy and\n          Katherine Crowson and\n          Ludwig Schmidt and\n          Robert Kaczmarczyk and\n          Jenia Jitsev},\n  booktitle={Thirty-sixth Conference on Neural Information Processing Systems Datasets and Benchmarks Track},\n  year={2022},\n  url={https://openreview.net/forum?id=M3Y74vmsMcY}\n}\n```\n\nOpenAI CLIP paper\n```\n@inproceedings{Radford2021LearningTV,\n  title={Learning Transferable Visual Models From Natural Language Supervision},\n  author={Alec Radford and Jong Wook Kim and Chris Hallacy and A. Ramesh and Gabriel Goh and Sandhini Agarwal and Girish Sastry and Amanda Askell and Pamela Mishkin and Jack Clark and Gretchen Krueger and Ilya Sutskever},\n  booktitle={ICML},\n  year={2021}\n}\n```\n\nOpenCLIP software\n```\n@software{ilharco_gabriel_2021_5143773,\n  author       = {Ilharco, Gabriel and\n                  Wortsman, Mitchell and\n                  Wightman, Ross and\n                  Gordon, Cade and\n                  Carlini, Nicholas and\n                  Taori, Rohan and\n                  Dave, Achal and\n                  Shankar, Vaishaal and\n                  Namkoong, Hongseok and\n                  Miller, John and\n                  Hajishirzi, Hannaneh and\n                  Farhadi, Ali and\n                  Schmidt, Ludwig},\n  title        = {OpenCLIP},\n  month        = jul,\n  year         = 2021,\n  note         = {If you use this software, please cite it as below.},\n  publisher    = {Zenodo},\n  version      = {0.1},\n  doi          = {10.5281/zenodo.5143773},\n  url          = {https://doi.org/10.5281/zenodo.5143773}\n}\n```\n\n# How to Get Started with the Model\n\nUse the code below to get started with the model.\n\n** TODO ** - Hugging Face transformers, OpenCLIP, and timm getting started snippets",
+              "extracted_code": ""
+            }
+          ],
+          "datasets": [
+            {
+              "id": "openai/gsm8k",
+              "author": "openai",
+              "sha": "e53f048856ff4f594e959d75785d2c2d37b678ee",
+              "created_at": "2022-04-12T10:22:10+00:00",
+              "last_modified": "2024-01-04T12:05:15+00:00",
+              "private": false,
+              "gated": false,
+              "disabled": false,
+              "downloads": 404130,
+              "likes": 862,
+              "siblings": [
+                {
+                  "rfilename": ".gitattributes"
+                },
+                {
+                  "rfilename": "README.md"
+                },
+                {
+                  "rfilename": "main/test-00000-of-00001.parquet"
+                },
+                {
+                  "rfilename": "main/train-00000-of-00001.parquet"
+                },
+                {
+                  "rfilename": "socratic/test-00000-of-00001.parquet"
+                },
+                {
+                  "rfilename": "socratic/train-00000-of-00001.parquet"
+                }
+              ],
+              "card_data": {
+                "license": [
+                  "mit"
+                ],
+                "language": [
+                  "en"
+                ],
+                "tags": [
+                  "math-word-problems"
+                ],
+                "datasets": [],
+                "task_categories": [
+                  "text2text-generation"
+                ],
+                "size_categories": [
+                  "1K<n<10K"
+                ],
+                "metrics": [],
+                "widget": []
+              },
+              "tags": [
+                "annotations_creators:crowdsourced",
+                "language_creators:crowdsourced",
+                "multilinguality:monolingual",
+                "source_datasets:original",
+                "language:en",
+                "license:mit",
+                "size_categories:10K<n<100K",
+                "format:parquet",
+                "modality:text",
+                "library:datasets",
+                "library:pandas",
+                "library:mlcroissant",
+                "library:polars",
+                "arxiv:2110.14168",
+                "region:us",
+                "math-word-problems"
+              ],
+              "readme": "---\nannotations_creators:\n- crowdsourced\nlanguage_creators:\n- crowdsourced\nlanguage:\n- en\nlicense:\n- mit\nmultilinguality:\n- monolingual\nsize_categories:\n- 1K<n<10K\nsource_datasets:\n- original\ntask_categories:\n- text2text-generation\ntask_ids: []\npaperswithcode_id: gsm8k\npretty_name: Grade School Math 8K\ntags:\n- math-word-problems\ndataset_info:\n- config_name: main\n  features:\n  - name: question\n    dtype: string\n  - name: answer\n    dtype: string\n  splits:\n  - name: train\n    num_bytes: 3963202\n    num_examples: 7473\n  - name: test\n    num_bytes: 713732\n    num_examples: 1319\n  download_size: 2725633\n  dataset_size: 4676934\n- config_name: socratic\n  features:\n  - name: question\n    dtype: string\n  - name: answer\n    dtype: string\n  splits:\n  - name: train\n    num_bytes: 5198108\n    num_examples: 7473\n  - name: test\n    num_bytes: 936859\n    num_examples: 1319\n  download_size: 3164254\n  dataset_size: 6134967\nconfigs:\n- config_name: main\n  data_files:\n  - split: train\n    path: main/train-*\n  - split: test\n    path: main/test-*\n- config_name: socratic\n  data_files:\n  - split: train\n    path: socratic/train-*\n  - split: test\n    path: socratic/test-*\n---\n\n# Dataset Card for GSM8K\n\n## Table of Contents\n- [Dataset Description](#dataset-description)\n  - [Dataset Summary](#dataset-summary)\n  - [Supported Tasks](#supported-tasks-and-leaderboards)\n  - [Languages](#languages)\n- [Dataset Structure](#dataset-structure)\n  - [Data Instances](#data-instances)\n  - [Data Fields](#data-instances)\n  - [Data Splits](#data-instances)\n- [Dataset Creation](#dataset-creation)\n  - [Curation Rationale](#curation-rationale)\n  - [Source Data](#source-data)\n  - [Annotations](#annotations)\n  - [Personal and Sensitive Information](#personal-and-sensitive-information)\n- [Considerations for Using the Data](#considerations-for-using-the-data)\n  - [Social Impact of Dataset](#social-impact-of-dataset)\n  - [Discussion of Biases](#discussion-of-biases)\n  - [Other Known Limitations](#other-known-limitations)\n- [Additional Information](#additional-information)\n  - [Dataset Curators](#dataset-curators)\n  - [Licensing Information](#licensing-information)\n  - [Citation Information](#citation-information)\n\n## Dataset Description\n\n- **Homepage:** https://openai.com/blog/grade-school-math/\n- **Repository:** https://github.com/openai/grade-school-math\n- **Paper:** https://arxiv.org/abs/2110.14168\n- **Leaderboard:** [Needs More Information]\n- **Point of Contact:** [Needs More Information]\n\n### Dataset Summary\n\nGSM8K (Grade School Math 8K) is a dataset of 8.5K high quality linguistically diverse grade school math word problems. The dataset was created to support the task of question answering on basic mathematical problems that require multi-step reasoning.\n- These problems take between 2 and 8 steps to solve.\n- Solutions primarily involve performing a sequence of elementary calculations using basic arithmetic operations (+ − ×÷) to reach the final answer.\n- A bright middle school student should be able to solve every problem: from the paper, \"Problems require no concepts beyond the level of early Algebra, and the vast majority of problems can be solved without explicitly defining a variable.\"\n- Solutions are provided in natural language, as opposed to pure math expressions. From the paper: \"We believe this is the most generally useful data format, and we expect it to shed light on the properties of large language models’ internal monologues\"\"\n\n### Supported Tasks and Leaderboards\n\nThis dataset is generally used to test logic and math in language modelling.\nIt has been used for many benchmarks, including the [LLM Leaderboard](https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard).\n\n### Languages\n\nThe text in the dataset is in English. The associated BCP-47 code is `en`.\n\n## Dataset Structure\n\n### Data Instances\n\nFor the `main` configuration, each instance contains a string for the grade-school level math question and a string for the corresponding answer with multiple steps of reasoning and calculator annotations (explained [here](https://github.com/openai/grade-school-math#calculation-annotations)).\n\n\n```python\n{\n    'question': 'Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?',\n    'answer': 'Natalia sold 48/2 = <<48/2=24>>24 clips in May.\\nNatalia sold 48+24 = <<48+24=72>>72 clips altogether in April and May.\\n#### 72',\n}\n```\n\nFor the `socratic` configuration, each instance contains a string for a grade-school level math question, a string for the corresponding answer with multiple steps of reasoning, calculator annotations (explained [here](https://github.com/openai/grade-school-math#calculation-annotations)), and *Socratic sub-questions*.\n\n```python\n{\n    'question': 'Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?',\n    'answer': 'How many clips did Natalia sell in May? ** Natalia sold 48/2 = <<48/2=24>>24 clips in May.\\nHow many clips did Natalia sell altogether in April and May? ** Natalia sold 48+24 = <<48+24=72>>72 clips altogether in April and May.\\n#### 72',\n}\n```\n\n### Data Fields\n\nThe data fields are the same among `main` and `socratic` configurations and their individual splits.\n\n- question: The question string to a grade school math problem.\n\n- answer: The full solution string to the `question`. It contains multiple steps of reasoning with calculator annotations and the final numeric solution.\n\n### Data Splits\n\n| name   |train|validation|\n|--------|----:|---------:|\n|main    | 7473|      1319|\n|socratic| 7473|      1319|\n\n## Dataset Creation\n\n### Curation Rationale\n\n[Needs More Information]\n\n### Source Data\n\n#### Initial Data Collection and Normalization\n\nFrom the paper, appendix A:\n\n> We initially collected a starting set of a thousand problems and natural language solutions by hiring freelance contractors on Upwork (upwork.com). We then worked with Surge AI (surgehq.ai), an NLP data labeling platform, to scale up our data collection. After collecting the full dataset, we asked workers to re-solve all problems, with no workers re-solving problems they originally wrote. We checked whether their final answers agreed with the original solutions, and any problems that produced disagreements were either repaired or discarded. We then performed another round of agreement checks on a smaller subset of problems, finding that 1.7% of problems still produce disagreements among contractors. We estimate this to be the fraction of problems that contain breaking errors or ambiguities. It is possible that a larger percentage of problems contain subtle errors.\n\n#### Who are the source language producers?\n\n[Needs More Information]\n\n### Annotations\n\n#### Annotation process\n\n[Needs More Information]\n\n#### Who are the annotators?\n\nSurge AI (surgehq.ai)\n\n### Personal and Sensitive Information\n\n[Needs More Information]\n\n## Considerations for Using the Data\n\n### Social Impact of Dataset\n\n[Needs More Information]\n\n### Discussion of Biases\n\n[Needs More Information]\n\n### Other Known Limitations\n\n[Needs More Information]\n\n## Additional Information\n\n### Dataset Curators\n\n[Needs More Information]\n\n### Licensing Information\n\nThe GSM8K dataset is licensed under the [MIT License](https://opensource.org/licenses/MIT).\n\n### Citation Information\n\n```bibtex\n@article{cobbe2021gsm8k,\n  title={Training Verifiers to Solve Math Word Problems},\n  author={Cobbe, Karl and Kosaraju, Vineet and Bavarian, Mohammad and Chen, Mark and Jun, Heewoo and Kaiser, Lukasz and Plappert, Matthias and Tworek, Jerry and Hilton, Jacob and Nakano, Reiichiro and Hesse, Christopher and Schulman, John},\n  journal={arXiv preprint arXiv:2110.14168},\n  year={2021}\n}\n```\n\n### Contributions\n\nThanks to [@jon-tow](https://github.com/jon-tow) for adding this dataset.",
+              "extracted_code": ""
+            },
+            {
+              "id": "sjyuxyz/MMLU-Pro-with-subset",
+              "author": "sjyuxyz",
+              "sha": "c27cc639ebf71a887989347103627680cad9972d",
+              "created_at": "2024-06-13T08:54:49+00:00",
+              "last_modified": "2024-08-05T09:59:01+00:00",
+              "private": false,
+              "gated": false,
+              "disabled": false,
+              "downloads": 981,
+              "likes": 0,
+              "siblings": [
+                {
+                  "rfilename": ".gitattributes"
+                },
+                {
+                  "rfilename": "README.md"
+                },
+                {
+                  "rfilename": "all/dev-00000-of-00001.parquet"
+                },
+                {
+                  "rfilename": "all/test-00000-of-00001.parquet"
+                },
+                {
+                  "rfilename": "all/validation-00000-of-00001.parquet"
+                },
+                {
+                  "rfilename": "biology/dev-00000-of-00001.parquet"
+                },
+                {
+                  "rfilename": "biology/test-00000-of-00001.parquet"
+                },
+                {
+                  "rfilename": "biology/validation-00000-of-00001.parquet"
+                },
+                {
+                  "rfilename": "business/dev-00000-of-00001.parquet"
+                },
+                {
+                  "rfilename": "business/test-00000-of-00001.parquet"
+                }
+              ],
+              "card_data": {
+                "license": "mit",
+                "language": [],
+                "tags": [],
+                "datasets": [],
+                "task_categories": [],
+                "size_categories": [],
+                "metrics": [],
+                "widget": []
+              },
+              "tags": [
+                "license:mit",
+                "size_categories:10K<n<100K",
+                "modality:tabular",
+                "modality:text",
+                "region:us"
+              ],
+              "readme": "---\nlicense: mit\ndataset_info:\n- config_name: all\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  splits:\n  - name: dev\n    num_bytes: 61143\n    num_examples: 70\n  - name: test\n    num_bytes: 8715504\n    num_examples: 12032\n  - name: validation\n    num_bytes: 875751.6901595745\n    num_examples: 1209\n  download_size: 13432417\n  dataset_size: 9652398.690159574\n- config_name: biology\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 5007\n    num_examples: 5\n  - name: test\n    num_bytes: 636293\n    num_examples: 717\n  - name: validation\n    num_bytes: 63895.531380753135\n    num_examples: 72\n  download_size: 1023431\n  dataset_size: 705195.5313807531\n- config_name: business\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 4110\n    num_examples: 5\n  - name: test\n    num_bytes: 402757\n    num_examples: 789\n  - name: validation\n    num_bytes: 40326.74651457541\n    num_examples: 79\n  download_size: 692478\n  dataset_size: 447193.74651457544\n- config_name: chemistry\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 4043\n    num_examples: 5\n  - name: test\n    num_bytes: 623872\n    num_examples: 1132\n  - name: validation\n    num_bytes: 62828.09893992933\n    num_examples: 114\n  download_size: 1008690\n  dataset_size: 690743.0989399294\n- config_name: computer science\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: validation\n    num_bytes: 4611\n    num_examples: 5\n  - name: test\n    num_bytes: 269535\n    num_examples: 410\n  download_size: 142719\n  dataset_size: 274146\n- config_name: computer_science\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 4611\n    num_examples: 5\n  - name: test\n    num_bytes: 269535\n    num_examples: 410\n  - name: validation\n    num_bytes: 26953.5\n    num_examples: 41\n  download_size: 469284\n  dataset_size: 301099.5\n- config_name: economics\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 3959\n    num_examples: 5\n  - name: test\n    num_bytes: 629740\n    num_examples: 844\n  - name: validation\n    num_bytes: 63421.68246445498\n    num_examples: 85\n  download_size: 939255\n  dataset_size: 697120.682464455\n- config_name: engineering\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 2976\n    num_examples: 5\n  - name: test\n    num_bytes: 667238\n    num_examples: 969\n  - name: validation\n    num_bytes: 66792.6584107327\n    num_examples: 97\n  download_size: 1026833\n  dataset_size: 737006.6584107328\n- config_name: health\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 3834\n    num_examples: 5\n  - name: test\n    num_bytes: 549388\n    num_examples: 818\n  - name: validation\n    num_bytes: 55073.12469437653\n    num_examples: 82\n  download_size: 807513\n  dataset_size: 608295.1246943765\n- config_name: history\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 8577\n    num_examples: 5\n  - name: test\n    num_bytes: 526192\n    num_examples: 381\n  - name: validation\n    num_bytes: 53862.17322834646\n    num_examples: 39\n  download_size: 973413\n  dataset_size: 588631.1732283465\n- config_name: law\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 5345\n    num_examples: 5\n  - name: test\n    num_bytes: 1794680\n    num_examples: 1101\n  - name: validation\n    num_bytes: 180935.04087193462\n    num_examples: 111\n  download_size: 2598303\n  dataset_size: 1980960.0408719345\n- config_name: math\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 4453\n    num_examples: 5\n  - name: test\n    num_bytes: 555919\n    num_examples: 1351\n  - name: validation\n    num_bytes: 55962.238341968914\n    num_examples: 136\n  download_size: 911367\n  dataset_size: 616334.238341969\n- config_name: other\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 3170\n    num_examples: 5\n  - name: test\n    num_bytes: 528540\n    num_examples: 924\n  - name: validation\n    num_bytes: 53197.207792207795\n    num_examples: 93\n  download_size: 938199\n  dataset_size: 584907.2077922078\n- config_name: philosophy\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 3269\n    num_examples: 5\n  - name: test\n    num_bytes: 278911\n    num_examples: 499\n  - name: validation\n    num_bytes: 27946.99398797595\n    num_examples: 50\n  download_size: 475870\n  dataset_size: 310126.993987976\n- config_name: physics\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 3835\n    num_examples: 5\n  - name: test\n    num_bytes: 701474\n    num_examples: 1299\n  - name: validation\n    num_bytes: 70201.40107775212\n    num_examples: 130\n  download_size: 1137151\n  dataset_size: 775510.4010777521\n- config_name: psychology\n  features:\n  - name: question_id\n    dtype: int64\n  - name: question\n    dtype: string\n  - name: options\n    sequence: string\n  - name: answer\n    dtype: string\n  - name: answer_index\n    dtype: int64\n  - name: cot_content\n    dtype: string\n  - name: category\n    dtype: string\n  - name: src\n    dtype: string\n  - name: __index_level_0__\n    dtype: int64\n  splits:\n  - name: dev\n    num_bytes: 4514\n    num_examples: 5\n  - name: test\n    num_bytes: 647221\n    num_examples: 798\n  - name: validation\n    num_bytes: 64884.31077694236\n    num_examples: 80\n  download_size: 1070158\n  dataset_size: 716619.3107769424\nconfigs:\n- config_name: all\n  data_files:\n  - split: validation\n    path: all/validation-*\n  - split: test\n    path: all/test-*\n  - split: dev\n    path: all/dev-*\n- config_name: biology\n  data_files:\n  - split: validation\n    path: biology/validation-*\n  - split: test\n    path: biology/test-*\n  - split: dev\n    path: biology/dev-*\n- config_name: business\n  data_files:\n  - split: validation\n    path: business/validation-*\n  - split: test\n    path: business/test-*\n  - split: dev\n    path: business/dev-*\n- config_name: chemistry\n  data_files:\n  - split: validation\n    path: chemistry/validation-*\n  - split: test\n    path: chemistry/test-*\n  - split: dev\n    path: chemistry/dev-*\n- config_name: computer science\n  data_files:\n  - split: validation\n    path: computer science/validation-*\n  - split: test\n    path: computer science/test-*\n- config_name: computer_science\n  data_files:\n  - split: validation\n    path: computer_science/validation-*\n  - split: test\n    path: computer_science/test-*\n  - split: dev\n    path: computer_science/dev-*\n- config_name: economics\n  data_files:\n  - split: validation\n    path: economics/validation-*\n  - split: test\n    path: economics/test-*\n  - split: dev\n    path: economics/dev-*\n- config_name: engineering\n  data_files:\n  - split: validation\n    path: engineering/validation-*\n  - split: test\n    path: engineering/test-*\n  - split: dev\n    path: engineering/dev-*\n- config_name: health\n  data_files:\n  - split: validation\n    path: health/validation-*\n  - split: test\n    path: health/test-*\n  - split: dev\n    path: health/dev-*\n- config_name: history\n  data_files:\n  - split: validation\n    path: history/validation-*\n  - split: test\n    path: history/test-*\n  - split: dev\n    path: history/dev-*\n- config_name: law\n  data_files:\n  - split: validation\n    path: law/validation-*\n  - split: test\n    path: law/test-*\n  - split: dev\n    path: law/dev-*\n- config_name: math\n  data_files:\n  - split: validation\n    path: math/validation-*\n  - split: test\n    path: math/test-*\n  - split: dev\n    path: math/dev-*\n- config_name: other\n  data_files:\n  - split: validation\n    path: other/validation-*\n  - split: test\n    path: other/test-*\n  - split: dev\n    path: other/dev-*\n- config_name: philosophy\n  data_files:\n  - split: validation\n    path: philosophy/validation-*\n  - split: test\n    path: philosophy/test-*\n  - split: dev\n    path: philosophy/dev-*\n- config_name: physics\n  data_files:\n  - split: validation\n    path: physics/validation-*\n  - split: test\n    path: physics/test-*\n  - split: dev\n    path: physics/dev-*\n- config_name: psychology\n  data_files:\n  - split: validation\n    path: psychology/validation-*\n  - split: test\n    path: psychology/test-*\n  - split: dev\n    path: psychology/dev-*\n---\n\nThis dataset contains a copy of the TIGER-Lab/MMLU-Pro HF dataset but with categories split into subsets for better compatibility with existing lm evals libraries. (e.g. lm-evaluation-harness)\n\nPlease visit https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro for more information on the MMLU-Pro dataset.\n",
+              "extracted_code": ""
+            },
+            {
+              "id": "tomekkorbak/pile-detoxify",
+              "author": "tomekkorbak",
+              "sha": "a4c789887a5064ddb505b642b381c347ac0c6964",
+              "created_at": "2023-01-25T17:32:30+00:00",
+              "last_modified": "2023-02-07T15:31:11+00:00",
+              "private": false,
+              "gated": false,
+              "disabled": false,
+              "downloads": 162,
+              "likes": 1,
+              "siblings": [
+                {
+                  "rfilename": ".gitattributes"
+                },
+                {
+                  "rfilename": "README.md"
+                },
+                {
+                  "rfilename": "data/train-00000-of-00027-ae814fcd0e55395c.parquet"
+                },
+                {
+                  "rfilename": "data/train-00001-of-00027-0f00f4334d4387cf.parquet"
+                },
+                {
+                  "rfilename": "data/train-00002-of-00027-c90336e42a0b0d84.parquet"
+                },
+                {
+                  "rfilename": "data/train-00003-of-00027-d79974490dc31c10.parquet"
+                },
+                {
+                  "rfilename": "data/train-00004-of-00027-f0d755187cece588.parquet"
+                },
+                {
+                  "rfilename": "data/train-00005-of-00027-8f9d1ca7945aa714.parquet"
+                },
+                {
+                  "rfilename": "data/train-00006-of-00027-d7b9e7cfedda4b81.parquet"
+                },
+                {
+                  "rfilename": "data/train-00007-of-00027-49d33d437388e9e1.parquet"
+                }
+              ],
+              "card_data": {
+                "license": [
+                  "mit"
+                ],
+                "language": [
+                  "en"
+                ],
+                "tags": [
+                  "toxicity",
+                  "pretraining-with-human-feedback"
+                ],
+                "datasets": [],
+                "task_categories": [
+                  "text-classification",
+                  "other"
+                ],
+                "size_categories": [
+                  "1M<n<10M"
+                ],
+                "metrics": [],
+                "widget": []
+              },
+              "tags": [
+                "task_categories:text-classification",
+                "task_categories:other",
+                "task_ids:acceptability-classification",
+                "task_ids:hate-speech-detection",
+                "task_ids:text-scoring",
+                "annotations_creators:machine-generated",
+                "language_creators:found",
+                "multilinguality:monolingual",
+                "source_datasets:extended|the_pile",
+                "language:en",
+                "license:mit",
+                "size_categories:1M<n<10M",
+                "format:parquet",
+                "modality:tabular",
+                "modality:text",
+                "library:datasets",
+                "library:dask",
+                "library:mlcroissant",
+                "library:polars",
+                "arxiv:1907.11692",
+                "arxiv:2101.00027",
+                "region:us",
+                "toxicity",
+                "pretraining-with-human-feedback"
+              ],
+              "readme": "---\nannotations_creators:\n- machine-generated\nlanguage:\n- en\nlanguage_creators:\n- found\nlicense:\n- mit\nmultilinguality:\n- monolingual\npretty_name: pile-detoxify\nsize_categories:\n- 1M<n<10M\nsource_datasets:\n- extended|the_pile\ntags:\n- toxicity\n- pretraining-with-human-feedback\ntask_categories:\n- text-classification\n- other\ntask_ids:\n- acceptability-classification\n- hate-speech-detection\n- text-scoring\n---\n\n# Dataset Card for pile-pii-scrubadub\n\n## Dataset Description\n\n- **Repository: https://github.com/tomekkorbak/aligned-pretraining-objectives** \n- **Paper: Arxiv link to be added**\n\n### Dataset Summary\n\nThis dataset contains text from [The Pile](https://huggingface.co/datasets/the_pile), annotated based on the toxicity of each sentence.\nEach document (row in the dataset) is segmented into sentences, and each sentence is given a score: the toxicity predicted by the [Detoxify](https://github.com/unitaryai/detoxify).\n\n### Supported Tasks and Leaderboards\n\n[More Information Needed]\n\n### Languages\n\nThis dataset is taken from [The Pile](https://huggingface.co/datasets/the_pile), which is English text.\n\n## Dataset Structure\n\n### Data Instances\n\n1949977\n\n### Data Fields\n\n- texts (sequence): a list of the sentences in the document, segmented using SpaCy\n- meta (dict): the section of [The Pile](https://huggingface.co/datasets/the_pile) from which it originated\n- scores (sequence): a score for each sentence in the `texts` column indicating the toxicity predicted by [Detoxify](https://github.com/unitaryai/detoxify)\n- avg_score (float64): the average of the scores listed in the `scores` column\n- num_sents (int64): the number of sentences (and scores) in that document\n\n### Data Splits\n\nTraining set only\n\n## Dataset Creation\n\n### Curation Rationale\n\nThis is labeled text from [The Pile](https://huggingface.co/datasets/the_pile), a large dataset of text in English. The text is scored for toxicity so that generative language models can be trained to avoid generating toxic text.\n\n### Source Data\n\n#### Initial Data Collection and Normalization\n\nThis is labeled text from [The Pile](https://huggingface.co/datasets/the_pile).\n\n#### Who are the source language producers?\n\nPlease see [The Pile](https://huggingface.co/datasets/the_pile) for the source of the dataset.\n\n### Annotations\n\n#### Annotation process\n\nEach sentence was scored using [Detoxify](https://github.com/unitaryai/detoxify), which is a toxic comment classifier.\nWe used the `unbiased` model which is based on the 124M parameter [RoBERTa](https://arxiv.org/abs/1907.11692) and trained on the [Jigsaw Unintended Bias in Toxicity Classification dataset](https://www.kaggle.com/c/jigsaw-unintended-bias-in-toxicity-classification).\n\n#### Who are the annotators?\n\n[Detoxify](https://github.com/unitaryai/detoxify)\n\n### Personal and Sensitive Information\n\nThis dataset contains all personal identifable information and toxic text that was originally contained in [The Pile](https://huggingface.co/datasets/the_pile).\n\n## Considerations for Using the Data\n\n### Social Impact of Dataset\n\nThis dataset contains examples of toxic text and personal identifiable information.\n(A version of this datatset with personal identifiable information annotated is [available here](https://huggingface.co/datasets/tomekkorbak/pile-pii-scrubadub).)\nPlease take care to avoid misusing the toxic text or putting anybody in danger by publicizing their information.\nThis dataset is intended for research purposes only. We cannot guarantee that all toxic text has been detected, and we cannot guarantee that models trained using it will avoid generating toxic text.\nWe do not recommend deploying models trained on this data.\n\n### Discussion of Biases\n\nThis dataset contains all biases from The Pile discussed in their paper: https://arxiv.org/abs/2101.00027\n\n### Other Known Limitations\n\nThe toxic text in this dataset was detected using imperfect automated detection methods. We cannot guarantee that the labels are 100% accurate.\n\n## Additional Information\n\n### Dataset Curators\n\n[The Pile](https://huggingface.co/datasets/the_pile)\n\n### Licensing Information\n\nFrom [The Pile](https://huggingface.co/datasets/the_pile): PubMed Central: [MIT License](https://github.com/EleutherAI/pile-pubmedcentral/blob/master/LICENSE)\n\n### Citation Information\n\nPaper information to be added\n\n### Contributions\n\n[The Pile](https://huggingface.co/datasets/the_pile)",
+              "extracted_code": ""
+            },
+            {
+              "id": "Lots-of-LoRAs/task140_detoxifying-lms_classification_style",
+              "author": "Lots-of-LoRAs",
+              "sha": "f43224458618535f027ec8288e0babb475e5c2c4",
+              "created_at": "2024-07-02T19:51:13+00:00",
+              "last_modified": "2024-07-16T14:58:15+00:00",
+              "private": false,
+              "gated": false,
+              "disabled": false,
+              "downloads": 116,
+              "likes": 1,
+              "siblings": [
+                {
+                  "rfilename": ".gitattributes"
+                },
+                {
+                  "rfilename": "README.md"
+                },
+                {
+                  "rfilename": "data/test-00000-of-00001.parquet"
+                },
+                {
+                  "rfilename": "data/train-00000-of-00001.parquet"
+                },
+                {
+                  "rfilename": "data/valid-00000-of-00001.parquet"
+                }
+              ],
+              "card_data": {
+                "license": [
+                  "apache-2.0"
+                ],
+                "language": [
+                  "en"
+                ],
+                "tags": [],
+                "datasets": [],
+                "task_categories": [
+                  "text-generation"
+                ],
+                "size_categories": [],
+                "metrics": [],
+                "widget": []
+              },
+              "tags": [
+                "task_categories:text-generation",
+                "annotations_creators:crowdsourced",
+                "language_creators:crowdsourced",
+                "language:en",
+                "license:apache-2.0",
+                "size_categories:n<1K",
+                "format:parquet",
+                "modality:text",
+                "library:datasets",
+                "library:pandas",
+                "library:mlcroissant",
+                "library:polars",
+                "arxiv:2204.07705",
+                "arxiv:2407.00066",
+                "region:us"
+              ],
+              "readme": "---\nannotations_creators:\n- crowdsourced\nlanguage_creators:\n- crowdsourced\nlanguage:\n- en\nlicense:\n- apache-2.0\ntask_categories:\n- text-generation\npretty_name: task140_detoxifying-lms_classification_style\ndataset_info:\n  config_name: plain_text\n  features:\n  - name: input\n    dtype: string\n  - name: output\n    dtype: string\n  - name: id\n    dtype: string\n  splits:\n  - name: train\n    num_examples: 312\n  - name: valid\n    num_examples: 39\n  - name: test\n    num_examples: 39\n---\n\n# Dataset Card for Natural Instructions (https://github.com/allenai/natural-instructions) Task: task140_detoxifying-lms_classification_style\n\n## Dataset Description\n\n- **Homepage:** https://github.com/allenai/natural-instructions\n- **Paper:** https://arxiv.org/abs/2204.07705\n- **Paper:** https://arxiv.org/abs/2407.00066\n- **Point of Contact:** [Rickard Brüel Gabrielsson](mailto:brg@mit.edu)\n\n## Additional Information\n\n### Citation Information\n\nThe following paper introduces the corpus in detail. If you use the corpus in published work, please cite it: \n```bibtex\n@misc{wang2022supernaturalinstructionsgeneralizationdeclarativeinstructions,\n    title={Super-NaturalInstructions: Generalization via Declarative Instructions on 1600+ NLP Tasks}, \n    author={Yizhong Wang and Swaroop Mishra and Pegah Alipoormolabashi and Yeganeh Kordi and Amirreza Mirzaei and Anjana Arunkumar and Arjun Ashok and Arut Selvan Dhanasekaran and Atharva Naik and David Stap and Eshaan Pathak and Giannis Karamanolakis and Haizhi Gary Lai and Ishan Purohit and Ishani Mondal and Jacob Anderson and Kirby Kuznia and Krima Doshi and Maitreya Patel and Kuntal Kumar Pal and Mehrad Moradshahi and Mihir Parmar and Mirali Purohit and Neeraj Varshney and Phani Rohitha Kaza and Pulkit Verma and Ravsehaj Singh Puri and Rushang Karia and Shailaja Keyur Sampat and Savan Doshi and Siddhartha Mishra and Sujan Reddy and Sumanta Patro and Tanay Dixit and Xudong Shen and Chitta Baral and Yejin Choi and Noah A. Smith and Hannaneh Hajishirzi and Daniel Khashabi},\n    year={2022},\n    eprint={2204.07705},\n    archivePrefix={arXiv},\n    primaryClass={cs.CL},\n    url={https://arxiv.org/abs/2204.07705}, \n}\n```\n\nMore details can also be found in the following paper:\n```bibtex\n@misc{brüelgabrielsson2024compressserveservingthousands,\n    title={Compress then Serve: Serving Thousands of LoRA Adapters with Little Overhead}, \n    author={Rickard Brüel-Gabrielsson and Jiacheng Zhu and Onkar Bhardwaj and Leshem Choshen and Kristjan Greenewald and Mikhail Yurochkin and Justin Solomon},\n    year={2024},\n    eprint={2407.00066},\n    archivePrefix={arXiv},\n    primaryClass={cs.DC},\n    url={https://arxiv.org/abs/2407.00066}, \n}\n```\n\n### Contact Information\n\nFor any comments or questions, please email [Rickard Brüel Gabrielsson](mailto:brg@mit.edu)\n",
+              "extracted_code": ""
+            }
+          ]
+        }
+      }
+    }
   },
   "idea_info_history": [
     {
