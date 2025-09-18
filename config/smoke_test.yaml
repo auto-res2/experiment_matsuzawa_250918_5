@@ -1,5 +1,5 @@
 global_settings:
-  output_dir: '.research/iteration1'
+  output_dir: '.research/iteration2'
   data_dir: 'data/'
   seeds: [42]
   force_preprocess: true
@@ -25,5 +25,5 @@ experiment_1:
         dp_budget: null
   training_procedure:
     lr: 0.001
-    epochs: 2 # Per snapshot
-    patience: 10 # Not used in streaming
+    epochs: 2  # Per snapshot
+    patience: 10  # Not used in streaming

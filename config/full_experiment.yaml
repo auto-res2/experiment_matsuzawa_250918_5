@@ -1,14 +1,13 @@
 global_settings:
-  output_dir: '.research/iteration1'
+  output_dir: '.research/iteration2'
   data_dir: 'data/'
   seeds: [42, 43, 44, 45, 46]
-  force_preprocess: true
+  force_preprocess: false
 
 experiment_1:
   description: "Streaming-Graph Latency & Energy Benchmark"
   datasets:
     - "Reddit-Threads"
-    # - "ogbn-products" # Monthly version not standard, omitting for runnable code
     - "Synthetic-PowerLaw-Stream"
   dataset_params:
     Synthetic-PowerLaw-Stream:
@@ -30,14 +29,14 @@ experiment_1:
         beta_schedule: false
         use_24_kernel: true
         dp_budget: null
-    - name: "GraphSAINT" # Using GAT as substitute
+    - name: "GraphSAINT"  # Using GAT as substitute
       params:
         hidden_dim: 256
         num_layers: 2
         heads: 8
   training_procedure:
     lr: 0.0003
-    epochs: 1 # Incremental fine-tuning
+    epochs: 1  # Incremental fine-tuning
     patience: 20
 
 experiment_2:
@@ -53,7 +52,7 @@ experiment_2:
         hidden_dim: 128
         num_layers: 2
         heads: 8
-    - name: "ASEGAT" # Using GAT as substitute
+    - name: "ASEGAT"  # Using GAT as substitute
       params:
         hidden_dim: 128
         num_layers: 2
@@ -82,12 +81,12 @@ experiment_3:
   datasets:
     - "ogbn-products"
   models_and_baselines:
-    - name: "GAT" # Vanilla 12-layer GAT-BalO
+    - name: "GAT"  # Vanilla 12-layer GAT-BalO
       params:
         hidden_dim: 256
         num_layers: 12
         heads: 8
-    - name: "S3GAT" # DP-BC off, beta-on
+    - name: "S3GAT"  # DP-BC off, beta-on
       params:
         hidden_dim: 256
         num_layers: 12
@@ -97,7 +96,7 @@ experiment_3:
         beta_schedule: true
         use_24_kernel: false
         dp_budget: null
-    - name: "S3GAT" # beta-off variant
+    - name: "S3GAT"  # beta-off variant
       params:
         hidden_dim: 256
         num_layers: 12
@@ -107,7 +106,7 @@ experiment_3:
         beta_schedule: false
         use_24_kernel: false
         dp_budget: null
-    - name: "S3GAT" # Epsilon=3
+    - name: "S3GAT"  # Epsilon=3
       params:
         hidden_dim: 256
         num_layers: 12
@@ -120,4 +119,4 @@ experiment_3:
   training_procedure:
     lr: 0.0003
     epochs: 600
-    patience: 600 # No early stopping
+    patience: 600  # No early stopping
