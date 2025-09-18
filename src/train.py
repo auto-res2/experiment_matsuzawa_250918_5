@@ -21,11 +21,18 @@ from preprocess import get_synthetic_stream_for_training, get_imagenet_val_loade
 
 class LoRALinear(nn.Module):
     """LoRA module for nn.Linear layers (W_out x W_in)."""
+
     def __init__(self, linear_layer: nn.Linear, rank: int):
         super().__init__()
         self.in_features = linear_layer.in_features
         self.out_features = linear_layer.out_features
         self.rank = rank
+
+        # Low-rank factors – initialised to zero so the network is unchanged at start
+        self.lora_A = nn.Parameter(torch.zeros(rank, self.in_features))  # (r,  in)
+        self.lora_B = nn.Parameter(torch.zeros(self.out_features, rank))  # (out, r)
+        nn.init.kaiming_uniform_(self.lora_B, a=math.sqrt(5))
+        nn.init.zeros_(self.lora_A)
 
         # Keep a frozen copy of the original weight for efficient inference
         self.register_buffer("base_weight", linear_layer.weight.detach().clone())
@@ -33,18 +40,11 @@ class LoRALinear(nn.Module):
         if self.has_bias:
             self.register_buffer("base_bias", linear_layer.bias.detach().clone())
 
-        # Low-rank factors – initialised to zero so the network is unchanged at start
-        # Create on same device as base weight
-        device = self.base_weight.device
-        self.lora_A = nn.Parameter(torch.zeros(rank, self.in_features, device=device))  # (r,  in)
-        self.lora_B = nn.Parameter(torch.zeros(self.out_features, rank, device=device))  # (out, r)
-        nn.init.kaiming_uniform_(self.lora_B, a=math.sqrt(5))
-        nn.init.zeros_(self.lora_A)
-
     def forward(self, x):
         # Equivalent to W + ΔW where ΔW = B@A (low rank)
-        delta_w = self.lora_B @ self.lora_A   # (out , in)
-        weight = self.base_weight + delta_w
+        delta_w = self.lora_B @ self.lora_A  # (out , in)
+        # Guard against accidental device mismatches
+        weight = self.base_weight + delta_w.to(self.base_weight.device)
         return F.linear(x, weight, self.base_bias if self.has_bias else None)
 
     def get_lora_params(self):
@@ -56,6 +56,7 @@ class LoRAConv2d(nn.Module):
     Follows the official LoRA paper formulation (https://arxiv.org/abs/2106.09685).
     Only supports groups==1 for simplicity in this demo code.
     """
+
     def __init__(self, conv_layer: nn.Conv2d, rank: int):
         super().__init__()
         if conv_layer.groups != 1:
@@ -73,25 +74,24 @@ class LoRAConv2d(nn.Module):
         k_h, k_w = self.kernel_size
         in_dim = self.in_channels * k_h * k_w
 
+        # Low-rank factors (initial ΔW = 0)
+        self.lora_A = nn.Parameter(torch.zeros(rank, in_dim))  # (r,  in_dim)
+        self.lora_B = nn.Parameter(torch.zeros(self.out_channels, rank))  # (out, r)
+        nn.init.kaiming_uniform_(self.lora_B, a=math.sqrt(5))
+        nn.init.zeros_(self.lora_A)
+
         # Frozen copy of original weight / bias
         self.register_buffer("base_weight", conv_layer.weight.detach().clone())
         self.has_bias = conv_layer.bias is not None
         if self.has_bias:
             self.register_buffer("base_bias", conv_layer.bias.detach().clone())
 
-        # Low-rank factors (initial ΔW = 0) - create on same device as base weight
-        device = self.base_weight.device
-        self.lora_A = nn.Parameter(torch.zeros(rank, in_dim, device=device))           # (r,  in_dim)
-        self.lora_B = nn.Parameter(torch.zeros(self.out_channels, rank, device=device))  # (out, r)
-        nn.init.kaiming_uniform_(self.lora_B, a=math.sqrt(5))
-        nn.init.zeros_(self.lora_A)
-
     def forward(self, x):
         # ΔW = B @ A  then reshape to (out, in, k_h, k_w)
         delta_w = (self.lora_B @ self.lora_A).view(
             self.out_channels, self.in_channels, *self.kernel_size
         )
-        weight = self.base_weight + delta_w
+        weight = self.base_weight + delta_w.to(self.base_weight.device)
         return F.conv2d(
             x,
             weight,
@@ -222,7 +222,8 @@ def train(config):
     # ----------------------------------------------------
     # Fisher Information
     # ----------------------------------------------------
-    fisher_path = os.path.join(output_dir, f"{backbone_name.replace('/', '_')}_fisher.pth")
+    safe_bb = backbone_name.replace('/', '_')
+    fisher_path = os.path.join(output_dir, f"{safe_bb}_fisher.pth")
     if os.path.exists(fisher_path):
         print(f"Loading pre-computed Fisher from {fisher_path}")
         fisher_diagonals = torch.load(fisher_path, map_location=device)
@@ -243,6 +244,11 @@ def train(config):
     pbar = tqdm(range(config["train"]["training_steps"]))
     loss_history = deque(maxlen=50)
 
+    # Pre-load a reference batch once for faster feature calculations
+    ref_loader = get_imagenet_val_loader(config, batch_size=config["train"]["batch_size"])
+    ref_images, _ = next(iter(ref_loader))
+    ref_images = ref_images.to(device)
+
     for step in pbar:
         # ------------------------------------------------
         # 1. Fetch sequence (length 3) of shifted batches
@@ -252,7 +258,10 @@ def train(config):
         # ------------------------------------------------
         # 2. Oracle update via 2nd-order SGD (simplified)
         # ------------------------------------------------
-        saved_weights = {name: [p.clone() for p in m.get_lora_params()] for name, m in model.named_modules() if isinstance(m, (LoRALinear, LoRAConv2d))}
+        saved_weights = {
+            name: [p.clone() for p in m.get_lora_params()]
+            for name, m in model.named_modules() if isinstance(m, (LoRALinear, LoRAConv2d))
+        }
 
         model.train()
         for m in lora_modules:
@@ -274,9 +283,10 @@ def train(config):
                 for name, m in model.named_modules():
                     if isinstance(m, (LoRALinear, LoRAConv2d)):
                         for i, p in enumerate(m.get_lora_params()):
-                            if p.grad is not None:
-                                fisher_inv = 1.0 / (fisher_diagonals[name][i] + 1e-8)
-                                p.sub_(p.grad * fisher_inv)
+                            denom = fisher_diagonals[name][i].to(p.device)
+                            if denom.shape != p.grad.shape:
+                                denom = denom.view_as(p.grad)
+                            p.sub_(p.grad / denom)
 
         final_entropy = -(F.softmax(model(images), 1) * F.log_softmax(model(images), 1)).sum(1).mean()
         oracle_entropy_drop = initial_entropy - final_entropy
@@ -286,7 +296,9 @@ def train(config):
         with torch.no_grad():
             for name, m in model.named_modules():
                 if isinstance(m, (LoRALinear, LoRAConv2d)):
-                    oracle_deltas[name] = [p.data - saved_weights[name][i] for i, p in enumerate(m.get_lora_params())]
+                    oracle_deltas[name] = [
+                        p.data - saved_weights[name][i] for i, p in enumerate(m.get_lora_params())
+                    ]
                     # restore weights
                     for i, p in enumerate(m.get_lora_params()):
                         p.copy_(saved_weights[name][i])
@@ -296,37 +308,46 @@ def train(config):
         # ------------------------------------------------
         # 3. Build feature-shift sequence vector
         # ------------------------------------------------
-        ref_loader = get_imagenet_val_loader(config, batch_size=config["train"]["batch_size"])
-        ref_images, _ = next(iter(ref_loader))
-        ref_images = ref_images.to(device)
         ref_stats = {}
         hooks = []
+
         def make_ref_hook(n):
             def _hook(_, __, out):
-                ref_stats[n] = (out.mean([0, 2, 3]), out.std([0, 2, 3])) if isinstance(_, LoRAConv2d) else (out.mean(0), out.std(0))
+                ref_stats[n] = (
+                    (out.mean([0, 2, 3]), out.std([0, 2, 3]))
+                    if isinstance(_, LoRAConv2d)
+                    else (out.mean(0), out.std(0))
+                )
+
             return _hook
+
         for n, m in model.named_modules():
             if isinstance(m, (LoRALinear, LoRAConv2d)):
                 hooks.append(m.register_forward_hook(make_ref_hook(n)))
         with torch.no_grad():
             model(ref_images)
-        for h in hooks: h.remove()
+        for h in hooks:
+            h.remove()
         hooks.clear()
 
         s_sequence = []
         for img_batch, _ in sequence_data:
             img_batch = img_batch.to(device)
             act_dict = {}
+
             def make_act_hook(n):
                 def _hook(_, __, out):
                     act_dict[n] = out
+
                 return _hook
+
             for n, m in model.named_modules():
                 if isinstance(m, (LoRALinear, LoRAConv2d)):
                     hooks.append(m.register_forward_hook(make_act_hook(n)))
             with torch.no_grad():
                 outputs = model(img_batch)
-            for h in hooks: h.remove()
+            for h in hooks:
+                h.remove()
             hooks.clear()
 
             entropy = -(F.softmax(outputs, 1) * F.log_softmax(outputs, 1)).sum(1).mean()
@@ -334,9 +355,19 @@ def train(config):
             for n, m in model.named_modules():
                 if isinstance(m, (LoRALinear, LoRAConv2d)):
                     act = act_dict[n]
-                    mu_t, sigma_t = (act.mean([0, 2, 3]), act.std([0, 2, 3])) if isinstance(m, LoRAConv2d) else (act.mean(0), act.std(0))
+                    mu_t, sigma_t = (
+                        (act.mean([0, 2, 3]), act.std([0, 2, 3]))
+                        if isinstance(m, LoRAConv2d)
+                        else (act.mean(0), act.std(0))
+                    )
                     mu_0, sigma_0 = ref_stats[n]
-                    parts.extend([(mu_t - mu_0).mean(), (torch.log(sigma_t) - torch.log(sigma_0)).mean(), entropy])
+                    parts.extend(
+                        [
+                            (mu_t - mu_0).mean(),
+                            (torch.log(sigma_t.clamp_min(1e-6)) - torch.log(sigma_0.clamp_min(1e-6))).mean(),
+                            entropy,
+                        ]
+                    )
             s_sequence.append(torch.stack(parts))
         s_sequence_tensor = torch.stack(s_sequence).unsqueeze(0)  # (1, seq, dim)
 
@@ -362,11 +393,13 @@ def train(config):
         optimizer.step()
 
         loss_history.append(loss.item())
-        pbar.set_description(f"Step {step+1}/{config['train']['training_steps']}  Loss: {np.mean(loss_history):.4f}")
+        pbar.set_description(
+            f"Step {step+1}/{config['train']['training_steps']}  Loss: {np.mean(loss_history):.4f}"
+        )
 
     # ----------------------------------------------------
     # Save hyper-network
     # ----------------------------------------------------
-    hyper_path = os.path.join(output_dir, f"hyper_gru_{backbone_name.replace('/', '_')}.pth")
+    hyper_path = os.path.join(output_dir, f"hyper_gru_{safe_bb}.pth")
     torch.save(hyper_network.state_dict(), hyper_path)
     print(f"Hyper-network saved to {hyper_path}")
