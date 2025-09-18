@@ -18,12 +18,18 @@ def main():
     config_group.add_argument('--full-experiment', action='store_true', help='Run with the full experiment configuration.')
 
     # Execution mode
-    parser.add_argument('--mode', type=str, required=True, choices=['train', 'evaluate'], help='Execution mode: train the hyper-network or evaluate it.')
+    parser.add_argument('--mode', type=str, choices=['train', 'evaluate'], help='Execution mode: train the hyper-network or evaluate it.')
     
     # Evaluation-specific arguments
     parser.add_argument('--experiment', type=str, choices=['exp1', 'exp2', 'exp3'], help='Specify which experiment to run in evaluation mode.')
 
     args = parser.parse_args()
+
+    # Set default mode for smoke test if not provided
+    if args.smoke_test and not args.mode:
+        args.mode = 'train'
+    elif not args.mode:
+        parser.error("--mode is required")
 
     if args.mode == 'evaluate' and not args.experiment:
         parser.error("--experiment is required when --mode is 'evaluate'")

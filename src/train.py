@@ -11,7 +11,7 @@ import timm
 from collections import deque
 import math
 
-from .preprocess import get_synthetic_stream_for_training, get_imagenet_val_loader
+from preprocess import get_synthetic_stream_for_training, get_imagenet_val_loader
 
 # --- LoRA Layers ---
 
@@ -32,6 +32,7 @@ class LoRALinear(nn.Module):
 
     def forward(self, x):
         lora_update = self.lora_A @ self.lora_B
+        lora_update = lora_update.to(x.device)
         return self.base_layer(x) + F.linear(x, lora_update)
 
     def get_lora_params(self):
@@ -58,10 +59,21 @@ class LoRAConv2d(nn.Module):
         self.base_layer.weight.requires_grad = False
 
     def forward(self, x):
-        lora_kernel = self.lora_B @ self.lora_A
-        lora_kernel_resized = F.interpolate(lora_kernel, size=self.kernel_size, mode='replicate')
-        lora_update = F.conv2d(x, lora_kernel_resized, stride=self.stride, padding=self.padding, dilation=self.dilation, groups=self.groups)
-        return self.base_layer(x) + lora_update
+        # Simplified LoRA for conv layers - just add the LoRA update to the base weights
+        base_output = self.base_layer(x)
+        
+        # Compute LoRA update by matrix multiplication and reshaping
+        # lora_A: (rank, in_channels, 1, 1), lora_B: (out_channels, rank, 1, 1)
+        # We want: (out_channels, in_channels, kernel_h, kernel_w)
+        lora_weight = self.lora_B.squeeze(-1).squeeze(-1) @ self.lora_A.squeeze(-1).squeeze(-1) 
+        lora_weight = lora_weight.unsqueeze(-1).unsqueeze(-1).expand(-1, -1, *self.kernel_size)
+        
+        # Ensure device consistency
+        lora_weight = lora_weight.to(x.device)
+        
+        lora_output = F.conv2d(x, lora_weight, stride=self.stride, padding=self.padding, dilation=self.dilation, groups=1)
+        
+        return base_output + lora_output
     
     def get_lora_params(self):
         return [self.lora_A, self.lora_B]
@@ -223,14 +235,15 @@ def train(config):
                     if isinstance(mod, (LoRALinear, LoRAConv2d)):
                         for i, p in enumerate(mod.get_lora_params()):
                             # Second-order update: grad_w = F_inv * grad_L
-                            update = p.grad / fisher_diagonals[name][i]
+                            fisher_diag = fisher_diagonals[name][i].to(device)
+                            update = p.grad / fisher_diag
                             p.sub_(update)
 
         # Oracle weights are now in the model
         final_outputs = model(sequence_data[-1][0].to(device))
         final_entropy = -torch.sum(F.softmax(final_outputs, dim=1) * F.log_softmax(final_outputs, dim=1), dim=1).mean()
         oracle_entropy_drop = initial_entropy - final_entropy
-        target_gate = torch.sigmoid(oracle_entropy_drop * 10) # Heuristic scaling
+        target_gate = torch.sigmoid(oracle_entropy_drop * 10).to(device) # Heuristic scaling
 
         oracle_deltas = {}
         with torch.no_grad():
@@ -298,9 +311,10 @@ def train(config):
         # Pre-conditioned target u_t = F^(1/2) * Delta_W*
         for name in oracle_deltas:
             for i, delta in enumerate(oracle_deltas[name]):
-                preconditioned = delta * torch.sqrt(fisher_diagonals[name][i])
+                fisher_diag = fisher_diagonals[name][i].to(device)
+                preconditioned = delta * torch.sqrt(fisher_diag)
                 u_target_list.append(preconditioned.flatten())
-        u_target = torch.cat(u_target_list)
+        u_target = torch.cat(u_target_list).to(device)
 
         # 4. Train HyperGRU
         optimizer.zero_grad()

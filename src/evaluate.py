@@ -14,13 +14,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from fvcore.nn import FlopCountAnalysis
 
-from .preprocess import (
+from preprocess import (
     get_recurring_shift_stream,
     get_imagenet_c_loader,
     get_domainnet_loaders,
     get_stress_test_stream
 )
-from .train import inject_lora, LoRALinear, LoRAConv2d, HyperGRU
+from train import inject_lora, LoRALinear, LoRAConv2d, HyperGRU
 
 class FLASH_Adapter:
     def __init__(self, model, hyper_network, fisher_diagonals, config, device):
@@ -55,7 +55,7 @@ class FLASH_Adapter:
         return offsets
 
     def _compute_ref_stats(self):
-        from .preprocess import get_imagenet_val_loader
+        from preprocess import get_imagenet_val_loader
         ref_loader = get_imagenet_val_loader(self.config, self.config['train']['batch_size'])
         ref_images, _ = next(iter(ref_loader))
         ref_images = ref_images.to(self.device)

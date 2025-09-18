@@ -1,0 +1,37 @@
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:25:44 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test PASSED Thu Sep 18 03:26:03 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:26:58 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test PASSED Thu Sep 18 03:27:09 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:27:47 PM UTC 2025 ===
+--- Starting Training Phase ---
+Loading backbone model: timm/resnet18.a1_in1k
+Computing Fisher information diagonal...
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:29:52 PM UTC 2025 ===
+--- Starting Training Phase ---
+Loading backbone model: timm/resnet18.a1_in1k
+Computing Fisher information diagonal...
+=== [PHASE 1/2] Smoke test PASSED Thu Sep 18 03:30:55 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:31:22 PM UTC 2025 ===
+--- Starting Training Phase ---
+Loading backbone model: timm/resnet18.a1_in1k
+Computing Fisher information diagonal...
+=== [PHASE 1/2] Smoke test PASSED Thu Sep 18 03:31:33 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:32:48 PM UTC 2025 ===
+--- Starting Training Phase ---
+Loading backbone model: timm/resnet18.a1_in1k
+Computing Fisher information diagonal...
+=== [PHASE 1/2] Smoke test PASSED Thu Sep 18 03:33:01 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:33:36 PM UTC 2025 ===
+--- Starting Training Phase ---
+Loading backbone model: timm/resnet18.a1_in1k
+Computing Fisher information diagonal...
+Generating synthetic data stream for meta-training...
+Starting meta-training of HyperGRU...
+=== [PHASE 1/2] Smoke test PASSED Thu Sep 18 03:34:02 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:34:31 PM UTC 2025 ===
+--- Starting Training Phase ---
+Loading backbone model: timm/resnet18.a1_in1k
+Loading pre-computed Fisher from /home/toma/pt80-1-a-27/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/../.research/iteration1/smoke_test_outputs/timm_resnet18.a1_in1k_fisher.pth
+Generating synthetic data stream for meta-training...
+Starting meta-training of HyperGRU...
+=== [PHASE 1/2] Smoke test PASSED Thu Sep 18 03:34:43 PM UTC 2025 ===
