@@ -1,0 +1,3 @@
+usage: main.py [-h] (--smoke-test | --full-experiment)
+               [--mode {train,evaluate}] [--experiment {exp1,exp2,exp3}]
+main.py: error: --experiment is required when --mode is 'evaluate'
