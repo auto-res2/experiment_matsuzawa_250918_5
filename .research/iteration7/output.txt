@@ -1,0 +1,2028 @@
+=== [PHASE 2/2] Full experiment start Thu Sep 18 05:14:23 PM UTC 2025 ===
+--- Stage 1: Data Preprocessing ---
+Processing dataset: Reddit-Threads
+Loading pre-processed data from data/processed/reddit_threads.pt
+Processing dataset: Synthetic-PowerLaw-Stream
+Loading pre-processed data from data/processed/synthetic_powerlaw_stream.pt
+Processing dataset: Chameleon-S
+Loading pre-processed data from data/processed/chameleon_s.pt
+Processing dataset: Squirrel-S
+Loading pre-processed data from data/processed/squirrel_s.pt
+Processing dataset: Roman-Empire
+Loading pre-processed data from data/processed/roman_empire.pt
+Processing dataset: Amazon-Ratings
+Loading pre-processed data from data/processed/amazon_ratings.pt
+Processing dataset: ogbn-products
+Generating Synthetic Power-Law Stream…
+--- Data Preprocessing Complete ---
+
+>>> Starting Experiment 1: Streaming-Graph Latency & Energy Benchmark <<<
+
+--- Stage 2: Training for Experiment 1 ---
+--- Training Model: GAT for Experiment 1 ---
+  Seed 42, Snapshot 1/10, Loss: 2.3718
+  Seed 42, Snapshot 2/10, Loss: 2.3963
+  Seed 42, Snapshot 3/10, Loss: 2.3668
+  Seed 42, Snapshot 4/10, Loss: 2.3643
+  Seed 42, Snapshot 5/10, Loss: 2.3560
+  Seed 42, Snapshot 6/10, Loss: 2.3818
+  Seed 42, Snapshot 7/10, Loss: 2.3645
+  Seed 42, Snapshot 8/10, Loss: 2.3619
+  Seed 42, Snapshot 9/10, Loss: 2.3691
+  Seed 42, Snapshot 10/10, Loss: 2.3746
+  Seed 43, Snapshot 1/10, Loss: 2.3742
+  Seed 43, Snapshot 2/10, Loss: 2.3689
+  Seed 43, Snapshot 3/10, Loss: 2.3640
+  Seed 43, Snapshot 4/10, Loss: 2.3672
+  Seed 43, Snapshot 5/10, Loss: 2.3614
+  Seed 43, Snapshot 6/10, Loss: 2.3543
+  Seed 43, Snapshot 7/10, Loss: 2.3794
+  Seed 43, Snapshot 8/10, Loss: 2.3856
+  Seed 43, Snapshot 9/10, Loss: 2.3745
+  Seed 43, Snapshot 10/10, Loss: 2.4040
+  Seed 44, Snapshot 1/10, Loss: 2.3685
+  Seed 44, Snapshot 2/10, Loss: 2.4507
+  Seed 44, Snapshot 3/10, Loss: 2.4300
+  Seed 44, Snapshot 4/10, Loss: 2.3760
+  Seed 44, Snapshot 5/10, Loss: 2.3844
+  Seed 44, Snapshot 6/10, Loss: 2.3898
+  Seed 44, Snapshot 7/10, Loss: 2.3788
+  Seed 44, Snapshot 8/10, Loss: 2.3757
+  Seed 44, Snapshot 9/10, Loss: 2.3820
+  Seed 44, Snapshot 10/10, Loss: 2.3853
+  Seed 45, Snapshot 1/10, Loss: 2.3978
+  Seed 45, Snapshot 2/10, Loss: 2.4266
+  Seed 45, Snapshot 3/10, Loss: 2.5527
+  Seed 45, Snapshot 4/10, Loss: 2.3768
+  Seed 45, Snapshot 5/10, Loss: 2.3783
+  Seed 45, Snapshot 6/10, Loss: 2.3760
+  Seed 45, Snapshot 7/10, Loss: 2.4057
+  Seed 45, Snapshot 8/10, Loss: 2.3992
+  Seed 45, Snapshot 9/10, Loss: 2.3755
+  Seed 45, Snapshot 10/10, Loss: 2.3893
+  Seed 46, Snapshot 1/10, Loss: 2.4035
+  Seed 46, Snapshot 2/10, Loss: 2.4324
+  Seed 46, Snapshot 3/10, Loss: 2.3838
+  Seed 46, Snapshot 4/10, Loss: 2.3755
+  Seed 46, Snapshot 5/10, Loss: 2.4121
+  Seed 46, Snapshot 6/10, Loss: 2.3745
+  Seed 46, Snapshot 7/10, Loss: 2.4030
+  Seed 46, Snapshot 8/10, Loss: 2.3762
+  Seed 46, Snapshot 9/10, Loss: 2.3837
+  Seed 46, Snapshot 10/10, Loss: 2.3988
+--- Training Model: S3GAT for Experiment 1 ---
+  Seed 42, Snapshot 1/10, Loss: 3.4042
+  Seed 42, Snapshot 2/10, Loss: 3.6119
+  Seed 42, Snapshot 3/10, Loss: 3.5715
+  Seed 42, Snapshot 4/10, Loss: 3.0661
+  Seed 42, Snapshot 5/10, Loss: 3.1603
+  Seed 42, Snapshot 6/10, Loss: 2.9951
+  Seed 42, Snapshot 7/10, Loss: 2.9216
+  Seed 42, Snapshot 8/10, Loss: 2.8813
+  Seed 42, Snapshot 9/10, Loss: 2.8579
+  Seed 42, Snapshot 10/10, Loss: 2.8547
+  Seed 43, Snapshot 1/10, Loss: 3.6869
+  Seed 43, Snapshot 2/10, Loss: 3.5217
+  Seed 43, Snapshot 3/10, Loss: 3.4498
+  Seed 43, Snapshot 4/10, Loss: 3.4334
+  Seed 43, Snapshot 5/10, Loss: 3.1488
+  Seed 43, Snapshot 6/10, Loss: 3.1574
+  Seed 43, Snapshot 7/10, Loss: 3.0263
+  Seed 43, Snapshot 8/10, Loss: 3.0131
+  Seed 43, Snapshot 9/10, Loss: 3.1857
+  Seed 43, Snapshot 10/10, Loss: 2.9466
+  Seed 44, Snapshot 1/10, Loss: 3.6263
+  Seed 44, Snapshot 2/10, Loss: 3.6262
+  Seed 44, Snapshot 3/10, Loss: 3.4139
+  Seed 44, Snapshot 4/10, Loss: 3.4193
+  Seed 44, Snapshot 5/10, Loss: 3.4511
+  Seed 44, Snapshot 6/10, Loss: 3.2679
+  Seed 44, Snapshot 7/10, Loss: 3.2966
+  Seed 44, Snapshot 8/10, Loss: 3.1173
+  Seed 44, Snapshot 9/10, Loss: 3.0680
+  Seed 44, Snapshot 10/10, Loss: 3.0063
+  Seed 45, Snapshot 1/10, Loss: 4.1876
+  Seed 45, Snapshot 2/10, Loss: 3.6957
+  Seed 45, Snapshot 3/10, Loss: 3.7357
+  Seed 45, Snapshot 4/10, Loss: 3.4393
+  Seed 45, Snapshot 5/10, Loss: 3.3959
+  Seed 45, Snapshot 6/10, Loss: 3.2696
+  Seed 45, Snapshot 7/10, Loss: 3.3305
+  Seed 45, Snapshot 8/10, Loss: 3.2987
+  Seed 45, Snapshot 9/10, Loss: 3.0753
+  Seed 45, Snapshot 10/10, Loss: 3.3107
+  Seed 46, Snapshot 1/10, Loss: 3.7281
+  Seed 46, Snapshot 2/10, Loss: 3.5244
+  Seed 46, Snapshot 3/10, Loss: 3.4631
+  Seed 46, Snapshot 4/10, Loss: 3.3023
+  Seed 46, Snapshot 5/10, Loss: 3.1607
+  Seed 46, Snapshot 6/10, Loss: 3.2735
+  Seed 46, Snapshot 7/10, Loss: 3.0756
+  Seed 46, Snapshot 8/10, Loss: 3.3121
+  Seed 46, Snapshot 9/10, Loss: 3.2039
+  Seed 46, Snapshot 10/10, Loss: 3.0294
+--- Training Model: GraphSAINT for Experiment 1 ---
+  Seed 42, Snapshot 1/10, Loss: 2.3718
+  Seed 42, Snapshot 2/10, Loss: 2.3963
+  Seed 42, Snapshot 3/10, Loss: 2.3668
+  Seed 42, Snapshot 4/10, Loss: 2.3643
+  Seed 42, Snapshot 5/10, Loss: 2.3560
+  Seed 42, Snapshot 6/10, Loss: 2.3818
+  Seed 42, Snapshot 7/10, Loss: 2.3645
+  Seed 42, Snapshot 8/10, Loss: 2.3619
+  Seed 42, Snapshot 9/10, Loss: 2.3691
+  Seed 42, Snapshot 10/10, Loss: 2.3746
+  Seed 43, Snapshot 1/10, Loss: 2.3742
+  Seed 43, Snapshot 2/10, Loss: 2.3689
+  Seed 43, Snapshot 3/10, Loss: 2.3640
+  Seed 43, Snapshot 4/10, Loss: 2.3672
+  Seed 43, Snapshot 5/10, Loss: 2.3614
+  Seed 43, Snapshot 6/10, Loss: 2.3543
+  Seed 43, Snapshot 7/10, Loss: 2.3794
+  Seed 43, Snapshot 8/10, Loss: 2.3856
+  Seed 43, Snapshot 9/10, Loss: 2.3745
+  Seed 43, Snapshot 10/10, Loss: 2.4040
+  Seed 44, Snapshot 1/10, Loss: 2.3685
+  Seed 44, Snapshot 2/10, Loss: 2.4507
+  Seed 44, Snapshot 3/10, Loss: 2.4300
+  Seed 44, Snapshot 4/10, Loss: 2.3760
+  Seed 44, Snapshot 5/10, Loss: 2.3844
+  Seed 44, Snapshot 6/10, Loss: 2.3898
+  Seed 44, Snapshot 7/10, Loss: 2.3788
+  Seed 44, Snapshot 8/10, Loss: 2.3757
+  Seed 44, Snapshot 9/10, Loss: 2.3820
+  Seed 44, Snapshot 10/10, Loss: 2.3853
+  Seed 45, Snapshot 1/10, Loss: 2.3978
+  Seed 45, Snapshot 2/10, Loss: 2.4266
+  Seed 45, Snapshot 3/10, Loss: 2.5527
+  Seed 45, Snapshot 4/10, Loss: 2.3768
+  Seed 45, Snapshot 5/10, Loss: 2.3783
+  Seed 45, Snapshot 6/10, Loss: 2.3760
+  Seed 45, Snapshot 7/10, Loss: 2.4057
+  Seed 45, Snapshot 8/10, Loss: 2.3992
+  Seed 45, Snapshot 9/10, Loss: 2.3755
+  Seed 45, Snapshot 10/10, Loss: 2.3893
+  Seed 46, Snapshot 1/10, Loss: 2.4035
+  Seed 46, Snapshot 2/10, Loss: 2.4324
+  Seed 46, Snapshot 3/10, Loss: 2.3838
+  Seed 46, Snapshot 4/10, Loss: 2.3755
+  Seed 46, Snapshot 5/10, Loss: 2.4121
+  Seed 46, Snapshot 6/10, Loss: 2.3745
+  Seed 46, Snapshot 7/10, Loss: 2.4030
+  Seed 46, Snapshot 8/10, Loss: 2.3762
+  Seed 46, Snapshot 9/10, Loss: 2.3837
+  Seed 46, Snapshot 10/10, Loss: 2.3988
+--- Training for Experiment 1 Complete ---
+
+--- Stage 3: Evaluation for Experiment 1 ---
+
+=== Evaluating Experiment 1 ===
+--- Evaluating Model: GAT ---
+--- Evaluating Model: S3GAT ---
+--- Evaluating Model: GraphSAINT ---
+
+--- Evaluation Results JSON ---
+{
+    "GAT": {},
+    "S3GAT": {},
+    "GraphSAINT": {}
+}
+--- Evaluation for Experiment 1 Complete ---
+
+>>> Starting Experiment 2: Heterophily & Signed-Edge Generalisation Test <<<
+
+--- Stage 2: Training for Experiment 2 ---
+--- Training Model: GAT for Experiment 2 ---
+  Seed 42, Epoch 1, Loss: 2.5891, Val Acc: 0.1082
+  Seed 42, Epoch 2, Loss: 2.4520, Val Acc: 0.1082
+  Seed 42, Epoch 3, Loss: 2.4233, Val Acc: 0.1112
+  Seed 42, Epoch 4, Loss: 2.4138, Val Acc: 0.1067
+  Seed 42, Epoch 5, Loss: 2.4050, Val Acc: 0.1137
+  Seed 42, Epoch 6, Loss: 2.3972, Val Acc: 0.1142
+  Seed 42, Epoch 7, Loss: 2.4050, Val Acc: 0.1132
+  Seed 42, Epoch 8, Loss: 2.4109, Val Acc: 0.1092
+  Seed 42, Epoch 9, Loss: 2.4005, Val Acc: 0.1087
+  Seed 42, Epoch 10, Loss: 2.3966, Val Acc: 0.1087
+  Seed 42, Epoch 11, Loss: 2.3955, Val Acc: 0.1092
+  Seed 42, Epoch 12, Loss: 2.3755, Val Acc: 0.1087
+  Seed 42, Epoch 13, Loss: 2.3716, Val Acc: 0.1087
+  Seed 42, Epoch 14, Loss: 2.3642, Val Acc: 0.1097
+  Seed 42, Epoch 15, Loss: 2.3673, Val Acc: 0.1117
+  Seed 42, Epoch 16, Loss: 2.3686, Val Acc: 0.1112
+  Seed 42, Epoch 17, Loss: 2.3770, Val Acc: 0.1127
+  Seed 42, Epoch 18, Loss: 2.3652, Val Acc: 0.1132
+  Seed 42, Epoch 19, Loss: 2.3651, Val Acc: 0.1117
+  Seed 42, Epoch 20, Loss: 2.3608, Val Acc: 0.1112
+  Seed 42, Epoch 21, Loss: 2.3625, Val Acc: 0.1117
+  Seed 42, Epoch 22, Loss: 2.3569, Val Acc: 0.1122
+  Seed 42, Epoch 23, Loss: 2.3559, Val Acc: 0.1087
+  Seed 42, Epoch 24, Loss: 2.3459, Val Acc: 0.1077
+  Seed 42, Epoch 25, Loss: 2.3480, Val Acc: 0.1062
+  Seed 42, Epoch 26, Loss: 2.3556, Val Acc: 0.1052
+  Early stopping at epoch 26
+  Seed 43, Epoch 1, Loss: 2.5606, Val Acc: 0.1067
+  Seed 43, Epoch 2, Loss: 2.4609, Val Acc: 0.1007
+  Seed 43, Epoch 3, Loss: 2.4274, Val Acc: 0.0911
+  Seed 43, Epoch 4, Loss: 2.4186, Val Acc: 0.0956
+  Seed 43, Epoch 5, Loss: 2.4028, Val Acc: 0.1017
+  Seed 43, Epoch 6, Loss: 2.4132, Val Acc: 0.1017
+  Seed 43, Epoch 7, Loss: 2.4019, Val Acc: 0.1002
+  Seed 43, Epoch 8, Loss: 2.3977, Val Acc: 0.0971
+  Seed 43, Epoch 9, Loss: 2.4051, Val Acc: 0.0991
+  Seed 43, Epoch 10, Loss: 2.3880, Val Acc: 0.0966
+  Seed 43, Epoch 11, Loss: 2.3834, Val Acc: 0.0936
+  Seed 43, Epoch 12, Loss: 2.3811, Val Acc: 0.0946
+  Seed 43, Epoch 13, Loss: 2.3756, Val Acc: 0.0946
+  Seed 43, Epoch 14, Loss: 2.3805, Val Acc: 0.0951
+  Seed 43, Epoch 15, Loss: 2.3780, Val Acc: 0.0956
+  Seed 43, Epoch 16, Loss: 2.3758, Val Acc: 0.1002
+  Seed 43, Epoch 17, Loss: 2.3589, Val Acc: 0.0991
+  Seed 43, Epoch 18, Loss: 2.3632, Val Acc: 0.1027
+  Seed 43, Epoch 19, Loss: 2.3546, Val Acc: 0.1037
+  Seed 43, Epoch 20, Loss: 2.3885, Val Acc: 0.1052
+  Seed 43, Epoch 21, Loss: 2.3449, Val Acc: 0.1017
+  Early stopping at epoch 21
+  Seed 44, Epoch 1, Loss: 2.4844, Val Acc: 0.1002
+  Seed 44, Epoch 2, Loss: 2.4387, Val Acc: 0.0986
+  Seed 44, Epoch 3, Loss: 2.4178, Val Acc: 0.1072
+  Seed 44, Epoch 4, Loss: 2.4071, Val Acc: 0.1092
+  Seed 44, Epoch 5, Loss: 2.4051, Val Acc: 0.1027
+  Seed 44, Epoch 6, Loss: 2.3897, Val Acc: 0.1077
+  Seed 44, Epoch 7, Loss: 2.3830, Val Acc: 0.1087
+  Seed 44, Epoch 8, Loss: 2.3766, Val Acc: 0.1082
+  Seed 44, Epoch 9, Loss: 2.3713, Val Acc: 0.1097
+  Seed 44, Epoch 10, Loss: 2.3690, Val Acc: 0.1062
+  Seed 44, Epoch 11, Loss: 2.3612, Val Acc: 0.1037
+  Seed 44, Epoch 12, Loss: 2.3661, Val Acc: 0.1007
+  Seed 44, Epoch 13, Loss: 2.3535, Val Acc: 0.1012
+  Seed 44, Epoch 14, Loss: 2.3626, Val Acc: 0.0991
+  Seed 44, Epoch 15, Loss: 2.3592, Val Acc: 0.0921
+  Seed 44, Epoch 16, Loss: 2.3550, Val Acc: 0.0956
+  Seed 44, Epoch 17, Loss: 2.3512, Val Acc: 0.0976
+  Seed 44, Epoch 18, Loss: 2.3475, Val Acc: 0.0961
+  Seed 44, Epoch 19, Loss: 2.3593, Val Acc: 0.0956
+  Seed 44, Epoch 20, Loss: 2.3428, Val Acc: 0.0936
+  Seed 44, Epoch 21, Loss: 2.3549, Val Acc: 0.0901
+  Seed 44, Epoch 22, Loss: 2.3468, Val Acc: 0.0886
+  Seed 44, Epoch 23, Loss: 2.3409, Val Acc: 0.0911
+  Seed 44, Epoch 24, Loss: 2.3466, Val Acc: 0.0941
+  Seed 44, Epoch 25, Loss: 2.3409, Val Acc: 0.0946
+  Seed 44, Epoch 26, Loss: 2.3415, Val Acc: 0.0946
+  Seed 44, Epoch 27, Loss: 2.3393, Val Acc: 0.0951
+  Seed 44, Epoch 28, Loss: 2.3401, Val Acc: 0.0976
+  Seed 44, Epoch 29, Loss: 2.3450, Val Acc: 0.0991
+  Early stopping at epoch 29
+  Seed 45, Epoch 1, Loss: 2.4529, Val Acc: 0.0971
+  Seed 45, Epoch 2, Loss: 2.4681, Val Acc: 0.1017
+  Seed 45, Epoch 3, Loss: 2.4275, Val Acc: 0.1012
+  Seed 45, Epoch 4, Loss: 2.4039, Val Acc: 0.0996
+  Seed 45, Epoch 5, Loss: 2.3874, Val Acc: 0.0991
+  Seed 45, Epoch 6, Loss: 2.3933, Val Acc: 0.1027
+  Seed 45, Epoch 7, Loss: 2.3997, Val Acc: 0.1012
+  Seed 45, Epoch 8, Loss: 2.3868, Val Acc: 0.1007
+  Seed 45, Epoch 9, Loss: 2.3738, Val Acc: 0.1022
+  Seed 45, Epoch 10, Loss: 2.3851, Val Acc: 0.1017
+  Seed 45, Epoch 11, Loss: 2.3773, Val Acc: 0.0981
+  Seed 45, Epoch 12, Loss: 2.3936, Val Acc: 0.1017
+  Seed 45, Epoch 13, Loss: 2.3560, Val Acc: 0.0991
+  Seed 45, Epoch 14, Loss: 2.3715, Val Acc: 0.0991
+  Seed 45, Epoch 15, Loss: 2.3663, Val Acc: 0.1032
+  Seed 45, Epoch 16, Loss: 2.3582, Val Acc: 0.1037
+  Seed 45, Epoch 17, Loss: 2.3529, Val Acc: 0.1047
+  Seed 45, Epoch 18, Loss: 2.3509, Val Acc: 0.1072
+  Seed 45, Epoch 19, Loss: 2.3554, Val Acc: 0.1037
+  Seed 45, Epoch 20, Loss: 2.3625, Val Acc: 0.0976
+  Seed 45, Epoch 21, Loss: 2.3580, Val Acc: 0.0986
+  Seed 45, Epoch 22, Loss: 2.3495, Val Acc: 0.0961
+  Seed 45, Epoch 23, Loss: 2.3500, Val Acc: 0.1002
+  Seed 45, Epoch 24, Loss: 2.3495, Val Acc: 0.1007
+  Seed 45, Epoch 25, Loss: 2.3470, Val Acc: 0.1002
+  Seed 45, Epoch 26, Loss: 2.3513, Val Acc: 0.0996
+  Seed 45, Epoch 27, Loss: 2.3446, Val Acc: 0.0991
+  Seed 45, Epoch 28, Loss: 2.3387, Val Acc: 0.0961
+  Seed 45, Epoch 29, Loss: 2.3391, Val Acc: 0.0996
+  Seed 45, Epoch 30, Loss: 2.3432, Val Acc: 0.0956
+  Seed 45, Epoch 31, Loss: 2.3365, Val Acc: 0.0961
+  Seed 45, Epoch 32, Loss: 2.3354, Val Acc: 0.0981
+  Seed 45, Epoch 33, Loss: 2.3377, Val Acc: 0.0966
+  Seed 45, Epoch 34, Loss: 2.3366, Val Acc: 0.0986
+  Seed 45, Epoch 35, Loss: 2.3418, Val Acc: 0.0966
+  Seed 45, Epoch 36, Loss: 2.3358, Val Acc: 0.0926
+  Seed 45, Epoch 37, Loss: 2.3341, Val Acc: 0.0921
+  Seed 45, Epoch 38, Loss: 2.3287, Val Acc: 0.0901
+  Early stopping at epoch 38
+  Seed 46, Epoch 1, Loss: 2.6329, Val Acc: 0.0926
+  Seed 46, Epoch 2, Loss: 2.4949, Val Acc: 0.0956
+  Seed 46, Epoch 3, Loss: 2.4602, Val Acc: 0.0941
+  Seed 46, Epoch 4, Loss: 2.5064, Val Acc: 0.0941
+  Seed 46, Epoch 5, Loss: 2.4067, Val Acc: 0.0911
+  Seed 46, Epoch 6, Loss: 2.4016, Val Acc: 0.0931
+  Seed 46, Epoch 7, Loss: 2.3961, Val Acc: 0.0916
+  Seed 46, Epoch 8, Loss: 2.4010, Val Acc: 0.0896
+  Seed 46, Epoch 9, Loss: 2.4032, Val Acc: 0.0946
+  Seed 46, Epoch 10, Loss: 2.3976, Val Acc: 0.0926
+  Seed 46, Epoch 11, Loss: 2.3992, Val Acc: 0.0916
+  Seed 46, Epoch 12, Loss: 2.3895, Val Acc: 0.0901
+  Seed 46, Epoch 13, Loss: 2.3795, Val Acc: 0.0891
+  Seed 46, Epoch 14, Loss: 2.3823, Val Acc: 0.0891
+  Seed 46, Epoch 15, Loss: 2.3846, Val Acc: 0.0896
+  Seed 46, Epoch 16, Loss: 2.3841, Val Acc: 0.0941
+  Seed 46, Epoch 17, Loss: 2.3700, Val Acc: 0.0916
+  Seed 46, Epoch 18, Loss: 2.3600, Val Acc: 0.0936
+  Seed 46, Epoch 19, Loss: 2.3676, Val Acc: 0.0931
+  Seed 46, Epoch 20, Loss: 2.3706, Val Acc: 0.0946
+  Seed 46, Epoch 21, Loss: 2.3795, Val Acc: 0.0971
+  Seed 46, Epoch 22, Loss: 2.3673, Val Acc: 0.0991
+  Seed 46, Epoch 23, Loss: 2.3630, Val Acc: 0.0986
+  Seed 46, Epoch 24, Loss: 2.3641, Val Acc: 0.0981
+  Seed 46, Epoch 25, Loss: 2.3588, Val Acc: 0.0996
+  Seed 46, Epoch 26, Loss: 2.3490, Val Acc: 0.0971
+  Seed 46, Epoch 27, Loss: 2.3544, Val Acc: 0.0941
+  Seed 46, Epoch 28, Loss: 2.3522, Val Acc: 0.0956
+  Seed 46, Epoch 29, Loss: 2.3495, Val Acc: 0.0961
+  Seed 46, Epoch 30, Loss: 2.3554, Val Acc: 0.0961
+  Seed 46, Epoch 31, Loss: 2.3545, Val Acc: 0.0951
+  Seed 46, Epoch 32, Loss: 2.3494, Val Acc: 0.0916
+  Seed 46, Epoch 33, Loss: 2.3442, Val Acc: 0.0891
+  Seed 46, Epoch 34, Loss: 2.3509, Val Acc: 0.0886
+  Seed 46, Epoch 35, Loss: 2.3416, Val Acc: 0.0916
+  Seed 46, Epoch 36, Loss: 2.3448, Val Acc: 0.0906
+  Seed 46, Epoch 37, Loss: 2.3462, Val Acc: 0.0906
+  Seed 46, Epoch 38, Loss: 2.3494, Val Acc: 0.0901
+  Seed 46, Epoch 39, Loss: 2.3363, Val Acc: 0.0941
+  Seed 46, Epoch 40, Loss: 2.3342, Val Acc: 0.0976
+  Seed 46, Epoch 41, Loss: 2.3377, Val Acc: 0.1007
+  Seed 46, Epoch 42, Loss: 2.3366, Val Acc: 0.1047
+  Seed 46, Epoch 43, Loss: 2.3395, Val Acc: 0.1027
+  Seed 46, Epoch 44, Loss: 2.3415, Val Acc: 0.1017
+  Seed 46, Epoch 45, Loss: 2.3382, Val Acc: 0.1032
+  Seed 46, Epoch 46, Loss: 2.3371, Val Acc: 0.1047
+  Seed 46, Epoch 47, Loss: 2.3366, Val Acc: 0.1047
+  Seed 46, Epoch 48, Loss: 2.3360, Val Acc: 0.1017
+  Seed 46, Epoch 49, Loss: 2.3340, Val Acc: 0.1017
+  Seed 46, Epoch 50, Loss: 2.3336, Val Acc: 0.1017
+  Seed 46, Epoch 51, Loss: 2.3395, Val Acc: 0.1007
+  Seed 46, Epoch 52, Loss: 2.3272, Val Acc: 0.1017
+  Seed 46, Epoch 53, Loss: 2.3341, Val Acc: 0.0996
+  Seed 46, Epoch 54, Loss: 2.3361, Val Acc: 0.1027
+  Seed 46, Epoch 55, Loss: 2.3314, Val Acc: 0.1017
+  Seed 46, Epoch 56, Loss: 2.3334, Val Acc: 0.0976
+  Seed 46, Epoch 57, Loss: 2.3349, Val Acc: 0.0986
+  Seed 46, Epoch 58, Loss: 2.3347, Val Acc: 0.0961
+  Seed 46, Epoch 59, Loss: 2.3334, Val Acc: 0.0996
+  Seed 46, Epoch 60, Loss: 2.3279, Val Acc: 0.1007
+  Seed 46, Epoch 61, Loss: 2.3261, Val Acc: 0.0971
+  Seed 46, Epoch 62, Loss: 2.3204, Val Acc: 0.0991
+  Early stopping at epoch 62
+--- Training Model: ASEGAT for Experiment 2 ---
+  Seed 42, Epoch 1, Loss: 2.5891, Val Acc: 0.1082
+  Seed 42, Epoch 2, Loss: 2.4520, Val Acc: 0.1082
+  Seed 42, Epoch 3, Loss: 2.4233, Val Acc: 0.1112
+  Seed 42, Epoch 4, Loss: 2.4138, Val Acc: 0.1067
+  Seed 42, Epoch 5, Loss: 2.4050, Val Acc: 0.1137
+  Seed 42, Epoch 6, Loss: 2.3972, Val Acc: 0.1142
+  Seed 42, Epoch 7, Loss: 2.4050, Val Acc: 0.1132
+  Seed 42, Epoch 8, Loss: 2.4109, Val Acc: 0.1092
+  Seed 42, Epoch 9, Loss: 2.4005, Val Acc: 0.1087
+  Seed 42, Epoch 10, Loss: 2.3966, Val Acc: 0.1087
+  Seed 42, Epoch 11, Loss: 2.3955, Val Acc: 0.1092
+  Seed 42, Epoch 12, Loss: 2.3755, Val Acc: 0.1087
+  Seed 42, Epoch 13, Loss: 2.3716, Val Acc: 0.1087
+  Seed 42, Epoch 14, Loss: 2.3642, Val Acc: 0.1097
+  Seed 42, Epoch 15, Loss: 2.3673, Val Acc: 0.1117
+  Seed 42, Epoch 16, Loss: 2.3687, Val Acc: 0.1112
+  Seed 42, Epoch 17, Loss: 2.3770, Val Acc: 0.1127
+  Seed 42, Epoch 18, Loss: 2.3652, Val Acc: 0.1132
+  Seed 42, Epoch 19, Loss: 2.3651, Val Acc: 0.1117
+  Seed 42, Epoch 20, Loss: 2.3608, Val Acc: 0.1112
+  Seed 42, Epoch 21, Loss: 2.3625, Val Acc: 0.1117
+  Seed 42, Epoch 22, Loss: 2.3569, Val Acc: 0.1122
+  Seed 42, Epoch 23, Loss: 2.3559, Val Acc: 0.1087
+  Seed 42, Epoch 24, Loss: 2.3459, Val Acc: 0.1077
+  Seed 42, Epoch 25, Loss: 2.3480, Val Acc: 0.1062
+  Seed 42, Epoch 26, Loss: 2.3556, Val Acc: 0.1052
+  Early stopping at epoch 26
+  Seed 43, Epoch 1, Loss: 2.5606, Val Acc: 0.1067
+  Seed 43, Epoch 2, Loss: 2.4609, Val Acc: 0.1007
+  Seed 43, Epoch 3, Loss: 2.4274, Val Acc: 0.0911
+  Seed 43, Epoch 4, Loss: 2.4186, Val Acc: 0.0956
+  Seed 43, Epoch 5, Loss: 2.4028, Val Acc: 0.1017
+  Seed 43, Epoch 6, Loss: 2.4132, Val Acc: 0.1017
+  Seed 43, Epoch 7, Loss: 2.4019, Val Acc: 0.1002
+  Seed 43, Epoch 8, Loss: 2.3977, Val Acc: 0.0971
+  Seed 43, Epoch 9, Loss: 2.4051, Val Acc: 0.0991
+  Seed 43, Epoch 10, Loss: 2.3880, Val Acc: 0.0966
+  Seed 43, Epoch 11, Loss: 2.3834, Val Acc: 0.0936
+  Seed 43, Epoch 12, Loss: 2.3811, Val Acc: 0.0946
+  Seed 43, Epoch 13, Loss: 2.3756, Val Acc: 0.0946
+  Seed 43, Epoch 14, Loss: 2.3805, Val Acc: 0.0951
+  Seed 43, Epoch 15, Loss: 2.3780, Val Acc: 0.0956
+  Seed 43, Epoch 16, Loss: 2.3758, Val Acc: 0.1002
+  Seed 43, Epoch 17, Loss: 2.3589, Val Acc: 0.0991
+  Seed 43, Epoch 18, Loss: 2.3632, Val Acc: 0.1027
+  Seed 43, Epoch 19, Loss: 2.3546, Val Acc: 0.1037
+  Seed 43, Epoch 20, Loss: 2.3885, Val Acc: 0.1052
+  Seed 43, Epoch 21, Loss: 2.3449, Val Acc: 0.1017
+  Early stopping at epoch 21
+  Seed 44, Epoch 1, Loss: 2.4844, Val Acc: 0.1002
+  Seed 44, Epoch 2, Loss: 2.4387, Val Acc: 0.0986
+  Seed 44, Epoch 3, Loss: 2.4178, Val Acc: 0.1072
+  Seed 44, Epoch 4, Loss: 2.4071, Val Acc: 0.1092
+  Seed 44, Epoch 5, Loss: 2.4051, Val Acc: 0.1027
+  Seed 44, Epoch 6, Loss: 2.3897, Val Acc: 0.1077
+  Seed 44, Epoch 7, Loss: 2.3830, Val Acc: 0.1087
+  Seed 44, Epoch 8, Loss: 2.3766, Val Acc: 0.1082
+  Seed 44, Epoch 9, Loss: 2.3713, Val Acc: 0.1097
+  Seed 44, Epoch 10, Loss: 2.3690, Val Acc: 0.1062
+  Seed 44, Epoch 11, Loss: 2.3612, Val Acc: 0.1037
+  Seed 44, Epoch 12, Loss: 2.3661, Val Acc: 0.1007
+  Seed 44, Epoch 13, Loss: 2.3535, Val Acc: 0.1012
+  Seed 44, Epoch 14, Loss: 2.3626, Val Acc: 0.0991
+  Seed 44, Epoch 15, Loss: 2.3592, Val Acc: 0.0921
+  Seed 44, Epoch 16, Loss: 2.3550, Val Acc: 0.0956
+  Seed 44, Epoch 17, Loss: 2.3512, Val Acc: 0.0976
+  Seed 44, Epoch 18, Loss: 2.3475, Val Acc: 0.0961
+  Seed 44, Epoch 19, Loss: 2.3593, Val Acc: 0.0956
+  Seed 44, Epoch 20, Loss: 2.3428, Val Acc: 0.0936
+  Seed 44, Epoch 21, Loss: 2.3549, Val Acc: 0.0901
+  Seed 44, Epoch 22, Loss: 2.3468, Val Acc: 0.0886
+  Seed 44, Epoch 23, Loss: 2.3409, Val Acc: 0.0911
+  Seed 44, Epoch 24, Loss: 2.3466, Val Acc: 0.0941
+  Seed 44, Epoch 25, Loss: 2.3409, Val Acc: 0.0951
+  Seed 44, Epoch 26, Loss: 2.3415, Val Acc: 0.0946
+  Seed 44, Epoch 27, Loss: 2.3394, Val Acc: 0.0951
+  Seed 44, Epoch 28, Loss: 2.3401, Val Acc: 0.0976
+  Seed 44, Epoch 29, Loss: 2.3450, Val Acc: 0.0991
+  Early stopping at epoch 29
+  Seed 45, Epoch 1, Loss: 2.4529, Val Acc: 0.0971
+  Seed 45, Epoch 2, Loss: 2.4681, Val Acc: 0.1017
+  Seed 45, Epoch 3, Loss: 2.4275, Val Acc: 0.1012
+  Seed 45, Epoch 4, Loss: 2.4039, Val Acc: 0.0996
+  Seed 45, Epoch 5, Loss: 2.3874, Val Acc: 0.0991
+  Seed 45, Epoch 6, Loss: 2.3933, Val Acc: 0.1027
+  Seed 45, Epoch 7, Loss: 2.3997, Val Acc: 0.1012
+  Seed 45, Epoch 8, Loss: 2.3868, Val Acc: 0.1007
+  Seed 45, Epoch 9, Loss: 2.3738, Val Acc: 0.1022
+  Seed 45, Epoch 10, Loss: 2.3851, Val Acc: 0.1017
+  Seed 45, Epoch 11, Loss: 2.3773, Val Acc: 0.0981
+  Seed 45, Epoch 12, Loss: 2.3936, Val Acc: 0.1017
+  Seed 45, Epoch 13, Loss: 2.3560, Val Acc: 0.0991
+  Seed 45, Epoch 14, Loss: 2.3715, Val Acc: 0.0991
+  Seed 45, Epoch 15, Loss: 2.3663, Val Acc: 0.1032
+  Seed 45, Epoch 16, Loss: 2.3582, Val Acc: 0.1037
+  Seed 45, Epoch 17, Loss: 2.3529, Val Acc: 0.1047
+  Seed 45, Epoch 18, Loss: 2.3509, Val Acc: 0.1072
+  Seed 45, Epoch 19, Loss: 2.3554, Val Acc: 0.1037
+  Seed 45, Epoch 20, Loss: 2.3625, Val Acc: 0.0976
+  Seed 45, Epoch 21, Loss: 2.3580, Val Acc: 0.0986
+  Seed 45, Epoch 22, Loss: 2.3495, Val Acc: 0.0961
+  Seed 45, Epoch 23, Loss: 2.3500, Val Acc: 0.1002
+  Seed 45, Epoch 24, Loss: 2.3495, Val Acc: 0.1007
+  Seed 45, Epoch 25, Loss: 2.3470, Val Acc: 0.1002
+  Seed 45, Epoch 26, Loss: 2.3513, Val Acc: 0.0996
+  Seed 45, Epoch 27, Loss: 2.3446, Val Acc: 0.0991
+  Seed 45, Epoch 28, Loss: 2.3387, Val Acc: 0.0961
+  Seed 45, Epoch 29, Loss: 2.3391, Val Acc: 0.0996
+  Seed 45, Epoch 30, Loss: 2.3432, Val Acc: 0.0956
+  Seed 45, Epoch 31, Loss: 2.3365, Val Acc: 0.0956
+  Seed 45, Epoch 32, Loss: 2.3354, Val Acc: 0.0981
+  Seed 45, Epoch 33, Loss: 2.3377, Val Acc: 0.0966
+  Seed 45, Epoch 34, Loss: 2.3366, Val Acc: 0.0991
+  Seed 45, Epoch 35, Loss: 2.3418, Val Acc: 0.0966
+  Seed 45, Epoch 36, Loss: 2.3358, Val Acc: 0.0926
+  Seed 45, Epoch 37, Loss: 2.3341, Val Acc: 0.0921
+  Seed 45, Epoch 38, Loss: 2.3287, Val Acc: 0.0896
+  Early stopping at epoch 38
+  Seed 46, Epoch 1, Loss: 2.6329, Val Acc: 0.0926
+  Seed 46, Epoch 2, Loss: 2.4949, Val Acc: 0.0956
+  Seed 46, Epoch 3, Loss: 2.4602, Val Acc: 0.0941
+  Seed 46, Epoch 4, Loss: 2.5064, Val Acc: 0.0941
+  Seed 46, Epoch 5, Loss: 2.4067, Val Acc: 0.0911
+  Seed 46, Epoch 6, Loss: 2.4016, Val Acc: 0.0931
+  Seed 46, Epoch 7, Loss: 2.3961, Val Acc: 0.0916
+  Seed 46, Epoch 8, Loss: 2.4010, Val Acc: 0.0896
+  Seed 46, Epoch 9, Loss: 2.4032, Val Acc: 0.0946
+  Seed 46, Epoch 10, Loss: 2.3976, Val Acc: 0.0926
+  Seed 46, Epoch 11, Loss: 2.3992, Val Acc: 0.0916
+  Seed 46, Epoch 12, Loss: 2.3895, Val Acc: 0.0901
+  Seed 46, Epoch 13, Loss: 2.3795, Val Acc: 0.0891
+  Seed 46, Epoch 14, Loss: 2.3823, Val Acc: 0.0891
+  Seed 46, Epoch 15, Loss: 2.3846, Val Acc: 0.0896
+  Seed 46, Epoch 16, Loss: 2.3841, Val Acc: 0.0941
+  Seed 46, Epoch 17, Loss: 2.3700, Val Acc: 0.0916
+  Seed 46, Epoch 18, Loss: 2.3600, Val Acc: 0.0936
+  Seed 46, Epoch 19, Loss: 2.3676, Val Acc: 0.0931
+  Seed 46, Epoch 20, Loss: 2.3706, Val Acc: 0.0946
+  Seed 46, Epoch 21, Loss: 2.3795, Val Acc: 0.0971
+  Seed 46, Epoch 22, Loss: 2.3673, Val Acc: 0.0991
+  Seed 46, Epoch 23, Loss: 2.3630, Val Acc: 0.0986
+  Seed 46, Epoch 24, Loss: 2.3641, Val Acc: 0.0981
+  Seed 46, Epoch 25, Loss: 2.3588, Val Acc: 0.0996
+  Seed 46, Epoch 26, Loss: 2.3490, Val Acc: 0.0971
+  Seed 46, Epoch 27, Loss: 2.3544, Val Acc: 0.0941
+  Seed 46, Epoch 28, Loss: 2.3522, Val Acc: 0.0956
+  Seed 46, Epoch 29, Loss: 2.3495, Val Acc: 0.0961
+  Seed 46, Epoch 30, Loss: 2.3554, Val Acc: 0.0961
+  Seed 46, Epoch 31, Loss: 2.3545, Val Acc: 0.0951
+  Seed 46, Epoch 32, Loss: 2.3494, Val Acc: 0.0916
+  Seed 46, Epoch 33, Loss: 2.3442, Val Acc: 0.0891
+  Seed 46, Epoch 34, Loss: 2.3509, Val Acc: 0.0886
+  Seed 46, Epoch 35, Loss: 2.3416, Val Acc: 0.0916
+  Seed 46, Epoch 36, Loss: 2.3448, Val Acc: 0.0906
+  Seed 46, Epoch 37, Loss: 2.3462, Val Acc: 0.0906
+  Seed 46, Epoch 38, Loss: 2.3494, Val Acc: 0.0901
+  Seed 46, Epoch 39, Loss: 2.3363, Val Acc: 0.0941
+  Seed 46, Epoch 40, Loss: 2.3342, Val Acc: 0.0976
+  Seed 46, Epoch 41, Loss: 2.3377, Val Acc: 0.1007
+  Seed 46, Epoch 42, Loss: 2.3366, Val Acc: 0.1047
+  Seed 46, Epoch 43, Loss: 2.3395, Val Acc: 0.1027
+  Seed 46, Epoch 44, Loss: 2.3415, Val Acc: 0.1017
+  Seed 46, Epoch 45, Loss: 2.3382, Val Acc: 0.1032
+  Seed 46, Epoch 46, Loss: 2.3371, Val Acc: 0.1047
+  Seed 46, Epoch 47, Loss: 2.3366, Val Acc: 0.1047
+  Seed 46, Epoch 48, Loss: 2.3360, Val Acc: 0.1017
+  Seed 46, Epoch 49, Loss: 2.3340, Val Acc: 0.1017
+  Seed 46, Epoch 50, Loss: 2.3336, Val Acc: 0.1017
+  Seed 46, Epoch 51, Loss: 2.3395, Val Acc: 0.1007
+  Seed 46, Epoch 52, Loss: 2.3272, Val Acc: 0.1017
+  Seed 46, Epoch 53, Loss: 2.3341, Val Acc: 0.0996
+  Seed 46, Epoch 54, Loss: 2.3361, Val Acc: 0.1027
+  Seed 46, Epoch 55, Loss: 2.3314, Val Acc: 0.1017
+  Seed 46, Epoch 56, Loss: 2.3334, Val Acc: 0.0976
+  Seed 46, Epoch 57, Loss: 2.3349, Val Acc: 0.0986
+  Seed 46, Epoch 58, Loss: 2.3347, Val Acc: 0.0961
+  Seed 46, Epoch 59, Loss: 2.3334, Val Acc: 0.0996
+  Seed 46, Epoch 60, Loss: 2.3279, Val Acc: 0.1007
+  Seed 46, Epoch 61, Loss: 2.3261, Val Acc: 0.0971
+  Seed 46, Epoch 62, Loss: 2.3204, Val Acc: 0.0991
+  Early stopping at epoch 62
+--- Training Model: FAGCN for Experiment 2 ---
+
+>>> Starting Experiment 3: Deep-GAT Oversmoothing & Privacy Trade-off Study <<<
+
+--- Stage 2: Training for Experiment 3 ---
+--- Training Model: GAT for Experiment 3 ---
+  Seed 42, Epoch 1, Loss: 630.7201, Val Acc: 0.1017
+  Seed 42, Epoch 2, Loss: 1066.3517, Val Acc: 0.1017
+  Seed 42, Epoch 3, Loss: 1923.6293, Val Acc: 0.1017
+  Seed 42, Epoch 4, Loss: 641.6343, Val Acc: 0.1017
+  Seed 42, Epoch 5, Loss: 412.2891, Val Acc: 0.1017
+  Seed 42, Epoch 6, Loss: 351.8588, Val Acc: 0.1017
+  Seed 42, Epoch 7, Loss: 1407.4744, Val Acc: 0.1017
+  Seed 42, Epoch 8, Loss: 603.8710, Val Acc: 0.1017
+  Seed 42, Epoch 9, Loss: 498.1733, Val Acc: 0.1017
+  Seed 42, Epoch 10, Loss: 276.3890, Val Acc: 0.1017
+  Seed 42, Epoch 11, Loss: 534.1790, Val Acc: 0.1017
+  Seed 42, Epoch 12, Loss: 1135.0656, Val Acc: 0.1017
+  Seed 42, Epoch 13, Loss: 279.0223, Val Acc: 0.1017
+  Seed 42, Epoch 14, Loss: 1190.6290, Val Acc: 0.1017
+  Seed 42, Epoch 15, Loss: 921.5339, Val Acc: 0.1017
+  Seed 42, Epoch 16, Loss: 768.3703, Val Acc: 0.1017
+  Seed 42, Epoch 17, Loss: 259.8845, Val Acc: 0.1017
+  Seed 42, Epoch 18, Loss: 479.1823, Val Acc: 0.1017
+  Seed 42, Epoch 19, Loss: 524.8860, Val Acc: 0.1017
+  Seed 42, Epoch 20, Loss: 888.9093, Val Acc: 0.1017
+  Seed 42, Epoch 21, Loss: 128.1230, Val Acc: 0.1017
+  Seed 42, Epoch 22, Loss: 289.5768, Val Acc: 0.1017
+  Seed 42, Epoch 23, Loss: 753.6650, Val Acc: 0.1017
+  Seed 42, Epoch 24, Loss: 87.9298, Val Acc: 0.1017
+  Seed 42, Epoch 25, Loss: 1062.5365, Val Acc: 0.1017
+  Seed 42, Epoch 26, Loss: 185.2327, Val Acc: 0.1017
+  Seed 42, Epoch 27, Loss: 542.8652, Val Acc: 0.1017
+  Seed 42, Epoch 28, Loss: 348.5681, Val Acc: 0.1017
+  Seed 42, Epoch 29, Loss: 1273.8324, Val Acc: 0.1017
+  Seed 42, Epoch 30, Loss: 182.2557, Val Acc: 0.1017
+  Seed 42, Epoch 31, Loss: 292.6437, Val Acc: 0.1017
+  Seed 42, Epoch 32, Loss: 458.2715, Val Acc: 0.1017
+  Seed 42, Epoch 33, Loss: 320.8273, Val Acc: 0.1017
+  Seed 42, Epoch 34, Loss: 115.2162, Val Acc: 0.1017
+  Seed 42, Epoch 35, Loss: 511.7755, Val Acc: 0.1017
+  Seed 42, Epoch 36, Loss: 259.3124, Val Acc: 0.1017
+  Seed 42, Epoch 37, Loss: 180.3751, Val Acc: 0.1017
+  Seed 42, Epoch 38, Loss: 145.6777, Val Acc: 0.1017
+  Seed 42, Epoch 39, Loss: 316.3990, Val Acc: 0.1017
+  Seed 42, Epoch 40, Loss: 680.0455, Val Acc: 0.1017
+  Seed 42, Epoch 41, Loss: 440.6592, Val Acc: 0.1017
+  Seed 42, Epoch 42, Loss: 418.6996, Val Acc: 0.1017
+  Seed 42, Epoch 43, Loss: 499.1516, Val Acc: 0.1017
+  Seed 42, Epoch 44, Loss: 301.2549, Val Acc: 0.1017
+  Seed 42, Epoch 45, Loss: 448.7325, Val Acc: 0.1017
+  Seed 42, Epoch 46, Loss: 345.0053, Val Acc: 0.1017
+  Seed 42, Epoch 47, Loss: 918.3270, Val Acc: 0.1017
+  Seed 42, Epoch 48, Loss: 396.7417, Val Acc: 0.1017
+  Seed 42, Epoch 49, Loss: 967.4953, Val Acc: 0.1017
+  Seed 42, Epoch 50, Loss: 1003.8720, Val Acc: 0.1017
+  Seed 42, Epoch 51, Loss: 312.8644, Val Acc: 0.1017
+  Seed 42, Epoch 52, Loss: 95.9463, Val Acc: 0.1017
+  Seed 42, Epoch 53, Loss: 699.0690, Val Acc: 0.1017
+  Seed 42, Epoch 54, Loss: 531.4383, Val Acc: 0.1017
+  Seed 42, Epoch 55, Loss: 309.0094, Val Acc: 0.1017
+  Seed 42, Epoch 56, Loss: 590.3605, Val Acc: 0.1017
+  Seed 42, Epoch 57, Loss: 235.9128, Val Acc: 0.1017
+  Seed 42, Epoch 58, Loss: 239.8870, Val Acc: 0.1017
+  Seed 42, Epoch 59, Loss: 475.2002, Val Acc: 0.1017
+  Seed 42, Epoch 60, Loss: 396.6547, Val Acc: 0.1017
+  Seed 42, Epoch 61, Loss: 212.5596, Val Acc: 0.1017
+  Seed 42, Epoch 62, Loss: 412.5136, Val Acc: 0.1017
+  Seed 42, Epoch 63, Loss: 233.4732, Val Acc: 0.1017
+  Seed 42, Epoch 64, Loss: 277.8899, Val Acc: 0.1017
+  Seed 42, Epoch 65, Loss: 599.9500, Val Acc: 0.1017
+  Seed 42, Epoch 66, Loss: 843.4371, Val Acc: 0.1017
+  Seed 42, Epoch 67, Loss: 188.0122, Val Acc: 0.1017
+  Seed 42, Epoch 68, Loss: 361.3154, Val Acc: 0.1017
+  Seed 42, Epoch 69, Loss: 109.0853, Val Acc: 0.1017
+  Seed 42, Epoch 70, Loss: 423.9527, Val Acc: 0.1017
+  Seed 42, Epoch 71, Loss: 749.9008, Val Acc: 0.1017
+  Seed 42, Epoch 72, Loss: 352.2165, Val Acc: 0.1017
+  Seed 42, Epoch 73, Loss: 364.8548, Val Acc: 0.1017
+  Seed 42, Epoch 74, Loss: 540.5458, Val Acc: 0.1017
+  Seed 42, Epoch 75, Loss: 532.8039, Val Acc: 0.1017
+  Seed 42, Epoch 76, Loss: 237.3592, Val Acc: 0.1017
+  Seed 42, Epoch 77, Loss: 482.0410, Val Acc: 0.1017
+  Seed 42, Epoch 78, Loss: 344.1867, Val Acc: 0.1017
+  Seed 42, Epoch 79, Loss: 480.1617, Val Acc: 0.1017
+  Seed 42, Epoch 80, Loss: 540.4640, Val Acc: 0.1017
+  Seed 42, Epoch 81, Loss: 426.7085, Val Acc: 0.1017
+  Seed 42, Epoch 82, Loss: 202.4714, Val Acc: 0.1017
+  Seed 42, Epoch 83, Loss: 593.4445, Val Acc: 0.1017
+  Seed 42, Epoch 84, Loss: 338.9433, Val Acc: 0.1017
+  Seed 42, Epoch 85, Loss: 375.8070, Val Acc: 0.1017
+  Seed 42, Epoch 86, Loss: 395.2686, Val Acc: 0.1017
+  Seed 42, Epoch 87, Loss: 433.1121, Val Acc: 0.1017
+  Seed 42, Epoch 88, Loss: 602.3345, Val Acc: 0.1017
+  Seed 42, Epoch 89, Loss: 456.5324, Val Acc: 0.1017
+  Seed 42, Epoch 90, Loss: 848.0952, Val Acc: 0.1017
+  Seed 42, Epoch 91, Loss: 357.7116, Val Acc: 0.1017
+  Seed 42, Epoch 92, Loss: 1228.7043, Val Acc: 0.1017
+  Seed 42, Epoch 93, Loss: 233.3280, Val Acc: 0.1017
+  Seed 42, Epoch 94, Loss: 570.3103, Val Acc: 0.1017
+  Seed 42, Epoch 95, Loss: 410.8672, Val Acc: 0.1017
+  Seed 42, Epoch 96, Loss: 766.4251, Val Acc: 0.1017
+  Seed 42, Epoch 97, Loss: 443.5346, Val Acc: 0.1017
+  Seed 42, Epoch 98, Loss: 450.0054, Val Acc: 0.1017
+  Seed 42, Epoch 99, Loss: 235.9115, Val Acc: 0.1017
+  Seed 42, Epoch 100, Loss: 625.5591, Val Acc: 0.1017
+  Seed 42, Epoch 101, Loss: 412.5137, Val Acc: 0.1017
+  Seed 42, Epoch 102, Loss: 748.8663, Val Acc: 0.1017
+  Seed 42, Epoch 103, Loss: 501.0512, Val Acc: 0.1017
+  Seed 42, Epoch 104, Loss: 937.8918, Val Acc: 0.1017
+  Seed 42, Epoch 105, Loss: 434.9019, Val Acc: 0.1017
+  Seed 42, Epoch 106, Loss: 422.1458, Val Acc: 0.1017
+  Seed 42, Epoch 107, Loss: 414.5308, Val Acc: 0.1017
+  Seed 42, Epoch 108, Loss: 475.9470, Val Acc: 0.1017
+  Seed 42, Epoch 109, Loss: 549.5734, Val Acc: 0.1017
+  Seed 42, Epoch 110, Loss: 386.7895, Val Acc: 0.1017
+  Seed 42, Epoch 111, Loss: 556.1961, Val Acc: 0.1017
+  Seed 42, Epoch 112, Loss: 933.7965, Val Acc: 0.1017
+  Seed 42, Epoch 113, Loss: 261.0247, Val Acc: 0.1017
+  Seed 42, Epoch 114, Loss: 317.4018, Val Acc: 0.1017
+  Seed 42, Epoch 115, Loss: 874.2565, Val Acc: 0.1017
+  Seed 42, Epoch 116, Loss: 1224.3186, Val Acc: 0.1017
+  Seed 42, Epoch 117, Loss: 367.1442, Val Acc: 0.1017
+  Seed 42, Epoch 118, Loss: 509.2865, Val Acc: 0.1017
+  Seed 42, Epoch 119, Loss: 594.7924, Val Acc: 0.1017
+  Seed 42, Epoch 120, Loss: 1044.1035, Val Acc: 0.1017
+  Seed 42, Epoch 121, Loss: 418.9520, Val Acc: 0.1017
+  Seed 42, Epoch 122, Loss: 554.9677, Val Acc: 0.1017
+  Seed 42, Epoch 123, Loss: 333.5218, Val Acc: 0.1017
+  Seed 42, Epoch 124, Loss: 1018.2628, Val Acc: 0.1017
+  Seed 42, Epoch 125, Loss: 212.6467, Val Acc: 0.1017
+  Seed 42, Epoch 126, Loss: 453.8398, Val Acc: 0.1017
+  Seed 42, Epoch 127, Loss: 279.3058, Val Acc: 0.1017
+  Seed 42, Epoch 128, Loss: 362.8602, Val Acc: 0.1017
+  Seed 42, Epoch 129, Loss: 1031.2467, Val Acc: 0.1017
+  Seed 42, Epoch 130, Loss: 501.5717, Val Acc: 0.1017
+  Seed 42, Epoch 131, Loss: 796.9850, Val Acc: 0.1017
+  Seed 42, Epoch 132, Loss: 222.1488, Val Acc: 0.1017
+  Seed 42, Epoch 133, Loss: 471.5107, Val Acc: 0.1017
+  Seed 42, Epoch 134, Loss: 319.5775, Val Acc: 0.1017
+  Seed 42, Epoch 135, Loss: 482.6464, Val Acc: 0.1017
+  Seed 42, Epoch 136, Loss: 774.5506, Val Acc: 0.1017
+  Seed 42, Epoch 137, Loss: 423.5863, Val Acc: 0.1017
+  Seed 42, Epoch 138, Loss: 249.5043, Val Acc: 0.1017
+  Seed 42, Epoch 139, Loss: 546.3702, Val Acc: 0.1017
+  Seed 42, Epoch 140, Loss: 991.7325, Val Acc: 0.1017
+  Seed 42, Epoch 141, Loss: 112.7655, Val Acc: 0.1017
+  Seed 42, Epoch 142, Loss: 698.6565, Val Acc: 0.1017
+  Seed 42, Epoch 143, Loss: 543.3116, Val Acc: 0.1017
+  Seed 42, Epoch 144, Loss: 470.4975, Val Acc: 0.1017
+  Seed 42, Epoch 145, Loss: 707.0441, Val Acc: 0.1017
+  Seed 42, Epoch 146, Loss: 353.5172, Val Acc: 0.1017
+  Seed 42, Epoch 147, Loss: 249.4812, Val Acc: 0.0996
+  Seed 42, Epoch 148, Loss: 306.7132, Val Acc: 0.0996
+  Seed 42, Epoch 149, Loss: 1234.5575, Val Acc: 0.0996
+  Seed 42, Epoch 150, Loss: 715.3521, Val Acc: 0.0996
+  Seed 42, Epoch 151, Loss: 271.0618, Val Acc: 0.0996
+  Seed 42, Epoch 152, Loss: 392.5497, Val Acc: 0.0996
+  Seed 42, Epoch 153, Loss: 619.7643, Val Acc: 0.0996
+  Seed 42, Epoch 154, Loss: 2109.5037, Val Acc: 0.0996
+  Seed 42, Epoch 155, Loss: 405.7940, Val Acc: 0.0996
+  Seed 42, Epoch 156, Loss: 534.4490, Val Acc: 0.0996
+  Seed 42, Epoch 157, Loss: 788.3754, Val Acc: 0.0996
+  Seed 42, Epoch 158, Loss: 1357.0416, Val Acc: 0.0996
+  Seed 42, Epoch 159, Loss: 520.7747, Val Acc: 0.0996
+  Seed 42, Epoch 160, Loss: 610.4956, Val Acc: 0.0996
+  Seed 42, Epoch 161, Loss: 251.1506, Val Acc: 0.0996
+  Seed 42, Epoch 162, Loss: 605.5466, Val Acc: 0.1012
+  Seed 42, Epoch 163, Loss: 485.9819, Val Acc: 0.1017
+  Seed 42, Epoch 164, Loss: 234.5415, Val Acc: 0.1032
+  Seed 42, Epoch 165, Loss: 619.3081, Val Acc: 0.1017
+  Seed 42, Epoch 166, Loss: 346.3421, Val Acc: 0.1017
+  Seed 42, Epoch 167, Loss: 341.0225, Val Acc: 0.1017
+  Seed 42, Epoch 168, Loss: 379.3681, Val Acc: 0.1017
+  Seed 42, Epoch 169, Loss: 304.5813, Val Acc: 0.1017
+  Seed 42, Epoch 170, Loss: 593.6497, Val Acc: 0.1017
+  Seed 42, Epoch 171, Loss: 558.6575, Val Acc: 0.1017
+  Seed 42, Epoch 172, Loss: 475.8537, Val Acc: 0.1017
+  Seed 42, Epoch 173, Loss: 425.8318, Val Acc: 0.1017
+  Seed 42, Epoch 174, Loss: 343.6251, Val Acc: 0.1017
+  Seed 42, Epoch 175, Loss: 1006.6444, Val Acc: 0.1017
+  Seed 42, Epoch 176, Loss: 675.1172, Val Acc: 0.1017
+  Seed 42, Epoch 177, Loss: 1376.4500, Val Acc: 0.1017
+  Seed 42, Epoch 178, Loss: 379.2597, Val Acc: 0.1017
+  Seed 42, Epoch 179, Loss: 750.7874, Val Acc: 0.1017
+  Seed 42, Epoch 180, Loss: 451.4025, Val Acc: 0.1017
+  Seed 42, Epoch 181, Loss: 431.6506, Val Acc: 0.1017
+  Seed 42, Epoch 182, Loss: 610.1461, Val Acc: 0.1017
+  Seed 42, Epoch 183, Loss: 231.0912, Val Acc: 0.1017
+  Seed 42, Epoch 184, Loss: 308.8353, Val Acc: 0.1017
+  Seed 42, Epoch 185, Loss: 529.8342, Val Acc: 0.1017
+  Seed 42, Epoch 186, Loss: 172.8004, Val Acc: 0.1017
+  Seed 42, Epoch 187, Loss: 545.2852, Val Acc: 0.1017
+  Seed 42, Epoch 188, Loss: 737.3413, Val Acc: 0.1017
+  Seed 42, Epoch 189, Loss: 309.9889, Val Acc: 0.1017
+  Seed 42, Epoch 190, Loss: 991.7859, Val Acc: 0.1017
+  Seed 42, Epoch 191, Loss: 379.1901, Val Acc: 0.1017
+  Seed 42, Epoch 192, Loss: 555.4194, Val Acc: 0.1017
+  Seed 42, Epoch 193, Loss: 362.8748, Val Acc: 0.1017
+  Seed 42, Epoch 194, Loss: 558.5018, Val Acc: 0.1017
+  Seed 42, Epoch 195, Loss: 1351.8365, Val Acc: 0.1017
+  Seed 42, Epoch 196, Loss: 468.1018, Val Acc: 0.1017
+  Seed 42, Epoch 197, Loss: 644.2060, Val Acc: 0.1017
+  Seed 42, Epoch 198, Loss: 799.5332, Val Acc: 0.1017
+  Seed 42, Epoch 199, Loss: 488.8114, Val Acc: 0.1017
+  Seed 42, Epoch 200, Loss: 678.9908, Val Acc: 0.1017
+  Seed 42, Epoch 201, Loss: 278.3052, Val Acc: 0.1017
+  Seed 42, Epoch 202, Loss: 815.6154, Val Acc: 0.1017
+  Seed 42, Epoch 203, Loss: 580.9434, Val Acc: 0.1017
+  Seed 42, Epoch 204, Loss: 418.9688, Val Acc: 0.1017
+  Seed 42, Epoch 205, Loss: 285.3442, Val Acc: 0.1017
+  Seed 42, Epoch 206, Loss: 524.4351, Val Acc: 0.1017
+  Seed 42, Epoch 207, Loss: 529.2313, Val Acc: 0.1017
+  Seed 42, Epoch 208, Loss: 1226.4536, Val Acc: 0.1017
+  Seed 42, Epoch 209, Loss: 156.0418, Val Acc: 0.1017
+  Seed 42, Epoch 210, Loss: 1356.1359, Val Acc: 0.1017
+  Seed 42, Epoch 211, Loss: 638.5425, Val Acc: 0.1017
+  Seed 42, Epoch 212, Loss: 564.3008, Val Acc: 0.1017
+  Seed 42, Epoch 213, Loss: 208.6269, Val Acc: 0.1017
+  Seed 42, Epoch 214, Loss: 290.3460, Val Acc: 0.1017
+  Seed 42, Epoch 215, Loss: 504.5608, Val Acc: 0.1017
+  Seed 42, Epoch 216, Loss: 718.8262, Val Acc: 0.0936
+  Seed 42, Epoch 217, Loss: 496.9642, Val Acc: 0.0936
+  Seed 42, Epoch 218, Loss: 1357.9121, Val Acc: 0.0936
+  Seed 42, Epoch 219, Loss: 111.9989, Val Acc: 0.0936
+  Seed 42, Epoch 220, Loss: 1030.9160, Val Acc: 0.0936
+  Seed 42, Epoch 221, Loss: 432.9221, Val Acc: 0.0936
+  Seed 42, Epoch 222, Loss: 213.5339, Val Acc: 0.0936
+  Seed 42, Epoch 223, Loss: 219.8439, Val Acc: 0.0936
+  Seed 42, Epoch 224, Loss: 373.2064, Val Acc: 0.1017
+  Seed 42, Epoch 225, Loss: 868.7610, Val Acc: 0.1017
+  Seed 42, Epoch 226, Loss: 599.2001, Val Acc: 0.1017
+  Seed 42, Epoch 227, Loss: 403.5298, Val Acc: 0.1017
+  Seed 42, Epoch 228, Loss: 440.0189, Val Acc: 0.1017
+  Seed 42, Epoch 229, Loss: 495.9726, Val Acc: 0.1017
+  Seed 42, Epoch 230, Loss: 184.8745, Val Acc: 0.1017
+  Seed 42, Epoch 231, Loss: 526.2245, Val Acc: 0.1017
+  Seed 42, Epoch 232, Loss: 604.2969, Val Acc: 0.1017
+  Seed 42, Epoch 233, Loss: 318.8886, Val Acc: 0.1017
+  Seed 42, Epoch 234, Loss: 680.0672, Val Acc: 0.1017
+  Seed 42, Epoch 235, Loss: 977.0797, Val Acc: 0.1017
+  Seed 42, Epoch 236, Loss: 346.3977, Val Acc: 0.1017
+  Seed 42, Epoch 237, Loss: 256.7092, Val Acc: 0.1017
+  Seed 42, Epoch 238, Loss: 303.4431, Val Acc: 0.1017
+  Seed 42, Epoch 239, Loss: 378.0024, Val Acc: 0.1017
+  Seed 42, Epoch 240, Loss: 353.2829, Val Acc: 0.1017
+  Seed 42, Epoch 241, Loss: 325.9604, Val Acc: 0.1017
+  Seed 42, Epoch 242, Loss: 1037.4994, Val Acc: 0.1017
+  Seed 42, Epoch 243, Loss: 123.2171, Val Acc: 0.1017
+  Seed 42, Epoch 244, Loss: 1311.4186, Val Acc: 0.1017
+  Seed 42, Epoch 245, Loss: 855.6002, Val Acc: 0.1017
+  Seed 42, Epoch 246, Loss: 2307.0286, Val Acc: 0.1017
+  Seed 42, Epoch 247, Loss: 196.5782, Val Acc: 0.1017
+  Seed 42, Epoch 248, Loss: 1052.3635, Val Acc: 0.1017
+  Seed 42, Epoch 249, Loss: 868.6064, Val Acc: 0.1017
+  Seed 42, Epoch 250, Loss: 149.7881, Val Acc: 0.1017
+  Seed 42, Epoch 251, Loss: 1150.7506, Val Acc: 0.1017
+  Seed 42, Epoch 252, Loss: 258.9467, Val Acc: 0.1017
+  Seed 42, Epoch 253, Loss: 805.1931, Val Acc: 0.1017
+  Seed 42, Epoch 254, Loss: 1547.6019, Val Acc: 0.1017
+  Seed 42, Epoch 255, Loss: 888.2765, Val Acc: 0.1017
+  Seed 42, Epoch 256, Loss: 913.4682, Val Acc: 0.1017
+  Seed 42, Epoch 257, Loss: 763.3524, Val Acc: 0.1017
+  Seed 42, Epoch 258, Loss: 429.2169, Val Acc: 0.1017
+  Seed 42, Epoch 259, Loss: 914.4315, Val Acc: 0.1037
+  Seed 42, Epoch 260, Loss: 631.0552, Val Acc: 0.1037
+  Seed 42, Epoch 261, Loss: 323.2968, Val Acc: 0.1037
+  Seed 42, Epoch 262, Loss: 543.3841, Val Acc: 0.1037
+  Seed 42, Epoch 263, Loss: 356.4584, Val Acc: 0.1037
+  Seed 42, Epoch 264, Loss: 320.1808, Val Acc: 0.1037
+  Seed 42, Epoch 265, Loss: 591.2274, Val Acc: 0.1037
+  Seed 42, Epoch 266, Loss: 555.4845, Val Acc: 0.1037
+  Seed 42, Epoch 267, Loss: 1165.5404, Val Acc: 0.1037
+  Seed 42, Epoch 268, Loss: 738.0223, Val Acc: 0.1037
+  Seed 42, Epoch 269, Loss: 739.6658, Val Acc: 0.1037
+  Seed 42, Epoch 270, Loss: 658.7318, Val Acc: 0.1037
+  Seed 42, Epoch 271, Loss: 492.1263, Val Acc: 0.1037
+  Seed 42, Epoch 272, Loss: 789.5845, Val Acc: 0.1037
+  Seed 42, Epoch 273, Loss: 763.9231, Val Acc: 0.1037
+  Seed 42, Epoch 274, Loss: 805.0045, Val Acc: 0.1037
+  Seed 42, Epoch 275, Loss: 758.9498, Val Acc: 0.1037
+  Seed 42, Epoch 276, Loss: 1247.7051, Val Acc: 0.1037
+  Seed 42, Epoch 277, Loss: 842.5364, Val Acc: 0.1037
+  Seed 42, Epoch 278, Loss: 630.0421, Val Acc: 0.1037
+  Seed 42, Epoch 279, Loss: 1228.7148, Val Acc: 0.1037
+  Seed 42, Epoch 280, Loss: 1322.0887, Val Acc: 0.1037
+  Seed 42, Epoch 281, Loss: 334.2944, Val Acc: 0.1072
+  Seed 42, Epoch 282, Loss: 446.0042, Val Acc: 0.1017
+  Seed 42, Epoch 283, Loss: 658.1423, Val Acc: 0.1017
+  Seed 42, Epoch 284, Loss: 584.5047, Val Acc: 0.1017
+  Seed 42, Epoch 285, Loss: 517.0373, Val Acc: 0.1017
+  Seed 42, Epoch 286, Loss: 646.1524, Val Acc: 0.1017
+  Seed 42, Epoch 287, Loss: 779.1138, Val Acc: 0.1017
+  Seed 42, Epoch 288, Loss: 333.1375, Val Acc: 0.1017
+  Seed 42, Epoch 289, Loss: 736.0614, Val Acc: 0.1017
+  Seed 42, Epoch 290, Loss: 1056.9543, Val Acc: 0.1017
+  Seed 42, Epoch 291, Loss: 1228.7162, Val Acc: 0.1017
+  Seed 42, Epoch 292, Loss: 1100.7390, Val Acc: 0.1017
+  Seed 42, Epoch 293, Loss: 883.6021, Val Acc: 0.1017
+  Seed 42, Epoch 294, Loss: 845.0487, Val Acc: 0.1017
+  Seed 42, Epoch 295, Loss: 1330.4624, Val Acc: 0.1017
+  Seed 42, Epoch 296, Loss: 675.7347, Val Acc: 0.1017
+  Seed 42, Epoch 297, Loss: 706.3873, Val Acc: 0.1017
+  Seed 42, Epoch 298, Loss: 665.1163, Val Acc: 0.1017
+  Seed 42, Epoch 299, Loss: 470.3204, Val Acc: 0.1017
+  Seed 42, Epoch 300, Loss: 784.2247, Val Acc: 0.1017
+  Seed 42, Epoch 301, Loss: 772.0544, Val Acc: 0.1017
+  Seed 42, Epoch 302, Loss: 789.3119, Val Acc: 0.1017
+  Seed 42, Epoch 303, Loss: 1138.3901, Val Acc: 0.1017
+  Seed 42, Epoch 304, Loss: 1476.2911, Val Acc: 0.1017
+  Seed 42, Epoch 305, Loss: 300.4631, Val Acc: 0.1017
+  Seed 42, Epoch 306, Loss: 1580.8843, Val Acc: 0.1017
+  Seed 42, Epoch 307, Loss: 1103.5897, Val Acc: 0.1017
+  Seed 42, Epoch 308, Loss: 1319.7715, Val Acc: 0.1017
+  Seed 42, Epoch 309, Loss: 1349.1344, Val Acc: 0.1017
+  Seed 42, Epoch 310, Loss: 829.1169, Val Acc: 0.1017
+  Seed 42, Epoch 311, Loss: 1088.1414, Val Acc: 0.1017
+  Seed 42, Epoch 312, Loss: 1327.2915, Val Acc: 0.1017
+  Seed 42, Epoch 313, Loss: 555.8628, Val Acc: 0.1017
+  Seed 42, Epoch 314, Loss: 1341.3999, Val Acc: 0.1017
+  Seed 42, Epoch 315, Loss: 1508.4049, Val Acc: 0.1017
+  Seed 42, Epoch 316, Loss: 1533.8506, Val Acc: 0.1017
+  Seed 42, Epoch 317, Loss: 756.1680, Val Acc: 0.1017
+  Seed 42, Epoch 318, Loss: 883.5355, Val Acc: 0.1017
+  Seed 42, Epoch 319, Loss: 510.5291, Val Acc: 0.1017
+  Seed 42, Epoch 320, Loss: 904.0419, Val Acc: 0.1017
+  Seed 42, Epoch 321, Loss: 797.3086, Val Acc: 0.1017
+  Seed 42, Epoch 322, Loss: 996.4084, Val Acc: 0.1017
+  Seed 42, Epoch 323, Loss: 1621.5085, Val Acc: 0.1017
+  Seed 42, Epoch 324, Loss: 747.0502, Val Acc: 0.1017
+  Seed 42, Epoch 325, Loss: 506.4450, Val Acc: 0.1017
+  Seed 42, Epoch 326, Loss: 425.5684, Val Acc: 0.1017
+  Seed 42, Epoch 327, Loss: 743.9803, Val Acc: 0.1017
+  Seed 42, Epoch 328, Loss: 892.4813, Val Acc: 0.1017
+  Seed 42, Epoch 329, Loss: 641.8168, Val Acc: 0.1017
+  Seed 42, Epoch 330, Loss: 914.2347, Val Acc: 0.1017
+  Seed 42, Epoch 331, Loss: 801.6509, Val Acc: 0.1017
+  Seed 42, Epoch 332, Loss: 518.8369, Val Acc: 0.1017
+  Seed 42, Epoch 333, Loss: 766.0045, Val Acc: 0.1017
+  Seed 42, Epoch 334, Loss: 1098.7513, Val Acc: 0.1017
+  Seed 42, Epoch 335, Loss: 1290.2275, Val Acc: 0.1017
+  Seed 42, Epoch 336, Loss: 1743.7245, Val Acc: 0.0996
+  Seed 42, Epoch 337, Loss: 1202.7827, Val Acc: 0.0996
+  Seed 42, Epoch 338, Loss: 535.5653, Val Acc: 0.1017
+  Seed 42, Epoch 339, Loss: 281.7032, Val Acc: 0.1017
+  Seed 42, Epoch 340, Loss: 525.2618, Val Acc: 0.1017
+  Seed 42, Epoch 341, Loss: 912.0139, Val Acc: 0.1017
+  Seed 42, Epoch 342, Loss: 886.4816, Val Acc: 0.1017
+  Seed 42, Epoch 343, Loss: 1308.3951, Val Acc: 0.1017
+  Seed 42, Epoch 344, Loss: 910.0541, Val Acc: 0.1017
+  Seed 42, Epoch 345, Loss: 360.7074, Val Acc: 0.1017
+  Seed 42, Epoch 346, Loss: 921.7723, Val Acc: 0.1017
+  Seed 42, Epoch 347, Loss: 2092.5171, Val Acc: 0.1017
+  Seed 42, Epoch 348, Loss: 814.6537, Val Acc: 0.1017
+  Seed 42, Epoch 349, Loss: 793.3124, Val Acc: 0.1017
+  Seed 42, Epoch 350, Loss: 539.5719, Val Acc: 0.1017
+  Seed 42, Epoch 351, Loss: 1198.2762, Val Acc: 0.1017
+  Seed 42, Epoch 352, Loss: 1353.7628, Val Acc: 0.1017
+  Seed 42, Epoch 353, Loss: 1734.1565, Val Acc: 0.1017
+  Seed 42, Epoch 354, Loss: 1549.5717, Val Acc: 0.1017
+  Seed 42, Epoch 355, Loss: 1309.1971, Val Acc: 0.1017
+  Seed 42, Epoch 356, Loss: 1049.1764, Val Acc: 0.1017
+  Seed 42, Epoch 357, Loss: 495.4065, Val Acc: 0.1017
+  Seed 42, Epoch 358, Loss: 625.0995, Val Acc: 0.1017
+  Seed 42, Epoch 359, Loss: 640.1418, Val Acc: 0.1017
+  Seed 42, Epoch 360, Loss: 1852.1694, Val Acc: 0.1017
+  Seed 42, Epoch 361, Loss: 1236.8059, Val Acc: 0.1017
+  Seed 42, Epoch 362, Loss: 941.1753, Val Acc: 0.1017
+  Seed 42, Epoch 363, Loss: 1239.0703, Val Acc: 0.1017
+  Seed 42, Epoch 364, Loss: 655.8272, Val Acc: 0.1017
+  Seed 42, Epoch 365, Loss: 1280.7941, Val Acc: 0.1017
+  Seed 42, Epoch 366, Loss: 521.0050, Val Acc: 0.1017
+  Seed 42, Epoch 367, Loss: 1573.9630, Val Acc: 0.1017
+  Seed 42, Epoch 368, Loss: 1043.2697, Val Acc: 0.1017
+  Seed 42, Epoch 369, Loss: 1546.6398, Val Acc: 0.1017
+  Seed 42, Epoch 370, Loss: 1730.9543, Val Acc: 0.1017
+  Seed 42, Epoch 371, Loss: 1533.7936, Val Acc: 0.1017
+  Seed 42, Epoch 372, Loss: 1348.1392, Val Acc: 0.1017
+  Seed 42, Epoch 373, Loss: 1606.3956, Val Acc: 0.1017
+  Seed 42, Epoch 374, Loss: 826.3739, Val Acc: 0.1017
+  Seed 42, Epoch 375, Loss: 449.6288, Val Acc: 0.1017
+  Seed 42, Epoch 376, Loss: 1853.6244, Val Acc: 0.1017
+  Seed 42, Epoch 377, Loss: 269.5598, Val Acc: 0.1017
+  Seed 42, Epoch 378, Loss: 269.0219, Val Acc: 0.1017
+  Seed 42, Epoch 379, Loss: 1204.9058, Val Acc: 0.1017
+  Seed 42, Epoch 380, Loss: 1714.4803, Val Acc: 0.1017
+  Seed 42, Epoch 381, Loss: 620.8745, Val Acc: 0.1017
+  Seed 42, Epoch 382, Loss: 926.8843, Val Acc: 0.1017
+  Seed 42, Epoch 383, Loss: 809.3326, Val Acc: 0.1017
+  Seed 42, Epoch 384, Loss: 1018.7039, Val Acc: 0.1017
+  Seed 42, Epoch 385, Loss: 964.3723, Val Acc: 0.1017
+  Seed 42, Epoch 386, Loss: 1511.9165, Val Acc: 0.1017
+  Seed 42, Epoch 387, Loss: 625.6865, Val Acc: 0.1017
+  Seed 42, Epoch 388, Loss: 1288.2830, Val Acc: 0.1017
+  Seed 42, Epoch 389, Loss: 888.3926, Val Acc: 0.1017
+  Seed 42, Epoch 390, Loss: 703.2006, Val Acc: 0.1017
+  Seed 42, Epoch 391, Loss: 956.7056, Val Acc: 0.1017
+  Seed 42, Epoch 392, Loss: 560.7149, Val Acc: 0.1017
+  Seed 42, Epoch 393, Loss: 1809.0491, Val Acc: 0.1017
+  Seed 42, Epoch 394, Loss: 1865.2114, Val Acc: 0.1017
+  Seed 42, Epoch 395, Loss: 1921.0059, Val Acc: 0.1017
+  Seed 42, Epoch 396, Loss: 802.2210, Val Acc: 0.1017
+  Seed 42, Epoch 397, Loss: 699.5175, Val Acc: 0.1017
+  Seed 42, Epoch 398, Loss: 771.5162, Val Acc: 0.1017
+  Seed 42, Epoch 399, Loss: 484.0371, Val Acc: 0.1017
+  Seed 42, Epoch 400, Loss: 636.5734, Val Acc: 0.1017
+  Seed 42, Epoch 401, Loss: 1221.4657, Val Acc: 0.1017
+  Seed 42, Epoch 402, Loss: 1626.2725, Val Acc: 0.1017
+  Seed 42, Epoch 403, Loss: 375.8965, Val Acc: 0.1017
+  Seed 42, Epoch 404, Loss: 1074.8915, Val Acc: 0.1017
+  Seed 42, Epoch 405, Loss: 1721.7413, Val Acc: 0.1017
+  Seed 42, Epoch 406, Loss: 1810.2205, Val Acc: 0.1017
+  Seed 42, Epoch 407, Loss: 1532.5237, Val Acc: 0.1017
+  Seed 42, Epoch 408, Loss: 969.6136, Val Acc: 0.1017
+  Seed 42, Epoch 409, Loss: 785.9923, Val Acc: 0.1017
+  Seed 42, Epoch 410, Loss: 1162.0188, Val Acc: 0.1017
+  Seed 42, Epoch 411, Loss: 532.7652, Val Acc: 0.1017
+  Seed 42, Epoch 412, Loss: 1251.5100, Val Acc: 0.0996
+  Seed 42, Epoch 413, Loss: 1608.7592, Val Acc: 0.0996
+  Seed 42, Epoch 414, Loss: 1306.3530, Val Acc: 0.0996
+  Seed 42, Epoch 415, Loss: 986.9343, Val Acc: 0.0996
+  Seed 42, Epoch 416, Loss: 594.0548, Val Acc: 0.0996
+  Seed 42, Epoch 417, Loss: 1395.2987, Val Acc: 0.0996
+  Seed 42, Epoch 418, Loss: 1386.9094, Val Acc: 0.0996
+  Seed 42, Epoch 419, Loss: 1312.0361, Val Acc: 0.0996
+  Seed 42, Epoch 420, Loss: 1085.7509, Val Acc: 0.0996
+  Seed 42, Epoch 421, Loss: 817.6917, Val Acc: 0.0996
+  Seed 42, Epoch 422, Loss: 542.9496, Val Acc: 0.0996
+  Seed 42, Epoch 423, Loss: 929.2858, Val Acc: 0.0996
+  Seed 42, Epoch 424, Loss: 1160.4980, Val Acc: 0.0996
+  Seed 42, Epoch 425, Loss: 1240.2250, Val Acc: 0.0996
+  Seed 42, Epoch 426, Loss: 796.3765, Val Acc: 0.0996
+  Seed 42, Epoch 427, Loss: 1431.3744, Val Acc: 0.0996
+  Seed 42, Epoch 428, Loss: 964.3039, Val Acc: 0.0996
+  Seed 42, Epoch 429, Loss: 3450.9226, Val Acc: 0.0996
+  Seed 42, Epoch 430, Loss: 1256.7332, Val Acc: 0.0996
+  Seed 42, Epoch 431, Loss: 523.6867, Val Acc: 0.0996
+  Seed 42, Epoch 432, Loss: 635.4515, Val Acc: 0.0996
+  Seed 42, Epoch 433, Loss: 722.8117, Val Acc: 0.0996
+  Seed 42, Epoch 434, Loss: 959.3782, Val Acc: 0.0996
+  Seed 42, Epoch 435, Loss: 499.2478, Val Acc: 0.0996
+  Seed 42, Epoch 436, Loss: 1093.5120, Val Acc: 0.0996
+  Seed 42, Epoch 437, Loss: 1054.5577, Val Acc: 0.0996
+  Seed 42, Epoch 438, Loss: 685.7528, Val Acc: 0.0996
+  Seed 42, Epoch 439, Loss: 459.4298, Val Acc: 0.0996
+  Seed 42, Epoch 440, Loss: 524.9443, Val Acc: 0.0996
+  Seed 42, Epoch 441, Loss: 898.0119, Val Acc: 0.0996
+  Seed 42, Epoch 442, Loss: 1795.7678, Val Acc: 0.0996
+  Seed 42, Epoch 443, Loss: 670.5867, Val Acc: 0.0996
+  Seed 42, Epoch 444, Loss: 2183.9368, Val Acc: 0.0996
+  Seed 42, Epoch 445, Loss: 1345.5692, Val Acc: 0.0996
+  Seed 42, Epoch 446, Loss: 1169.4834, Val Acc: 0.0996
+  Seed 42, Epoch 447, Loss: 2266.8799, Val Acc: 0.0996
+  Seed 42, Epoch 448, Loss: 1193.0057, Val Acc: 0.0996
+  Seed 42, Epoch 449, Loss: 1144.9557, Val Acc: 0.0996
+  Seed 42, Epoch 450, Loss: 511.0656, Val Acc: 0.0996
+  Seed 42, Epoch 451, Loss: 1701.8169, Val Acc: 0.0996
+  Seed 42, Epoch 452, Loss: 1140.5035, Val Acc: 0.0996
+  Seed 42, Epoch 453, Loss: 874.3110, Val Acc: 0.0996
+  Seed 42, Epoch 454, Loss: 4206.7637, Val Acc: 0.0996
+  Seed 42, Epoch 455, Loss: 854.5317, Val Acc: 0.0996
+  Seed 42, Epoch 456, Loss: 581.1681, Val Acc: 0.0996
+  Seed 42, Epoch 457, Loss: 2358.8286, Val Acc: 0.0996
+  Seed 42, Epoch 458, Loss: 2089.6309, Val Acc: 0.0996
+  Seed 42, Epoch 459, Loss: 809.3427, Val Acc: 0.1002
+  Seed 42, Epoch 460, Loss: 626.4855, Val Acc: 0.1017
+  Seed 42, Epoch 461, Loss: 1065.2952, Val Acc: 0.1017
+  Seed 42, Epoch 462, Loss: 763.9201, Val Acc: 0.1017
+  Seed 42, Epoch 463, Loss: 1070.9777, Val Acc: 0.1017
+  Seed 42, Epoch 464, Loss: 1355.7792, Val Acc: 0.1017
+  Seed 42, Epoch 465, Loss: 376.0459, Val Acc: 0.1017
+  Seed 42, Epoch 466, Loss: 648.7880, Val Acc: 0.1017
+  Seed 42, Epoch 467, Loss: 963.2889, Val Acc: 0.1017
+  Seed 42, Epoch 468, Loss: 2297.5994, Val Acc: 0.1017
+  Seed 42, Epoch 469, Loss: 597.4174, Val Acc: 0.1017
+  Seed 42, Epoch 470, Loss: 691.8884, Val Acc: 0.1017
+  Seed 42, Epoch 471, Loss: 1875.9252, Val Acc: 0.1017
+  Seed 42, Epoch 472, Loss: 1148.6730, Val Acc: 0.1017
+  Seed 42, Epoch 473, Loss: 1222.2837, Val Acc: 0.1017
+  Seed 42, Epoch 474, Loss: 947.2394, Val Acc: 0.1017
+  Seed 42, Epoch 475, Loss: 989.0096, Val Acc: 0.1017
+  Seed 42, Epoch 476, Loss: 993.5426, Val Acc: 0.1017
+  Seed 42, Epoch 477, Loss: 914.5651, Val Acc: 0.1017
+  Seed 42, Epoch 478, Loss: 946.6446, Val Acc: 0.1017
+  Seed 42, Epoch 479, Loss: 1700.1229, Val Acc: 0.1017
+  Seed 42, Epoch 480, Loss: 358.7919, Val Acc: 0.1017
+  Seed 42, Epoch 481, Loss: 473.8920, Val Acc: 0.1017
+  Seed 42, Epoch 482, Loss: 1334.0228, Val Acc: 0.1017
+  Seed 42, Epoch 483, Loss: 1699.6486, Val Acc: 0.1017
+  Seed 42, Epoch 484, Loss: 1274.4874, Val Acc: 0.1017
+  Seed 42, Epoch 485, Loss: 953.4429, Val Acc: 0.1017
+  Seed 42, Epoch 486, Loss: 767.4975, Val Acc: 0.0976
+  Seed 42, Epoch 487, Loss: 669.7723, Val Acc: 0.1047
+  Seed 42, Epoch 488, Loss: 936.0807, Val Acc: 0.0991
+  Seed 42, Epoch 489, Loss: 1338.7515, Val Acc: 0.0996
+  Seed 42, Epoch 490, Loss: 2311.9019, Val Acc: 0.0996
+  Seed 42, Epoch 491, Loss: 1504.8585, Val Acc: 0.0996
+  Seed 42, Epoch 492, Loss: 747.3210, Val Acc: 0.0996
+  Seed 42, Epoch 493, Loss: 831.7812, Val Acc: 0.0996
+  Seed 42, Epoch 494, Loss: 1508.6393, Val Acc: 0.0996
+  Seed 42, Epoch 495, Loss: 1315.6420, Val Acc: 0.0996
+  Seed 42, Epoch 496, Loss: 681.9250, Val Acc: 0.0996
+  Seed 42, Epoch 497, Loss: 1233.8770, Val Acc: 0.0996
+  Seed 42, Epoch 498, Loss: 541.9149, Val Acc: 0.0996
+  Seed 42, Epoch 499, Loss: 1459.3920, Val Acc: 0.0996
+  Seed 42, Epoch 500, Loss: 1604.1625, Val Acc: 0.0996
+  Seed 42, Epoch 501, Loss: 571.6147, Val Acc: 0.0996
+  Seed 42, Epoch 502, Loss: 1110.0015, Val Acc: 0.0996
+  Seed 42, Epoch 503, Loss: 887.6038, Val Acc: 0.0996
+  Seed 42, Epoch 504, Loss: 590.1564, Val Acc: 0.0996
+  Seed 42, Epoch 505, Loss: 654.9108, Val Acc: 0.0996
+  Seed 42, Epoch 506, Loss: 909.8599, Val Acc: 0.0996
+  Seed 42, Epoch 507, Loss: 533.9978, Val Acc: 0.0996
+  Seed 42, Epoch 508, Loss: 726.7936, Val Acc: 0.0996
+  Seed 42, Epoch 509, Loss: 602.7654, Val Acc: 0.0996
+  Seed 42, Epoch 510, Loss: 2808.3750, Val Acc: 0.0996
+  Seed 42, Epoch 511, Loss: 1236.9253, Val Acc: 0.0996
+  Seed 42, Epoch 512, Loss: 1057.7581, Val Acc: 0.0996
+  Seed 42, Epoch 513, Loss: 911.4467, Val Acc: 0.0996
+  Seed 42, Epoch 514, Loss: 946.7709, Val Acc: 0.0996
+  Seed 42, Epoch 515, Loss: 553.1420, Val Acc: 0.0996
+  Seed 42, Epoch 516, Loss: 859.7695, Val Acc: 0.0996
+  Seed 42, Epoch 517, Loss: 591.9157, Val Acc: 0.0996
+  Seed 42, Epoch 518, Loss: 1255.8268, Val Acc: 0.0996
+  Seed 42, Epoch 519, Loss: 3101.5117, Val Acc: 0.0996
+  Seed 42, Epoch 520, Loss: 662.0769, Val Acc: 0.0996
+  Seed 42, Epoch 521, Loss: 416.0156, Val Acc: 0.0996
+  Seed 42, Epoch 522, Loss: 1530.6458, Val Acc: 0.0996
+  Seed 42, Epoch 523, Loss: 644.7944, Val Acc: 0.0996
+  Seed 42, Epoch 524, Loss: 1598.1161, Val Acc: 0.0996
+  Seed 42, Epoch 525, Loss: 1285.5319, Val Acc: 0.0996
+  Seed 42, Epoch 526, Loss: 846.7855, Val Acc: 0.0996
+  Seed 42, Epoch 527, Loss: 1009.2223, Val Acc: 0.0996
+  Seed 42, Epoch 528, Loss: 577.4463, Val Acc: 0.0996
+  Seed 42, Epoch 529, Loss: 857.2430, Val Acc: 0.0996
+  Seed 42, Epoch 530, Loss: 884.3237, Val Acc: 0.0996
+  Seed 42, Epoch 531, Loss: 1008.6977, Val Acc: 0.0996
+  Seed 42, Epoch 532, Loss: 1963.3416, Val Acc: 0.0996
+  Seed 42, Epoch 533, Loss: 834.1596, Val Acc: 0.0996
+  Seed 42, Epoch 534, Loss: 1962.0973, Val Acc: 0.0996
+  Seed 42, Epoch 535, Loss: 1141.2131, Val Acc: 0.0996
+  Seed 42, Epoch 536, Loss: 2906.1545, Val Acc: 0.0996
+  Seed 42, Epoch 537, Loss: 918.2563, Val Acc: 0.0996
+  Seed 42, Epoch 538, Loss: 724.1671, Val Acc: 0.0996
+  Seed 42, Epoch 539, Loss: 1279.5530, Val Acc: 0.0996
+  Seed 42, Epoch 540, Loss: 1154.4323, Val Acc: 0.0996
+  Seed 42, Epoch 541, Loss: 533.0465, Val Acc: 0.0996
+  Seed 42, Epoch 542, Loss: 596.0439, Val Acc: 0.0996
+  Seed 42, Epoch 543, Loss: 785.5813, Val Acc: 0.0996
+  Seed 42, Epoch 544, Loss: 789.9785, Val Acc: 0.0996
+  Seed 42, Epoch 545, Loss: 1670.0497, Val Acc: 0.0996
+  Seed 42, Epoch 546, Loss: 803.0988, Val Acc: 0.0996
+  Seed 42, Epoch 547, Loss: 598.2973, Val Acc: 0.0996
+  Seed 42, Epoch 548, Loss: 1376.4218, Val Acc: 0.0996
+  Seed 42, Epoch 549, Loss: 1474.7665, Val Acc: 0.0996
+  Seed 42, Epoch 550, Loss: 887.0549, Val Acc: 0.0996
+  Seed 42, Epoch 551, Loss: 1060.0627, Val Acc: 0.0996
+  Seed 42, Epoch 552, Loss: 840.6361, Val Acc: 0.0996
+  Seed 42, Epoch 553, Loss: 888.5594, Val Acc: 0.0996
+  Seed 42, Epoch 554, Loss: 1222.3447, Val Acc: 0.0996
+  Seed 42, Epoch 555, Loss: 1311.6462, Val Acc: 0.0996
+  Seed 42, Epoch 556, Loss: 387.7410, Val Acc: 0.0996
+  Seed 42, Epoch 557, Loss: 935.0378, Val Acc: 0.0996
+  Seed 42, Epoch 558, Loss: 1153.0854, Val Acc: 0.0996
+  Seed 42, Epoch 559, Loss: 1579.9896, Val Acc: 0.0996
+  Seed 42, Epoch 560, Loss: 469.2237, Val Acc: 0.0996
+  Seed 42, Epoch 561, Loss: 1103.5378, Val Acc: 0.0996
+  Seed 42, Epoch 562, Loss: 1631.2463, Val Acc: 0.0996
+  Seed 42, Epoch 563, Loss: 1102.6731, Val Acc: 0.0996
+  Seed 42, Epoch 564, Loss: 1463.9117, Val Acc: 0.0996
+  Seed 42, Epoch 565, Loss: 713.6393, Val Acc: 0.0996
+  Seed 42, Epoch 566, Loss: 1633.3256, Val Acc: 0.0996
+  Seed 42, Epoch 567, Loss: 676.5685, Val Acc: 0.0996
+  Seed 42, Epoch 568, Loss: 1508.8182, Val Acc: 0.0996
+  Seed 42, Epoch 569, Loss: 969.6406, Val Acc: 0.0996
+  Seed 42, Epoch 570, Loss: 3222.8625, Val Acc: 0.0996
+  Seed 42, Epoch 571, Loss: 1054.1777, Val Acc: 0.0996
+  Seed 42, Epoch 572, Loss: 2014.1558, Val Acc: 0.0996
+  Seed 42, Epoch 573, Loss: 745.1118, Val Acc: 0.0996
+  Seed 42, Epoch 574, Loss: 774.2452, Val Acc: 0.0996
+  Seed 42, Epoch 575, Loss: 1685.1134, Val Acc: 0.0996
+  Seed 42, Epoch 576, Loss: 385.8399, Val Acc: 0.0996
+  Seed 42, Epoch 577, Loss: 1009.6851, Val Acc: 0.0996
+  Seed 42, Epoch 578, Loss: 2483.8921, Val Acc: 0.0996
+  Seed 42, Epoch 579, Loss: 1212.7126, Val Acc: 0.0996
+  Seed 42, Epoch 580, Loss: 1362.9243, Val Acc: 0.0996
+  Seed 42, Epoch 581, Loss: 733.7185, Val Acc: 0.0996
+  Seed 42, Epoch 582, Loss: 1167.6722, Val Acc: 0.0996
+  Seed 42, Epoch 583, Loss: 883.1316, Val Acc: 0.0996
+  Seed 42, Epoch 584, Loss: 1901.2278, Val Acc: 0.0996
+  Seed 42, Epoch 585, Loss: 1897.2062, Val Acc: 0.0996
+  Seed 42, Epoch 586, Loss: 1198.1678, Val Acc: 0.0996
+  Seed 42, Epoch 587, Loss: 846.5456, Val Acc: 0.0996
+  Seed 42, Epoch 588, Loss: 1862.1061, Val Acc: 0.0996
+  Seed 42, Epoch 589, Loss: 3682.2405, Val Acc: 0.0996
+  Seed 42, Epoch 590, Loss: 2303.1174, Val Acc: 0.0996
+  Seed 42, Epoch 591, Loss: 977.2357, Val Acc: 0.0996
+  Seed 42, Epoch 592, Loss: 1518.7462, Val Acc: 0.0996
+  Seed 42, Epoch 593, Loss: 645.7338, Val Acc: 0.0996
+  Seed 42, Epoch 594, Loss: 1809.8593, Val Acc: 0.0996
+  Seed 42, Epoch 595, Loss: 3317.0249, Val Acc: 0.0996
+  Seed 42, Epoch 596, Loss: 830.0935, Val Acc: 0.0996
+  Seed 42, Epoch 597, Loss: 1266.5941, Val Acc: 0.0996
+  Seed 42, Epoch 598, Loss: 562.2963, Val Acc: 0.0996
+  Seed 42, Epoch 599, Loss: 558.8432, Val Acc: 0.0996
+  Seed 42, Epoch 600, Loss: 1720.9644, Val Acc: 0.0996
+  Seed 43, Epoch 1, Loss: 3055.3716, Val Acc: 0.1087
+  Seed 43, Epoch 2, Loss: 238.1748, Val Acc: 0.1087
+  Seed 43, Epoch 3, Loss: 211.1199, Val Acc: 0.1087
+  Seed 43, Epoch 4, Loss: 921.5337, Val Acc: 0.1087
+  Seed 43, Epoch 5, Loss: 1119.3357, Val Acc: 0.1087
+  Seed 43, Epoch 6, Loss: 322.2915, Val Acc: 0.1087
+  Seed 43, Epoch 7, Loss: 189.2792, Val Acc: 0.1087
+  Seed 43, Epoch 8, Loss: 838.5267, Val Acc: 0.1087
+  Seed 43, Epoch 9, Loss: 543.1868, Val Acc: 0.1087
+  Seed 43, Epoch 10, Loss: 598.5863, Val Acc: 0.1087
+  Seed 43, Epoch 11, Loss: 473.3354, Val Acc: 0.1087
+  Seed 43, Epoch 12, Loss: 149.6141, Val Acc: 0.1087
+  Seed 43, Epoch 13, Loss: 160.4241, Val Acc: 0.1087
+  Seed 43, Epoch 14, Loss: 626.1617, Val Acc: 0.1087
+  Seed 43, Epoch 15, Loss: 198.9868, Val Acc: 0.1087
+  Seed 43, Epoch 16, Loss: 194.3485, Val Acc: 0.1087
+  Seed 43, Epoch 17, Loss: 126.5867, Val Acc: 0.1087
+  Seed 43, Epoch 18, Loss: 568.0709, Val Acc: 0.1087
+  Seed 43, Epoch 19, Loss: 397.3078, Val Acc: 0.1087
+  Seed 43, Epoch 20, Loss: 532.1454, Val Acc: 0.1087
+  Seed 43, Epoch 21, Loss: 142.3543, Val Acc: 0.1087
+  Seed 43, Epoch 22, Loss: 172.9377, Val Acc: 0.1087
+  Seed 43, Epoch 23, Loss: 230.2226, Val Acc: 0.1087
+  Seed 43, Epoch 24, Loss: 521.5363, Val Acc: 0.1087
+  Seed 43, Epoch 25, Loss: 551.3568, Val Acc: 0.1087
+  Seed 43, Epoch 26, Loss: 468.4567, Val Acc: 0.1087
+  Seed 43, Epoch 27, Loss: 321.4163, Val Acc: 0.1087
+  Seed 43, Epoch 28, Loss: 1418.0782, Val Acc: 0.1087
+  Seed 43, Epoch 29, Loss: 544.4174, Val Acc: 0.1087
+  Seed 43, Epoch 30, Loss: 237.7906, Val Acc: 0.1087
+  Seed 43, Epoch 31, Loss: 490.5755, Val Acc: 0.1087
+  Seed 43, Epoch 32, Loss: 140.5416, Val Acc: 0.1087
+  Seed 43, Epoch 33, Loss: 318.8659, Val Acc: 0.1017
+  Seed 43, Epoch 34, Loss: 563.3311, Val Acc: 0.0981
+  Seed 43, Epoch 35, Loss: 510.0444, Val Acc: 0.0981
+  Seed 43, Epoch 36, Loss: 194.6533, Val Acc: 0.0981
+  Seed 43, Epoch 37, Loss: 450.5739, Val Acc: 0.0981
+  Seed 43, Epoch 38, Loss: 1176.0812, Val Acc: 0.0981
+  Seed 43, Epoch 39, Loss: 666.1408, Val Acc: 0.0981
+  Seed 43, Epoch 40, Loss: 231.1466, Val Acc: 0.0981
+  Seed 43, Epoch 41, Loss: 402.4043, Val Acc: 0.0981
+  Seed 43, Epoch 42, Loss: 598.2271, Val Acc: 0.0981
+  Seed 43, Epoch 43, Loss: 619.5656, Val Acc: 0.0981
+  Seed 43, Epoch 44, Loss: 337.7518, Val Acc: 0.0981
+  Seed 43, Epoch 45, Loss: 115.3671, Val Acc: 0.0981
+  Seed 43, Epoch 46, Loss: 412.8645, Val Acc: 0.0981
+  Seed 43, Epoch 47, Loss: 437.9626, Val Acc: 0.0981
+  Seed 43, Epoch 48, Loss: 493.3598, Val Acc: 0.0981
+  Seed 43, Epoch 49, Loss: 620.0746, Val Acc: 0.0981
+  Seed 43, Epoch 50, Loss: 177.7482, Val Acc: 0.0981
+  Seed 43, Epoch 51, Loss: 655.1600, Val Acc: 0.0981
+  Seed 43, Epoch 52, Loss: 703.2473, Val Acc: 0.0981
+  Seed 43, Epoch 53, Loss: 594.6381, Val Acc: 0.0981
+  Seed 43, Epoch 54, Loss: 941.4827, Val Acc: 0.0981
+  Seed 43, Epoch 55, Loss: 185.1599, Val Acc: 0.0981
+  Seed 43, Epoch 56, Loss: 778.1429, Val Acc: 0.0981
+  Seed 43, Epoch 57, Loss: 482.7274, Val Acc: 0.0981
+  Seed 43, Epoch 58, Loss: 419.8846, Val Acc: 0.0981
+  Seed 43, Epoch 59, Loss: 110.0780, Val Acc: 0.0981
+  Seed 43, Epoch 60, Loss: 757.4326, Val Acc: 0.0981
+  Seed 43, Epoch 61, Loss: 301.8327, Val Acc: 0.0981
+  Seed 43, Epoch 62, Loss: 132.0682, Val Acc: 0.0981
+  Seed 43, Epoch 63, Loss: 1177.9518, Val Acc: 0.0981
+  Seed 43, Epoch 64, Loss: 677.2689, Val Acc: 0.0981
+  Seed 43, Epoch 65, Loss: 203.5640, Val Acc: 0.0981
+  Seed 43, Epoch 66, Loss: 147.2644, Val Acc: 0.0981
+  Seed 43, Epoch 67, Loss: 442.7299, Val Acc: 0.0981
+  Seed 43, Epoch 68, Loss: 434.8964, Val Acc: 0.0981
+  Seed 43, Epoch 69, Loss: 382.1868, Val Acc: 0.0981
+  Seed 43, Epoch 70, Loss: 367.9983, Val Acc: 0.0981
+  Seed 43, Epoch 71, Loss: 83.1909, Val Acc: 0.0981
+  Seed 43, Epoch 72, Loss: 875.6000, Val Acc: 0.0981
+  Seed 43, Epoch 73, Loss: 224.3670, Val Acc: 0.0981
+  Seed 43, Epoch 74, Loss: 295.5396, Val Acc: 0.0981
+  Seed 43, Epoch 75, Loss: 238.2362, Val Acc: 0.0981
+  Seed 43, Epoch 76, Loss: 295.3371, Val Acc: 0.0981
+  Seed 43, Epoch 77, Loss: 491.6989, Val Acc: 0.0981
+  Seed 43, Epoch 78, Loss: 273.6767, Val Acc: 0.0981
+  Seed 43, Epoch 79, Loss: 581.6312, Val Acc: 0.0981
+  Seed 43, Epoch 80, Loss: 496.7516, Val Acc: 0.0981
+  Seed 43, Epoch 81, Loss: 782.1234, Val Acc: 0.0981
+  Seed 43, Epoch 82, Loss: 896.0507, Val Acc: 0.0981
+  Seed 43, Epoch 83, Loss: 341.5885, Val Acc: 0.0981
+  Seed 43, Epoch 84, Loss: 139.7524, Val Acc: 0.0981
+  Seed 43, Epoch 85, Loss: 354.6898, Val Acc: 0.0981
+  Seed 43, Epoch 86, Loss: 322.0194, Val Acc: 0.0981
+  Seed 43, Epoch 87, Loss: 334.1729, Val Acc: 0.0981
+  Seed 43, Epoch 88, Loss: 398.4182, Val Acc: 0.0981
+  Seed 43, Epoch 89, Loss: 473.1092, Val Acc: 0.0981
+  Seed 43, Epoch 90, Loss: 378.8807, Val Acc: 0.0981
+  Seed 43, Epoch 91, Loss: 791.5499, Val Acc: 0.0981
+  Seed 43, Epoch 92, Loss: 647.8657, Val Acc: 0.0981
+  Seed 43, Epoch 93, Loss: 484.5516, Val Acc: 0.0981
+  Seed 43, Epoch 94, Loss: 874.9084, Val Acc: 0.0981
+  Seed 43, Epoch 95, Loss: 424.5136, Val Acc: 0.0981
+  Seed 43, Epoch 96, Loss: 452.3472, Val Acc: 0.0981
+  Seed 43, Epoch 97, Loss: 638.3858, Val Acc: 0.0981
+  Seed 43, Epoch 98, Loss: 544.3094, Val Acc: 0.0981
+  Seed 43, Epoch 99, Loss: 226.0059, Val Acc: 0.0981
+  Seed 43, Epoch 100, Loss: 371.9742, Val Acc: 0.0981
+  Seed 43, Epoch 101, Loss: 739.7441, Val Acc: 0.0981
+  Seed 43, Epoch 102, Loss: 326.4547, Val Acc: 0.0981
+  Seed 43, Epoch 103, Loss: 226.7390, Val Acc: 0.0981
+  Seed 43, Epoch 104, Loss: 222.2125, Val Acc: 0.0981
+  Seed 43, Epoch 105, Loss: 358.7046, Val Acc: 0.0981
+  Seed 43, Epoch 106, Loss: 786.4113, Val Acc: 0.0981
+  Seed 43, Epoch 107, Loss: 1095.6281, Val Acc: 0.0981
+  Seed 43, Epoch 108, Loss: 236.8780, Val Acc: 0.0981
+  Seed 43, Epoch 109, Loss: 230.1157, Val Acc: 0.0981
+  Seed 43, Epoch 110, Loss: 1228.9514, Val Acc: 0.0981
+  Seed 43, Epoch 111, Loss: 449.6635, Val Acc: 0.0981
+  Seed 43, Epoch 112, Loss: 336.8265, Val Acc: 0.0981
+  Seed 43, Epoch 113, Loss: 1223.1210, Val Acc: 0.0981
+  Seed 43, Epoch 114, Loss: 812.2386, Val Acc: 0.0981
+  Seed 43, Epoch 115, Loss: 331.4912, Val Acc: 0.0981
+  Seed 43, Epoch 116, Loss: 447.8712, Val Acc: 0.0981
+  Seed 43, Epoch 117, Loss: 253.0022, Val Acc: 0.0981
+  Seed 43, Epoch 118, Loss: 458.4938, Val Acc: 0.0981
+  Seed 43, Epoch 119, Loss: 708.3710, Val Acc: 0.0981
+  Seed 43, Epoch 120, Loss: 1170.7452, Val Acc: 0.0981
+  Seed 43, Epoch 121, Loss: 1205.3862, Val Acc: 0.0981
+  Seed 43, Epoch 122, Loss: 654.6262, Val Acc: 0.0981
+  Seed 43, Epoch 123, Loss: 1624.3994, Val Acc: 0.0981
+  Seed 43, Epoch 124, Loss: 271.0481, Val Acc: 0.0981
+  Seed 43, Epoch 125, Loss: 363.9631, Val Acc: 0.0981
+  Seed 43, Epoch 126, Loss: 561.5564, Val Acc: 0.0981
+  Seed 43, Epoch 127, Loss: 925.2004, Val Acc: 0.0981
+  Seed 43, Epoch 128, Loss: 318.6038, Val Acc: 0.0981
+  Seed 43, Epoch 129, Loss: 556.4775, Val Acc: 0.0981
+  Seed 43, Epoch 130, Loss: 711.0512, Val Acc: 0.0981
+  Seed 43, Epoch 131, Loss: 592.3285, Val Acc: 0.0981
+  Seed 43, Epoch 132, Loss: 547.7433, Val Acc: 0.0981
+  Seed 43, Epoch 133, Loss: 430.2399, Val Acc: 0.0981
+  Seed 43, Epoch 134, Loss: 695.2975, Val Acc: 0.0981
+  Seed 43, Epoch 135, Loss: 802.6030, Val Acc: 0.0981
+  Seed 43, Epoch 136, Loss: 462.4479, Val Acc: 0.0981
+  Seed 43, Epoch 137, Loss: 453.8687, Val Acc: 0.0981
+  Seed 43, Epoch 138, Loss: 463.1406, Val Acc: 0.0981
+  Seed 43, Epoch 139, Loss: 593.2887, Val Acc: 0.1087
+  Seed 43, Epoch 140, Loss: 454.9793, Val Acc: 0.1087
+  Seed 43, Epoch 141, Loss: 526.4982, Val Acc: 0.1087
+  Seed 43, Epoch 142, Loss: 746.5547, Val Acc: 0.1087
+  Seed 43, Epoch 143, Loss: 854.6949, Val Acc: 0.1087
+  Seed 43, Epoch 144, Loss: 179.3507, Val Acc: 0.1087
+  Seed 43, Epoch 145, Loss: 1005.8055, Val Acc: 0.1087
+  Seed 43, Epoch 146, Loss: 824.4056, Val Acc: 0.1087
+  Seed 43, Epoch 147, Loss: 476.4409, Val Acc: 0.1087
+  Seed 43, Epoch 148, Loss: 601.2167, Val Acc: 0.1087
+  Seed 43, Epoch 149, Loss: 496.1851, Val Acc: 0.1087
+  Seed 43, Epoch 150, Loss: 552.2173, Val Acc: 0.1087
+  Seed 43, Epoch 151, Loss: 910.7125, Val Acc: 0.1087
+  Seed 43, Epoch 152, Loss: 571.9035, Val Acc: 0.1087
+  Seed 43, Epoch 153, Loss: 820.8905, Val Acc: 0.1087
+  Seed 43, Epoch 154, Loss: 1344.5111, Val Acc: 0.1087
+  Seed 43, Epoch 155, Loss: 289.6114, Val Acc: 0.1087
+  Seed 43, Epoch 156, Loss: 799.0497, Val Acc: 0.1087
+  Seed 43, Epoch 157, Loss: 1703.3209, Val Acc: 0.1087
+  Seed 43, Epoch 158, Loss: 455.3316, Val Acc: 0.1087
+  Seed 43, Epoch 159, Loss: 534.0833, Val Acc: 0.1087
+  Seed 43, Epoch 160, Loss: 1328.7627, Val Acc: 0.1087
+  Seed 43, Epoch 161, Loss: 1291.5480, Val Acc: 0.1087
+  Seed 43, Epoch 162, Loss: 1000.5864, Val Acc: 0.1087
+  Seed 43, Epoch 163, Loss: 792.6213, Val Acc: 0.1087
+  Seed 43, Epoch 164, Loss: 677.4463, Val Acc: 0.1087
+  Seed 43, Epoch 165, Loss: 1811.3462, Val Acc: 0.1087
+  Seed 43, Epoch 166, Loss: 569.6064, Val Acc: 0.1087
+  Seed 43, Epoch 167, Loss: 587.9420, Val Acc: 0.1087
+  Seed 43, Epoch 168, Loss: 1056.6185, Val Acc: 0.1087
+  Seed 43, Epoch 169, Loss: 1976.1180, Val Acc: 0.1087
+  Seed 43, Epoch 170, Loss: 435.4344, Val Acc: 0.1087
+  Seed 43, Epoch 171, Loss: 512.7413, Val Acc: 0.1087
+  Seed 43, Epoch 172, Loss: 468.9239, Val Acc: 0.1087
+  Seed 43, Epoch 173, Loss: 365.0558, Val Acc: 0.1087
+  Seed 43, Epoch 174, Loss: 908.9072, Val Acc: 0.1087
+  Seed 43, Epoch 175, Loss: 641.9753, Val Acc: 0.1087
+  Seed 43, Epoch 176, Loss: 1910.7426, Val Acc: 0.1087
+  Seed 43, Epoch 177, Loss: 721.3156, Val Acc: 0.1087
+  Seed 43, Epoch 178, Loss: 438.6039, Val Acc: 0.1087
+  Seed 43, Epoch 179, Loss: 475.0709, Val Acc: 0.1087
+  Seed 43, Epoch 180, Loss: 492.8887, Val Acc: 0.1087
+  Seed 43, Epoch 181, Loss: 795.2484, Val Acc: 0.1087
+  Seed 43, Epoch 182, Loss: 776.4586, Val Acc: 0.1087
+  Seed 43, Epoch 183, Loss: 849.6216, Val Acc: 0.1087
+  Seed 43, Epoch 184, Loss: 353.6954, Val Acc: 0.1087
+  Seed 43, Epoch 185, Loss: 771.3962, Val Acc: 0.1087
+  Seed 43, Epoch 186, Loss: 1442.5848, Val Acc: 0.1087
+  Seed 43, Epoch 187, Loss: 386.9518, Val Acc: 0.1087
+  Seed 43, Epoch 188, Loss: 1278.6746, Val Acc: 0.1087
+  Seed 43, Epoch 189, Loss: 1159.8864, Val Acc: 0.1087
+  Seed 43, Epoch 190, Loss: 691.3604, Val Acc: 0.1087
+  Seed 43, Epoch 191, Loss: 1571.4601, Val Acc: 0.1087
+  Seed 43, Epoch 192, Loss: 840.0089, Val Acc: 0.1087
+  Seed 43, Epoch 193, Loss: 721.5359, Val Acc: 0.1087
+  Seed 43, Epoch 194, Loss: 620.8805, Val Acc: 0.1087
+  Seed 43, Epoch 195, Loss: 708.3745, Val Acc: 0.1087
+  Seed 43, Epoch 196, Loss: 364.5306, Val Acc: 0.1087
+  Seed 43, Epoch 197, Loss: 2097.9309, Val Acc: 0.1087
+  Seed 43, Epoch 198, Loss: 782.9604, Val Acc: 0.1087
+  Seed 43, Epoch 199, Loss: 443.5641, Val Acc: 0.1087
+  Seed 43, Epoch 200, Loss: 1344.6393, Val Acc: 0.1087
+  Seed 43, Epoch 201, Loss: 1049.4314, Val Acc: 0.1087
+  Seed 43, Epoch 202, Loss: 1558.7043, Val Acc: 0.1087
+  Seed 43, Epoch 203, Loss: 425.5675, Val Acc: 0.1087
+  Seed 43, Epoch 204, Loss: 620.1644, Val Acc: 0.1087
+  Seed 43, Epoch 205, Loss: 801.3829, Val Acc: 0.1087
+  Seed 43, Epoch 206, Loss: 757.7427, Val Acc: 0.1087
+  Seed 43, Epoch 207, Loss: 945.6776, Val Acc: 0.1087
+  Seed 43, Epoch 208, Loss: 963.8774, Val Acc: 0.1087
+  Seed 43, Epoch 209, Loss: 1470.7799, Val Acc: 0.1087
+  Seed 43, Epoch 210, Loss: 1513.0392, Val Acc: 0.1087
+  Seed 43, Epoch 211, Loss: 544.7174, Val Acc: 0.1087
+  Seed 43, Epoch 212, Loss: 1752.6097, Val Acc: 0.1087
+  Seed 43, Epoch 213, Loss: 1320.3671, Val Acc: 0.1087
+  Seed 43, Epoch 214, Loss: 1389.6508, Val Acc: 0.1087
+  Seed 43, Epoch 215, Loss: 783.1295, Val Acc: 0.1087
+  Seed 43, Epoch 216, Loss: 499.4343, Val Acc: 0.1017
+  Seed 43, Epoch 217, Loss: 1250.1821, Val Acc: 0.1017
+  Seed 43, Epoch 218, Loss: 508.9309, Val Acc: 0.1017
+  Seed 43, Epoch 219, Loss: 1182.7577, Val Acc: 0.1017
+  Seed 43, Epoch 220, Loss: 1743.7205, Val Acc: 0.1017
+  Seed 43, Epoch 221, Loss: 352.9643, Val Acc: 0.1017
+  Seed 43, Epoch 222, Loss: 671.5031, Val Acc: 0.1017
+  Seed 43, Epoch 223, Loss: 902.2142, Val Acc: 0.1017
+  Seed 43, Epoch 224, Loss: 868.9084, Val Acc: 0.1017
+  Seed 43, Epoch 225, Loss: 1500.2902, Val Acc: 0.1017
+  Seed 43, Epoch 226, Loss: 439.9536, Val Acc: 0.1017
+  Seed 43, Epoch 227, Loss: 577.4401, Val Acc: 0.1017
+  Seed 43, Epoch 228, Loss: 786.1849, Val Acc: 0.1017
+  Seed 43, Epoch 229, Loss: 1053.7756, Val Acc: 0.1017
+  Seed 43, Epoch 230, Loss: 711.3599, Val Acc: 0.1017
+  Seed 43, Epoch 231, Loss: 563.5912, Val Acc: 0.1017
+  Seed 43, Epoch 232, Loss: 547.1885, Val Acc: 0.1017
+  Seed 43, Epoch 233, Loss: 2339.6455, Val Acc: 0.1017
+  Seed 43, Epoch 234, Loss: 854.9639, Val Acc: 0.1017
+  Seed 43, Epoch 235, Loss: 1098.2412, Val Acc: 0.1017
+  Seed 43, Epoch 236, Loss: 1219.7827, Val Acc: 0.1017
+  Seed 43, Epoch 237, Loss: 725.6583, Val Acc: 0.1017
+  Seed 43, Epoch 238, Loss: 2243.7080, Val Acc: 0.1017
+  Seed 43, Epoch 239, Loss: 1007.1115, Val Acc: 0.1017
+  Seed 43, Epoch 240, Loss: 1266.1354, Val Acc: 0.1017
+  Seed 43, Epoch 241, Loss: 1058.2957, Val Acc: 0.1017
+  Seed 43, Epoch 242, Loss: 638.3156, Val Acc: 0.1017
+  Seed 43, Epoch 243, Loss: 1094.6226, Val Acc: 0.1017
+  Seed 43, Epoch 244, Loss: 1252.2418, Val Acc: 0.1017
+  Seed 43, Epoch 245, Loss: 1208.2745, Val Acc: 0.1017
+  Seed 43, Epoch 246, Loss: 781.1790, Val Acc: 0.1017
+  Seed 43, Epoch 247, Loss: 318.3031, Val Acc: 0.1017
+  Seed 43, Epoch 248, Loss: 1118.1311, Val Acc: 0.1017
+  Seed 43, Epoch 249, Loss: 893.1917, Val Acc: 0.1017
+  Seed 43, Epoch 250, Loss: 891.9381, Val Acc: 0.1017
+  Seed 43, Epoch 251, Loss: 1798.3883, Val Acc: 0.1017
+  Seed 43, Epoch 252, Loss: 1647.9425, Val Acc: 0.1017
+  Seed 43, Epoch 253, Loss: 1164.5507, Val Acc: 0.1017
+  Seed 43, Epoch 254, Loss: 4361.2925, Val Acc: 0.1017
+  Seed 43, Epoch 255, Loss: 1252.0181, Val Acc: 0.1017
+  Seed 43, Epoch 256, Loss: 1706.4900, Val Acc: 0.1017
+  Seed 43, Epoch 257, Loss: 1253.5531, Val Acc: 0.1017
+  Seed 43, Epoch 258, Loss: 1180.2144, Val Acc: 0.1017
+  Seed 43, Epoch 259, Loss: 1222.1007, Val Acc: 0.1017
+  Seed 43, Epoch 260, Loss: 1169.9701, Val Acc: 0.1017
+  Seed 43, Epoch 261, Loss: 1637.8096, Val Acc: 0.1017
+  Seed 43, Epoch 262, Loss: 1552.8733, Val Acc: 0.1017
+  Seed 43, Epoch 263, Loss: 864.9177, Val Acc: 0.1017
+  Seed 43, Epoch 264, Loss: 1832.9517, Val Acc: 0.1017
+  Seed 43, Epoch 265, Loss: 1540.2544, Val Acc: 0.1017
+  Seed 43, Epoch 266, Loss: 1195.5476, Val Acc: 0.1017
+  Seed 43, Epoch 267, Loss: 1074.7373, Val Acc: 0.1017
+  Seed 43, Epoch 268, Loss: 427.3810, Val Acc: 0.1017
+  Seed 43, Epoch 269, Loss: 1301.3894, Val Acc: 0.1017
+  Seed 43, Epoch 270, Loss: 1592.9043, Val Acc: 0.1017
+  Seed 43, Epoch 271, Loss: 543.5067, Val Acc: 0.1017
+  Seed 43, Epoch 272, Loss: 942.2097, Val Acc: 0.1017
+  Seed 43, Epoch 273, Loss: 688.8113, Val Acc: 0.1017
+  Seed 43, Epoch 274, Loss: 826.2266, Val Acc: 0.1017
+  Seed 43, Epoch 275, Loss: 1296.0514, Val Acc: 0.1017
+  Seed 43, Epoch 276, Loss: 1444.4758, Val Acc: 0.1017
+  Seed 43, Epoch 277, Loss: 1927.4015, Val Acc: 0.1017
+  Seed 43, Epoch 278, Loss: 957.8470, Val Acc: 0.1017
+  Seed 43, Epoch 279, Loss: 1350.5094, Val Acc: 0.1017
+  Seed 43, Epoch 280, Loss: 1126.3298, Val Acc: 0.1017
+  Seed 43, Epoch 281, Loss: 627.4671, Val Acc: 0.1017
+  Seed 43, Epoch 282, Loss: 1092.6957, Val Acc: 0.1017
+  Seed 43, Epoch 283, Loss: 1102.3444, Val Acc: 0.1017
+  Seed 43, Epoch 284, Loss: 2054.6641, Val Acc: 0.0986
+  Seed 43, Epoch 285, Loss: 1360.0190, Val Acc: 0.1012
+  Seed 43, Epoch 286, Loss: 1211.2731, Val Acc: 0.1012
+  Seed 43, Epoch 287, Loss: 1371.7745, Val Acc: 0.1087
+  Seed 43, Epoch 288, Loss: 1543.7155, Val Acc: 0.1087
+  Seed 43, Epoch 289, Loss: 1561.9204, Val Acc: 0.1087
+  Seed 43, Epoch 290, Loss: 1486.2263, Val Acc: 0.1087
+  Seed 43, Epoch 291, Loss: 1134.6897, Val Acc: 0.1087
+  Seed 43, Epoch 292, Loss: 958.1050, Val Acc: 0.1087
+  Seed 43, Epoch 293, Loss: 1112.9229, Val Acc: 0.1087
+  Seed 43, Epoch 294, Loss: 1882.7517, Val Acc: 0.1087
+  Seed 43, Epoch 295, Loss: 1101.6666, Val Acc: 0.1087
+  Seed 43, Epoch 296, Loss: 3020.0667, Val Acc: 0.1087
+  Seed 43, Epoch 297, Loss: 1063.7670, Val Acc: 0.1087
+  Seed 43, Epoch 298, Loss: 1101.2860, Val Acc: 0.1087
+  Seed 43, Epoch 299, Loss: 1004.5651, Val Acc: 0.1087
+  Seed 43, Epoch 300, Loss: 950.1016, Val Acc: 0.1087
+  Seed 43, Epoch 301, Loss: 2519.0562, Val Acc: 0.1087
+  Seed 43, Epoch 302, Loss: 1024.4658, Val Acc: 0.1087
+  Seed 43, Epoch 303, Loss: 979.3727, Val Acc: 0.1087
+  Seed 43, Epoch 304, Loss: 1239.1351, Val Acc: 0.1087
+  Seed 43, Epoch 305, Loss: 946.0417, Val Acc: 0.1087
+  Seed 43, Epoch 306, Loss: 1123.7802, Val Acc: 0.1087
+  Seed 43, Epoch 307, Loss: 926.3839, Val Acc: 0.1087
+  Seed 43, Epoch 308, Loss: 2661.9397, Val Acc: 0.1087
+  Seed 43, Epoch 309, Loss: 1568.3142, Val Acc: 0.1087
+  Seed 43, Epoch 310, Loss: 3161.1855, Val Acc: 0.1087
+  Seed 43, Epoch 311, Loss: 1562.2118, Val Acc: 0.1087
+  Seed 43, Epoch 312, Loss: 1151.3428, Val Acc: 0.1087
+  Seed 43, Epoch 313, Loss: 598.5278, Val Acc: 0.1087
+  Seed 43, Epoch 314, Loss: 1385.6438, Val Acc: 0.1087
+  Seed 43, Epoch 315, Loss: 1822.2164, Val Acc: 0.1087
+  Seed 43, Epoch 316, Loss: 1451.9803, Val Acc: 0.1087
+  Seed 43, Epoch 317, Loss: 829.5289, Val Acc: 0.1087
+  Seed 43, Epoch 318, Loss: 1014.5731, Val Acc: 0.1087
+  Seed 43, Epoch 319, Loss: 1139.6577, Val Acc: 0.1087
+  Seed 43, Epoch 320, Loss: 1150.5525, Val Acc: 0.1087
+  Seed 43, Epoch 321, Loss: 1247.8580, Val Acc: 0.1087
+  Seed 43, Epoch 322, Loss: 421.7376, Val Acc: 0.1087
+  Seed 43, Epoch 323, Loss: 1181.3921, Val Acc: 0.1087
+  Seed 43, Epoch 324, Loss: 850.1434, Val Acc: 0.1087
+  Seed 43, Epoch 325, Loss: 851.5637, Val Acc: 0.1087
+  Seed 43, Epoch 326, Loss: 1055.5867, Val Acc: 0.1087
+  Seed 43, Epoch 327, Loss: 2450.2925, Val Acc: 0.1087
+  Seed 43, Epoch 328, Loss: 1030.0333, Val Acc: 0.1087
+  Seed 43, Epoch 329, Loss: 1976.1604, Val Acc: 0.1087
+  Seed 43, Epoch 330, Loss: 2128.6345, Val Acc: 0.1087
+  Seed 43, Epoch 331, Loss: 1836.4817, Val Acc: 0.1087
+  Seed 43, Epoch 332, Loss: 1395.7609, Val Acc: 0.1087
+  Seed 43, Epoch 333, Loss: 798.8861, Val Acc: 0.1087
+  Seed 43, Epoch 334, Loss: 947.7413, Val Acc: 0.1087
+  Seed 43, Epoch 335, Loss: 2478.2356, Val Acc: 0.1087
+  Seed 43, Epoch 336, Loss: 2400.7776, Val Acc: 0.1087
+  Seed 43, Epoch 337, Loss: 1145.3707, Val Acc: 0.1087
+  Seed 43, Epoch 338, Loss: 702.7930, Val Acc: 0.1087
+  Seed 43, Epoch 339, Loss: 1038.0791, Val Acc: 0.1087
+  Seed 43, Epoch 340, Loss: 558.0371, Val Acc: 0.1087
+  Seed 43, Epoch 341, Loss: 2172.8208, Val Acc: 0.1087
+  Seed 43, Epoch 342, Loss: 3238.7268, Val Acc: 0.1087
+  Seed 43, Epoch 343, Loss: 664.1179, Val Acc: 0.1087
+  Seed 43, Epoch 344, Loss: 2419.0381, Val Acc: 0.1087
+  Seed 43, Epoch 345, Loss: 1337.9095, Val Acc: 0.1087
+  Seed 43, Epoch 346, Loss: 1101.5406, Val Acc: 0.1087
+  Seed 43, Epoch 347, Loss: 2360.3015, Val Acc: 0.1087
+  Seed 43, Epoch 348, Loss: 1261.8716, Val Acc: 0.1087
+  Seed 43, Epoch 349, Loss: 1540.0225, Val Acc: 0.1087
+  Seed 43, Epoch 350, Loss: 845.6658, Val Acc: 0.1087
+  Seed 43, Epoch 351, Loss: 1438.7585, Val Acc: 0.1087
+  Seed 43, Epoch 352, Loss: 3433.1694, Val Acc: 0.1087
+  Seed 43, Epoch 353, Loss: 1353.5243, Val Acc: 0.1087
+  Seed 43, Epoch 354, Loss: 1321.3740, Val Acc: 0.1087
+  Seed 43, Epoch 355, Loss: 2427.4280, Val Acc: 0.1087
+  Seed 43, Epoch 356, Loss: 752.1419, Val Acc: 0.1087
+  Seed 43, Epoch 357, Loss: 1110.2417, Val Acc: 0.1087
+  Seed 43, Epoch 358, Loss: 821.8235, Val Acc: 0.1087
+  Seed 43, Epoch 359, Loss: 1448.9022, Val Acc: 0.1087
+  Seed 43, Epoch 360, Loss: 3748.0901, Val Acc: 0.1087
+  Seed 43, Epoch 361, Loss: 1169.8929, Val Acc: 0.1087
+  Seed 43, Epoch 362, Loss: 1624.2952, Val Acc: 0.1087
+  Seed 43, Epoch 363, Loss: 960.6362, Val Acc: 0.1087
+  Seed 43, Epoch 364, Loss: 822.9563, Val Acc: 0.1087
+  Seed 43, Epoch 365, Loss: 1957.4307, Val Acc: 0.1087
+  Seed 43, Epoch 366, Loss: 2271.3308, Val Acc: 0.1087
+  Seed 43, Epoch 367, Loss: 918.8407, Val Acc: 0.1087
+  Seed 43, Epoch 368, Loss: 4088.1841, Val Acc: 0.1087
+  Seed 43, Epoch 369, Loss: 1087.1991, Val Acc: 0.1087
+  Seed 43, Epoch 370, Loss: 3939.9199, Val Acc: 0.1087
+  Seed 43, Epoch 371, Loss: 951.1635, Val Acc: 0.1087
+  Seed 43, Epoch 372, Loss: 708.0799, Val Acc: 0.1087
+  Seed 43, Epoch 373, Loss: 1522.9116, Val Acc: 0.1087
+  Seed 43, Epoch 374, Loss: 2285.6792, Val Acc: 0.1087
+  Seed 43, Epoch 375, Loss: 1948.7932, Val Acc: 0.1087
+  Seed 43, Epoch 376, Loss: 1291.3005, Val Acc: 0.1087
+  Seed 43, Epoch 377, Loss: 3686.9001, Val Acc: 0.1087
+  Seed 43, Epoch 378, Loss: 1167.9478, Val Acc: 0.1087
+  Seed 43, Epoch 379, Loss: 678.9698, Val Acc: 0.1087
+  Seed 43, Epoch 380, Loss: 1288.0549, Val Acc: 0.1087
+  Seed 43, Epoch 381, Loss: 3104.4380, Val Acc: 0.1087
+  Seed 43, Epoch 382, Loss: 4099.8584, Val Acc: 0.1087
+  Seed 43, Epoch 383, Loss: 1535.5947, Val Acc: 0.1087
+  Seed 43, Epoch 384, Loss: 805.9788, Val Acc: 0.1087
+  Seed 43, Epoch 385, Loss: 1334.8589, Val Acc: 0.1087
+  Seed 43, Epoch 386, Loss: 1233.5187, Val Acc: 0.1087
+  Seed 43, Epoch 387, Loss: 1009.9007, Val Acc: 0.1087
+  Seed 43, Epoch 388, Loss: 922.7308, Val Acc: 0.1087
+  Seed 43, Epoch 389, Loss: 1821.2699, Val Acc: 0.1087
+  Seed 43, Epoch 390, Loss: 1845.3152, Val Acc: 0.1087
+  Seed 43, Epoch 391, Loss: 2327.5957, Val Acc: 0.1087
+  Seed 43, Epoch 392, Loss: 1227.0315, Val Acc: 0.1087
+  Seed 43, Epoch 393, Loss: 2577.4807, Val Acc: 0.1087
+  Seed 43, Epoch 394, Loss: 2055.9978, Val Acc: 0.1087
+  Seed 43, Epoch 395, Loss: 1487.1088, Val Acc: 0.1087
+  Seed 43, Epoch 396, Loss: 1435.3726, Val Acc: 0.1087
+  Seed 43, Epoch 397, Loss: 908.1546, Val Acc: 0.1087
+  Seed 43, Epoch 398, Loss: 1240.1133, Val Acc: 0.1087
+  Seed 43, Epoch 399, Loss: 1573.4905, Val Acc: 0.1087
+  Seed 43, Epoch 400, Loss: 2035.1864, Val Acc: 0.1087
+  Seed 43, Epoch 401, Loss: 1779.5354, Val Acc: 0.1087
+  Seed 43, Epoch 402, Loss: 815.7192, Val Acc: 0.1087
+  Seed 43, Epoch 403, Loss: 737.1274, Val Acc: 0.1087
+  Seed 43, Epoch 404, Loss: 2569.5115, Val Acc: 0.1087
+  Seed 43, Epoch 405, Loss: 1683.1093, Val Acc: 0.1087
+  Seed 43, Epoch 406, Loss: 1840.9126, Val Acc: 0.1087
+  Seed 43, Epoch 407, Loss: 960.0599, Val Acc: 0.1087
+  Seed 43, Epoch 408, Loss: 2906.0891, Val Acc: 0.1087
+  Seed 43, Epoch 409, Loss: 709.5398, Val Acc: 0.1087
+  Seed 43, Epoch 410, Loss: 641.4502, Val Acc: 0.1087
+  Seed 43, Epoch 411, Loss: 785.8092, Val Acc: 0.1087
+  Seed 43, Epoch 412, Loss: 514.0100, Val Acc: 0.1087
+  Seed 43, Epoch 413, Loss: 2557.0579, Val Acc: 0.1087
+  Seed 43, Epoch 414, Loss: 841.1225, Val Acc: 0.1087
+  Seed 43, Epoch 415, Loss: 2603.9729, Val Acc: 0.1087
+  Seed 43, Epoch 416, Loss: 770.8846, Val Acc: 0.1087
+  Seed 43, Epoch 417, Loss: 748.8345, Val Acc: 0.1087
+  Seed 43, Epoch 418, Loss: 1264.4183, Val Acc: 0.1087
+  Seed 43, Epoch 419, Loss: 832.3846, Val Acc: 0.1087
+  Seed 43, Epoch 420, Loss: 1221.7158, Val Acc: 0.1087
+  Seed 43, Epoch 421, Loss: 1883.6254, Val Acc: 0.1087
+  Seed 43, Epoch 422, Loss: 2551.2441, Val Acc: 0.1087
+  Seed 43, Epoch 423, Loss: 2029.4320, Val Acc: 0.1087
+  Seed 43, Epoch 424, Loss: 1409.0415, Val Acc: 0.1087
+  Seed 43, Epoch 425, Loss: 2368.2244, Val Acc: 0.1087
+  Seed 43, Epoch 426, Loss: 903.4007, Val Acc: 0.1087
+  Seed 43, Epoch 427, Loss: 1239.3517, Val Acc: 0.1087
+  Seed 43, Epoch 428, Loss: 752.4148, Val Acc: 0.1087
+  Seed 43, Epoch 429, Loss: 1580.3152, Val Acc: 0.1087
+  Seed 43, Epoch 430, Loss: 1094.0669, Val Acc: 0.1087
+  Seed 43, Epoch 431, Loss: 1661.1667, Val Acc: 0.1087
+  Seed 43, Epoch 432, Loss: 2141.5972, Val Acc: 0.1087
+  Seed 43, Epoch 433, Loss: 1683.9523, Val Acc: 0.1087
+  Seed 43, Epoch 434, Loss: 2255.0188, Val Acc: 0.1087
+  Seed 43, Epoch 435, Loss: 1545.8511, Val Acc: 0.1087
+  Seed 43, Epoch 436, Loss: 1657.0857, Val Acc: 0.1087
+  Seed 43, Epoch 437, Loss: 1065.0632, Val Acc: 0.1087
+  Seed 43, Epoch 438, Loss: 811.3290, Val Acc: 0.1087
+  Seed 43, Epoch 439, Loss: 1702.3311, Val Acc: 0.1087
+  Seed 43, Epoch 440, Loss: 1132.7842, Val Acc: 0.1087
+  Seed 43, Epoch 441, Loss: 991.3354, Val Acc: 0.1087
+  Seed 43, Epoch 442, Loss: 1589.8429, Val Acc: 0.1087
+  Seed 43, Epoch 443, Loss: 1610.3138, Val Acc: 0.1087
+  Seed 43, Epoch 444, Loss: 1650.2518, Val Acc: 0.1087
+  Seed 43, Epoch 445, Loss: 1164.5247, Val Acc: 0.1087
+  Seed 43, Epoch 446, Loss: 1902.6122, Val Acc: 0.1087
+  Seed 43, Epoch 447, Loss: 1498.3976, Val Acc: 0.1087
+  Seed 43, Epoch 448, Loss: 2727.8428, Val Acc: 0.1087
+  Seed 43, Epoch 449, Loss: 1332.5311, Val Acc: 0.1087
+  Seed 43, Epoch 450, Loss: 2135.5225, Val Acc: 0.1087
+  Seed 43, Epoch 451, Loss: 905.5522, Val Acc: 0.1087
+  Seed 43, Epoch 452, Loss: 1371.3638, Val Acc: 0.1087
+  Seed 43, Epoch 453, Loss: 705.7950, Val Acc: 0.1087
+  Seed 43, Epoch 454, Loss: 1166.6528, Val Acc: 0.1087
+  Seed 43, Epoch 455, Loss: 1112.8528, Val Acc: 0.1087
+  Seed 43, Epoch 456, Loss: 1811.6074, Val Acc: 0.1087
+  Seed 43, Epoch 457, Loss: 1371.7494, Val Acc: 0.1087
+  Seed 43, Epoch 458, Loss: 1000.9951, Val Acc: 0.1057
+  Seed 43, Epoch 459, Loss: 1758.2268, Val Acc: 0.1012
+  Seed 43, Epoch 460, Loss: 1065.1952, Val Acc: 0.1012
+  Seed 43, Epoch 461, Loss: 1200.2554, Val Acc: 0.1012
+  Seed 43, Epoch 462, Loss: 1917.7754, Val Acc: 0.1012
+  Seed 43, Epoch 463, Loss: 2143.9592, Val Acc: 0.1012
+  Seed 43, Epoch 464, Loss: 1120.8115, Val Acc: 0.1012
+  Seed 43, Epoch 465, Loss: 4894.1724, Val Acc: 0.1012
+  Seed 43, Epoch 466, Loss: 1497.7892, Val Acc: 0.1012
+  Seed 43, Epoch 467, Loss: 2230.3608, Val Acc: 0.1012
+  Seed 43, Epoch 468, Loss: 1201.2861, Val Acc: 0.1012
+  Seed 43, Epoch 469, Loss: 1676.2612, Val Acc: 0.1012
+  Seed 43, Epoch 470, Loss: 790.0362, Val Acc: 0.1012
+  Seed 43, Epoch 471, Loss: 1441.7642, Val Acc: 0.1012
+  Seed 43, Epoch 472, Loss: 1311.8182, Val Acc: 0.1012
+  Seed 43, Epoch 473, Loss: 1677.1526, Val Acc: 0.1012
+  Seed 43, Epoch 474, Loss: 1959.8539, Val Acc: 0.1012
+  Seed 43, Epoch 475, Loss: 1651.6183, Val Acc: 0.1012
+  Seed 43, Epoch 476, Loss: 2924.2134, Val Acc: 0.1012
+  Seed 43, Epoch 477, Loss: 1780.6849, Val Acc: 0.1012
+  Seed 43, Epoch 478, Loss: 1444.8182, Val Acc: 0.1012
+  Seed 43, Epoch 479, Loss: 626.4547, Val Acc: 0.1012
+  Seed 43, Epoch 480, Loss: 1058.5264, Val Acc: 0.1012
+  Seed 43, Epoch 481, Loss: 1056.7272, Val Acc: 0.1012
+  Seed 43, Epoch 482, Loss: 860.4988, Val Acc: 0.1012
+  Seed 43, Epoch 483, Loss: 598.3297, Val Acc: 0.1012
+  Seed 43, Epoch 484, Loss: 1756.6407, Val Acc: 0.1012
+  Seed 43, Epoch 485, Loss: 796.0710, Val Acc: 0.1012
+  Seed 43, Epoch 486, Loss: 1149.3906, Val Acc: 0.1012
+  Seed 43, Epoch 487, Loss: 1894.9945, Val Acc: 0.1012
+  Seed 43, Epoch 488, Loss: 882.5772, Val Acc: 0.1012
+  Seed 43, Epoch 489, Loss: 730.6926, Val Acc: 0.1012
+  Seed 43, Epoch 490, Loss: 1796.6362, Val Acc: 0.1012
+  Seed 43, Epoch 491, Loss: 1223.4883, Val Acc: 0.1012
+  Seed 43, Epoch 492, Loss: 2459.0254, Val Acc: 0.1012
+  Seed 43, Epoch 493, Loss: 1238.6753, Val Acc: 0.1012
+  Seed 43, Epoch 494, Loss: 1049.6620, Val Acc: 0.1012
+  Seed 43, Epoch 495, Loss: 1288.1124, Val Acc: 0.1012
+  Seed 43, Epoch 496, Loss: 1506.9109, Val Acc: 0.1012
+  Seed 43, Epoch 497, Loss: 1545.0588, Val Acc: 0.1012
+  Seed 43, Epoch 498, Loss: 826.3604, Val Acc: 0.1012
+  Seed 43, Epoch 499, Loss: 960.0117, Val Acc: 0.1012
+  Seed 43, Epoch 500, Loss: 951.0615, Val Acc: 0.1012
+  Seed 43, Epoch 501, Loss: 468.9909, Val Acc: 0.1012
+  Seed 43, Epoch 502, Loss: 589.6841, Val Acc: 0.1012
+  Seed 43, Epoch 503, Loss: 648.3894, Val Acc: 0.1012
+  Seed 43, Epoch 504, Loss: 1394.3846, Val Acc: 0.1012
+  Seed 43, Epoch 505, Loss: 497.2012, Val Acc: 0.1012
+  Seed 43, Epoch 506, Loss: 910.1304, Val Acc: 0.1012
+  Seed 43, Epoch 507, Loss: 1647.7902, Val Acc: 0.1012
+  Seed 43, Epoch 508, Loss: 1551.6538, Val Acc: 0.1012
+  Seed 43, Epoch 509, Loss: 655.2647, Val Acc: 0.1012
+  Seed 43, Epoch 510, Loss: 822.5374, Val Acc: 0.1012
+  Seed 43, Epoch 511, Loss: 755.9804, Val Acc: 0.1012
+  Seed 43, Epoch 512, Loss: 1031.8811, Val Acc: 0.1012
+  Seed 43, Epoch 513, Loss: 902.9969, Val Acc: 0.1012
+  Seed 43, Epoch 514, Loss: 2287.4329, Val Acc: 0.1012
+  Seed 43, Epoch 515, Loss: 551.4409, Val Acc: 0.1012
+  Seed 43, Epoch 516, Loss: 1088.4077, Val Acc: 0.1012
+  Seed 43, Epoch 517, Loss: 1759.6207, Val Acc: 0.1012
+  Seed 43, Epoch 518, Loss: 974.4091, Val Acc: 0.1012
+  Seed 43, Epoch 519, Loss: 2003.1902, Val Acc: 0.1012
+  Seed 43, Epoch 520, Loss: 2574.2786, Val Acc: 0.1012
+  Seed 43, Epoch 521, Loss: 1469.5437, Val Acc: 0.1012
+  Seed 43, Epoch 522, Loss: 2027.1770, Val Acc: 0.1012
+  Seed 43, Epoch 523, Loss: 1220.5514, Val Acc: 0.1012
+  Seed 43, Epoch 524, Loss: 1116.2408, Val Acc: 0.1012
+  Seed 43, Epoch 525, Loss: 1528.2743, Val Acc: 0.1012
+  Seed 43, Epoch 526, Loss: 1188.5051, Val Acc: 0.1012
+  Seed 43, Epoch 527, Loss: 930.8832, Val Acc: 0.1012
+  Seed 43, Epoch 528, Loss: 3602.9292, Val Acc: 0.1012
+  Seed 43, Epoch 529, Loss: 2320.7893, Val Acc: 0.1012
+  Seed 43, Epoch 530, Loss: 982.4109, Val Acc: 0.1012
+  Seed 43, Epoch 531, Loss: 1629.6771, Val Acc: 0.1012
+  Seed 43, Epoch 532, Loss: 486.1989, Val Acc: 0.1012
+  Seed 43, Epoch 533, Loss: 1323.3153, Val Acc: 0.1012
+  Seed 43, Epoch 534, Loss: 2017.1875, Val Acc: 0.1012
+  Seed 43, Epoch 535, Loss: 718.7205, Val Acc: 0.1012
+  Seed 43, Epoch 536, Loss: 862.6988, Val Acc: 0.1012
+  Seed 43, Epoch 537, Loss: 1468.8252, Val Acc: 0.1012
+  Seed 43, Epoch 538, Loss: 1093.7002, Val Acc: 0.1012
+  Seed 43, Epoch 539, Loss: 1995.0457, Val Acc: 0.1012
+  Seed 43, Epoch 540, Loss: 2687.2341, Val Acc: 0.1012
+  Seed 43, Epoch 541, Loss: 538.4426, Val Acc: 0.1012
+  Seed 43, Epoch 542, Loss: 3125.6145, Val Acc: 0.1012
+  Seed 43, Epoch 543, Loss: 4432.7739, Val Acc: 0.1012
+  Seed 43, Epoch 544, Loss: 932.2576, Val Acc: 0.1012
+  Seed 43, Epoch 545, Loss: 902.2245, Val Acc: 0.1012
+  Seed 43, Epoch 546, Loss: 1679.3251, Val Acc: 0.1012
+  Seed 43, Epoch 547, Loss: 1541.5317, Val Acc: 0.1012
+  Seed 43, Epoch 548, Loss: 1037.1594, Val Acc: 0.1012
+  Seed 43, Epoch 549, Loss: 962.3927, Val Acc: 0.1012
+  Seed 43, Epoch 550, Loss: 1360.3649, Val Acc: 0.1012
+  Seed 43, Epoch 551, Loss: 2270.4604, Val Acc: 0.1012
+  Seed 43, Epoch 552, Loss: 1397.9541, Val Acc: 0.1012
+  Seed 43, Epoch 553, Loss: 2963.1274, Val Acc: 0.1012
+  Seed 43, Epoch 554, Loss: 1335.3353, Val Acc: 0.1012
+  Seed 43, Epoch 555, Loss: 1768.2827, Val Acc: 0.1012
+  Seed 43, Epoch 556, Loss: 2008.2231, Val Acc: 0.1012
+  Seed 43, Epoch 557, Loss: 1458.5297, Val Acc: 0.1012
+  Seed 43, Epoch 558, Loss: 2081.8699, Val Acc: 0.1012
+  Seed 43, Epoch 559, Loss: 1489.7769, Val Acc: 0.1012
+  Seed 43, Epoch 560, Loss: 4121.7466, Val Acc: 0.1012
+  Seed 43, Epoch 561, Loss: 3350.7932, Val Acc: 0.1012
+  Seed 43, Epoch 562, Loss: 1258.1520, Val Acc: 0.1012
+  Seed 43, Epoch 563, Loss: 972.1207, Val Acc: 0.1012
+  Seed 43, Epoch 564, Loss: 2301.8855, Val Acc: 0.1012
+  Seed 43, Epoch 565, Loss: 1366.5707, Val Acc: 0.1012
+  Seed 43, Epoch 566, Loss: 1755.6978, Val Acc: 0.1012
+  Seed 43, Epoch 567, Loss: 2616.8159, Val Acc: 0.1012
+  Seed 43, Epoch 568, Loss: 1425.7714, Val Acc: 0.1012
+  Seed 43, Epoch 569, Loss: 908.8281, Val Acc: 0.1012
+  Seed 43, Epoch 570, Loss: 509.2863, Val Acc: 0.1012
+  Seed 43, Epoch 571, Loss: 1564.8442, Val Acc: 0.1012
+  Seed 43, Epoch 572, Loss: 3613.0486, Val Acc: 0.1012
+  Seed 43, Epoch 573, Loss: 1495.6062, Val Acc: 0.1012
+  Seed 43, Epoch 574, Loss: 2444.6355, Val Acc: 0.1012
+  Seed 43, Epoch 575, Loss: 1720.1688, Val Acc: 0.1012
+  Seed 43, Epoch 576, Loss: 897.2745, Val Acc: 0.1012
+  Seed 43, Epoch 577, Loss: 4494.2646, Val Acc: 0.1012
+  Seed 43, Epoch 578, Loss: 2060.1414, Val Acc: 0.1012
+  Seed 43, Epoch 579, Loss: 5273.9731, Val Acc: 0.1012
+  Seed 43, Epoch 580, Loss: 955.3909, Val Acc: 0.1012
+  Seed 43, Epoch 581, Loss: 919.6949, Val Acc: 0.1012
+  Seed 43, Epoch 582, Loss: 1812.9446, Val Acc: 0.1012
+  Seed 43, Epoch 583, Loss: 1588.8724, Val Acc: 0.1012
+  Seed 43, Epoch 584, Loss: 853.7845, Val Acc: 0.1012
+  Seed 43, Epoch 585, Loss: 791.4952, Val Acc: 0.1012
+  Seed 43, Epoch 586, Loss: 1320.0159, Val Acc: 0.1012
+  Seed 43, Epoch 587, Loss: 1584.2378, Val Acc: 0.1012
+  Seed 43, Epoch 588, Loss: 787.9645, Val Acc: 0.1017
+  Seed 43, Epoch 589, Loss: 712.7490, Val Acc: 0.1017
+  Seed 43, Epoch 590, Loss: 1467.0618, Val Acc: 0.1017
+  Seed 43, Epoch 591, Loss: 1736.2606, Val Acc: 0.1017
+  Seed 43, Epoch 592, Loss: 2341.4766, Val Acc: 0.1017
+  Seed 43, Epoch 593, Loss: 828.7692, Val Acc: 0.1017
+  Seed 43, Epoch 594, Loss: 2205.6028, Val Acc: 0.1017
+  Seed 43, Epoch 595, Loss: 998.5106, Val Acc: 0.1017
+  Seed 43, Epoch 596, Loss: 1169.9346, Val Acc: 0.1017
+  Seed 43, Epoch 597, Loss: 1224.0997, Val Acc: 0.1017
+  Seed 43, Epoch 598, Loss: 924.8752, Val Acc: 0.1017
+  Seed 43, Epoch 599, Loss: 2432.9785, Val Acc: 0.1017
+  Seed 43, Epoch 600, Loss: 1178.5636, Val Acc: 0.1017
+  Seed 44, Epoch 1, Loss: 642.4859, Val Acc: 0.1012
+  Seed 44, Epoch 2, Loss: 1005.8344, Val Acc: 0.1012
+  Seed 44, Epoch 3, Loss: 790.8472, Val Acc: 0.1012
+  Seed 44, Epoch 4, Loss: 729.1773, Val Acc: 0.1012
+  Seed 44, Epoch 5, Loss: 597.1949, Val Acc: 0.1012
+  Seed 44, Epoch 6, Loss: 1093.9766, Val Acc: 0.1012
+  Seed 44, Epoch 7, Loss: 590.8482, Val Acc: 0.1012
+  Seed 44, Epoch 8, Loss: 596.8810, Val Acc: 0.1012
+  Seed 44, Epoch 9, Loss: 543.9185, Val Acc: 0.1012
+  Seed 44, Epoch 10, Loss: 452.9806, Val Acc: 0.1012
+  Seed 44, Epoch 11, Loss: 129.1381, Val Acc: 0.1012
+  Seed 44, Epoch 12, Loss: 649.5483, Val Acc: 0.1012
+  Seed 44, Epoch 13, Loss: 388.1582, Val Acc: 0.1012
+  Seed 44, Epoch 14, Loss: 361.9678, Val Acc: 0.1012
+  Seed 44, Epoch 15, Loss: 205.4876, Val Acc: 0.1012
+  Seed 44, Epoch 16, Loss: 520.1060, Val Acc: 0.1012
+  Seed 44, Epoch 17, Loss: 318.4719, Val Acc: 0.1012
+  Seed 44, Epoch 18, Loss: 843.1796, Val Acc: 0.1012
+  Seed 44, Epoch 19, Loss: 672.3848, Val Acc: 0.1012
+  Seed 44, Epoch 20, Loss: 593.0360, Val Acc: 0.1012
+  Seed 44, Epoch 21, Loss: 392.7570, Val Acc: 0.1012
+  Seed 44, Epoch 22, Loss: 597.6732, Val Acc: 0.1012
+  Seed 44, Epoch 23, Loss: 507.3721, Val Acc: 0.1012
+  Seed 44, Epoch 24, Loss: 419.8049, Val Acc: 0.1012
+  Seed 44, Epoch 25, Loss: 657.1560, Val Acc: 0.1012
+  Seed 44, Epoch 26, Loss: 288.8817, Val Acc: 0.1012
+  Seed 44, Epoch 27, Loss: 437.3658, Val Acc: 0.1012
+  Seed 44, Epoch 28, Loss: 110.5787, Val Acc: 0.1012
+  Seed 44, Epoch 29, Loss: 942.2398, Val Acc: 0.1012
+  Seed 44, Epoch 30, Loss: 330.0847, Val Acc: 0.1012
+  Seed 44, Epoch 31, Loss: 409.8862, Val Acc: 0.1012
+  Seed 44, Epoch 32, Loss: 251.5493, Val Acc: 0.1012
+  Seed 44, Epoch 33, Loss: 577.2089, Val Acc: 0.1012
+  Seed 44, Epoch 34, Loss: 328.0196, Val Acc: 0.1012
+  Seed 44, Epoch 35, Loss: 378.5033, Val Acc: 0.1012
+  Seed 44, Epoch 36, Loss: 435.8624, Val Acc: 0.1012
+  Seed 44, Epoch 37, Loss: 811.1789, Val Acc: 0.1012
+  Seed 44, Epoch 38, Loss: 806.5676, Val Acc: 0.1012
+  Seed 44, Epoch 39, Loss: 466.0345, Val Acc: 0.1012
+  Seed 44, Epoch 40, Loss: 264.3897, Val Acc: 0.1012
+  Seed 44, Epoch 41, Loss: 495.3409, Val Acc: 0.1012
+  Seed 44, Epoch 42, Loss: 430.8521, Val Acc: 0.1012
+  Seed 44, Epoch 43, Loss: 229.9933, Val Acc: 0.1012
+  Seed 44, Epoch 44, Loss: 172.0156, Val Acc: 0.1012
+  Seed 44, Epoch 45, Loss: 428.6536, Val Acc: 0.1012
+  Seed 44, Epoch 46, Loss: 431.9574, Val Acc: 0.1012
+  Seed 44, Epoch 47, Loss: 210.5772, Val Acc: 0.1012
+  Seed 44, Epoch 48, Loss: 1001.2953, Val Acc: 0.1012
+  Seed 44, Epoch 49, Loss: 300.2088, Val Acc: 0.1012
+  Seed 44, Epoch 50, Loss: 534.9102, Val Acc: 0.1012
+  Seed 44, Epoch 51, Loss: 840.6280, Val Acc: 0.1012
+  Seed 44, Epoch 52, Loss: 1055.1921, Val Acc: 0.1012
+  Seed 44, Epoch 53, Loss: 501.5181, Val Acc: 0.1012
+  Seed 44, Epoch 54, Loss: 136.2440, Val Acc: 0.1012
+  Seed 44, Epoch 55, Loss: 75.4291, Val Acc: 0.1012
+  Seed 44, Epoch 56, Loss: 151.2428, Val Acc: 0.1012
+  Seed 44, Epoch 57, Loss: 185.7417, Val Acc: 0.1012
+  Seed 44, Epoch 58, Loss: 184.3385, Val Acc: 0.1012
+  Seed 44, Epoch 59, Loss: 726.6369, Val Acc: 0.1012
+  Seed 44, Epoch 60, Loss: 397.8226, Val Acc: 0.1012
+  Seed 44, Epoch 61, Loss: 540.7360, Val Acc: 0.1012
+  Seed 44, Epoch 62, Loss: 634.7936, Val Acc: 0.1012
+  Seed 44, Epoch 63, Loss: 459.8182, Val Acc: 0.1012
+  Seed 44, Epoch 64, Loss: 876.0287, Val Acc: 0.1012
+  Seed 44, Epoch 65, Loss: 882.8426, Val Acc: 0.1012
+  Seed 44, Epoch 66, Loss: 836.8138, Val Acc: 0.1012
+  Seed 44, Epoch 67, Loss: 591.0283, Val Acc: 0.1012
+  Seed 44, Epoch 68, Loss: 820.7592, Val Acc: 0.1012
+  Seed 44, Epoch 69, Loss: 288.4153, Val Acc: 0.1012
+  Seed 44, Epoch 70, Loss: 789.5357, Val Acc: 0.1012
+  Seed 44, Epoch 71, Loss: 372.1864, Val Acc: 0.1012
+  Seed 44, Epoch 72, Loss: 853.5493, Val Acc: 0.1012
+  Seed 44, Epoch 73, Loss: 898.1588, Val Acc: 0.1012
+  Seed 44, Epoch 74, Loss: 205.1738, Val Acc: 0.1012
+  Seed 44, Epoch 75, Loss: 845.9513, Val Acc: 0.1012
+  Seed 44, Epoch 76, Loss: 1281.8911, Val Acc: 0.1012
+  Seed 44, Epoch 77, Loss: 385.6802, Val Acc: 0.1012
+  Seed 44, Epoch 78, Loss: 282.9180, Val Acc: 0.1012
+  Seed 44, Epoch 79, Loss: 633.7654, Val Acc: 0.1012
+  Seed 44, Epoch 80, Loss: 741.2740, Val Acc: 0.1012
+  Seed 44, Epoch 81, Loss: 138.0925, Val Acc: 0.1012
+  Seed 44, Epoch 82, Loss: 408.9042, Val Acc: 0.1012
+  Seed 44, Epoch 83, Loss: 572.5253, Val Acc: 0.1012
+  Seed 44, Epoch 84, Loss: 271.6010, Val Acc: 0.1012
+  Seed 44, Epoch 85, Loss: 269.3616, Val Acc: 0.1012
+  Seed 44, Epoch 86, Loss: 215.5289, Val Acc: 0.1012
+  Seed 44, Epoch 87, Loss: 387.7057, Val Acc: 0.1012
+  Seed 44, Epoch 88, Loss: 120.4466, Val Acc: 0.1012
+  Seed 44, Epoch 89, Loss: 299.8348, Val Acc: 0.1012
+  Seed 44, Epoch 90, Loss: 473.3711, Val Acc: 0.1012
+  Seed 44, Epoch 91, Loss: 263.1447, Val Acc: 0.1012
+  Seed 44, Epoch 92, Loss: 552.4864, Val Acc: 0.1012
+  Seed 44, Epoch 93, Loss: 331.6255, Val Acc: 0.1012
+  Seed 44, Epoch 94, Loss: 404.7256, Val Acc: 0.1012
+  Seed 44, Epoch 95, Loss: 455.0321, Val Acc: 0.1012
+  Seed 44, Epoch 96, Loss: 524.4978, Val Acc: 0.1012
+  Seed 44, Epoch 97, Loss: 439.4963, Val Acc: 0.1012
+  Seed 44, Epoch 98, Loss: 605.5406, Val Acc: 0.1012
+  Seed 44, Epoch 99, Loss: 91.3137, Val Acc: 0.1012
+  Seed 44, Epoch 100, Loss: 190.2349, Val Acc: 0.1012
+  Seed 44, Epoch 101, Loss: 160.6813, Val Acc: 0.1012
+  Seed 44, Epoch 102, Loss: 475.7442, Val Acc: 0.1012
+  Seed 44, Epoch 103, Loss: 464.2979, Val Acc: 0.1012
+  Seed 44, Epoch 104, Loss: 243.2013, Val Acc: 0.1012
+  Seed 44, Epoch 105, Loss: 438.3099, Val Acc: 0.1012
+  Seed 44, Epoch 106, Loss: 566.0243, Val Acc: 0.1012
+  Seed 44, Epoch 107, Loss: 205.4026, Val Acc: 0.1012
+  Seed 44, Epoch 108, Loss: 1374.5642, Val Acc: 0.1012
+  Seed 44, Epoch 109, Loss: 481.6613, Val Acc: 0.1012
+  Seed 44, Epoch 110, Loss: 246.2132, Val Acc: 0.1012
+  Seed 44, Epoch 111, Loss: 651.0735, Val Acc: 0.1012
+  Seed 44, Epoch 112, Loss: 556.6198, Val Acc: 0.1012
+  Seed 44, Epoch 113, Loss: 770.3659, Val Acc: 0.1012
+  Seed 44, Epoch 114, Loss: 174.7245, Val Acc: 0.1012
+  Seed 44, Epoch 115, Loss: 477.0308, Val Acc: 0.1012
+  Seed 44, Epoch 116, Loss: 134.4246, Val Acc: 0.1012
+  Seed 44, Epoch 117, Loss: 589.9164, Val Acc: 0.1012
+  Seed 44, Epoch 118, Loss: 501.1192, Val Acc: 0.1012
+  Seed 44, Epoch 119, Loss: 428.8246, Val Acc: 0.1012
+  Seed 44, Epoch 120, Loss: 401.9726, Val Acc: 0.1012
+  Seed 44, Epoch 121, Loss: 1316.3774, Val Acc: 0.1012
+  Seed 44, Epoch 122, Loss: 415.9138, Val Acc: 0.1012
+  Seed 44, Epoch 123, Loss: 577.6601, Val Acc: 0.1012
+  Seed 44, Epoch 124, Loss: 588.8098, Val Acc: 0.1012
+  Seed 44, Epoch 125, Loss: 327.4181, Val Acc: 0.1012
+  Seed 44, Epoch 126, Loss: 610.6722, Val Acc: 0.1012
+  Seed 44, Epoch 127, Loss: 361.9584, Val Acc: 0.1012
+  Seed 44, Epoch 128, Loss: 921.7872, Val Acc: 0.1012
+  Seed 44, Epoch 129, Loss: 801.2340, Val Acc: 0.1012
+  Seed 44, Epoch 130, Loss: 586.1983, Val Acc: 0.1012
+  Seed 44, Epoch 131, Loss: 396.6860, Val Acc: 0.1012
+  Seed 44, Epoch 132, Loss: 200.3960, Val Acc: 0.1012
+  Seed 44, Epoch 133, Loss: 463.2144, Val Acc: 0.1012
+  Seed 44, Epoch 134, Loss: 786.9678, Val Acc: 0.1012
+  Seed 44, Epoch 135, Loss: 296.2048, Val Acc: 0.1012
+  Seed 44, Epoch 136, Loss: 1064.5460, Val Acc: 0.1012
+  Seed 44, Epoch 137, Loss: 553.0530, Val Acc: 0.1012
+  Seed 44, Epoch 138, Loss: 449.1359, Val Acc: 0.1012
+  Seed 44, Epoch 139, Loss: 526.4923, Val Acc: 0.1012
+  Seed 44, Epoch 140, Loss: 1379.0199, Val Acc: 0.1012
+  Seed 44, Epoch 141, Loss: 228.5711, Val Acc: 0.1012
+  Seed 44, Epoch 142, Loss: 482.4544, Val Acc: 0.1012
+  Seed 44, Epoch 143, Loss: 483.0443, Val Acc: 0.1012
+  Seed 44, Epoch 144, Loss: 637.1933, Val Acc: 0.1012
+  Seed 44, Epoch 145, Loss: 588.8293, Val Acc: 0.1012
+  Seed 44, Epoch 146, Loss: 225.9025, Val Acc: 0.1012
+  Seed 44, Epoch 147, Loss: 559.8048, Val Acc: 0.1012
+  Seed 44, Epoch 148, Loss: 606.8068, Val Acc: 0.1012
+  Seed 44, Epoch 149, Loss: 1174.3965, Val Acc: 0.1012
+  Seed 44, Epoch 150, Loss: 232.0447, Val Acc: 0.1012
+  Seed 44, Epoch 151, Loss: 683.0396, Val Acc: 0.1012
+  Seed 44, Epoch 152, Loss: 420.8017, Val Acc: 0.1012
+  Seed 44, Epoch 153, Loss: 662.4691, Val Acc: 0.1012
+  Seed 44, Epoch 154, Loss: 527.3441, Val Acc: 0.1012
+  Seed 44, Epoch 155, Loss: 395.9752, Val Acc: 0.1012
+  Seed 44, Epoch 156, Loss: 319.1890, Val Acc: 0.1012
+  Seed 44, Epoch 157, Loss: 437.6890, Val Acc: 0.1012
+  Seed 44, Epoch 158, Loss: 97.4322, Val Acc: 0.1012
+  Seed 44, Epoch 159, Loss: 436.0578, Val Acc: 0.1012
+  Seed 44, Epoch 160, Loss: 212.2487, Val Acc: 0.1012
+  Seed 44, Epoch 161, Loss: 387.3880, Val Acc: 0.1012
+  Seed 44, Epoch 162, Loss: 365.2403, Val Acc: 0.1012
+  Seed 44, Epoch 163, Loss: 1080.8672, Val Acc: 0.1012
+  Seed 44, Epoch 164, Loss: 344.1616, Val Acc: 0.1012
+  Seed 44, Epoch 165, Loss: 356.6712, Val Acc: 0.1012
+  Seed 44, Epoch 166, Loss: 316.0485, Val Acc: 0.1012
+  Seed 44, Epoch 167, Loss: 166.5264, Val Acc: 0.1012
+  Seed 44, Epoch 168, Loss: 459.6106, Val Acc: 0.1012
+  Seed 44, Epoch 169, Loss: 638.1788, Val Acc: 0.1012
+  Seed 44, Epoch 170, Loss: 723.1218, Val Acc: 0.1012
+  Seed 44, Epoch 171, Loss: 1419.1047, Val Acc: 0.1012
+  Seed 44, Epoch 172, Loss: 601.9793, Val Acc: 0.1012
+  Seed 44, Epoch 173, Loss: 733.9297, Val Acc: 0.1012
+  Seed 44, Epoch 174, Loss: 408.2756, Val Acc: 0.1012
+  Seed 44, Epoch 175, Loss: 226.7800, Val Acc: 0.1012
+  Seed 44, Epoch 176, Loss: 278.4585, Val Acc: 0.1012
+  Seed 44, Epoch 177, Loss: 234.7316, Val Acc: 0.1012
+  Seed 44, Epoch 178, Loss: 89.2754, Val Acc: 0.1012
+  Seed 44, Epoch 179, Loss: 710.9877, Val Acc: 0.1012
+  Seed 44, Epoch 180, Loss: 244.5268, Val Acc: 0.1012
+  Seed 44, Epoch 181, Loss: 253.7872, Val Acc: 0.1012
+  Seed 44, Epoch 182, Loss: 398.3182, Val Acc: 0.1012
+  Seed 44, Epoch 183, Loss: 671.7800, Val Acc: 0.1012
+  Seed 44, Epoch 184, Loss: 118.8154, Val Acc: 0.1012
+  Seed 44, Epoch 185, Loss: 332.2501, Val Acc: 0.1012
+  Seed 44, Epoch 186, Loss: 72.7536, Val Acc: 0.1012
+  Seed 44, Epoch 187, Loss: 251.6781, Val Acc: 0.1012
+  Seed 44, Epoch 188, Loss: 430.1837, Val Acc: 0.1012
+  Seed 44, Epoch 189, Loss: 765.4984, Val Acc: 0.1012
+  Seed 44, Epoch 190, Loss: 1036.7327, Val Acc: 0.1012
+  Seed 44, Epoch 191, Loss: 500.1134, Val Acc: 0.1012
+  Seed 44, Epoch 192, Loss: 416.3916, Val Acc: 0.1012
+  Seed 44, Epoch 193, Loss: 576.8217, Val Acc: 0.1012
+  Seed 44, Epoch 194, Loss: 163.3719, Val Acc: 0.1012
+  Seed 44, Epoch 195, Loss: 402.4819, Val Acc: 0.1012
+  Seed 44, Epoch 196, Loss: 464.5571, Val Acc: 0.1012
+  Seed 44, Epoch 197, Loss: 309.6779, Val Acc: 0.1012
+  Seed 44, Epoch 198, Loss: 661.0274, Val Acc: 0.1012
+  Seed 44, Epoch 199, Loss: 831.4417, Val Acc: 0.1012
+  Seed 44, Epoch 200, Loss: 506.6115, Val Acc: 0.1012
+  Seed 44, Epoch 201, Loss: 689.5042, Val Acc: 0.1012
+  Seed 44, Epoch 202, Loss: 125.1289, Val Acc: 0.1012
+  Seed 44, Epoch 203, Loss: 656.3397, Val Acc: 0.1012
+  Seed 44, Epoch 204, Loss: 567.2789, Val Acc: 0.1012
+  Seed 44, Epoch 205, Loss: 902.4426, Val Acc: 0.1012
+  Seed 44, Epoch 206, Loss: 812.6888, Val Acc: 0.1012
+  Seed 44, Epoch 207, Loss: 597.7256, Val Acc: 0.1012
+  Seed 44, Epoch 208, Loss: 500.6936, Val Acc: 0.1012
+  Seed 44, Epoch 209, Loss: 390.6323, Val Acc: 0.1012
+  Seed 44, Epoch 210, Loss: 348.2550, Val Acc: 0.1012
+  Seed 44, Epoch 211, Loss: 822.0110, Val Acc: 0.1012
+  Seed 44, Epoch 212, Loss: 532.0178, Val Acc: 0.1012
+  Seed 44, Epoch 213, Loss: 220.4130, Val Acc: 0.1012
+  Seed 44, Epoch 214, Loss: 312.2743, Val Acc: 0.1012
+  Seed 44, Epoch 215, Loss: 618.5447, Val Acc: 0.1012
+  Seed 44, Epoch 216, Loss: 461.9586, Val Acc: 0.1012
+  Seed 44, Epoch 217, Loss: 458.8627, Val Acc: 0.1012
+  Seed 44, Epoch 218, Loss: 297.1025, Val Acc: 0.1012
+  Seed 44, Epoch 219, Loss: 1036.9841, Val Acc: 0.1012
+  Seed 44, Epoch 220, Loss: 293.3185, Val Acc: 0.1012
+  Seed 44, Epoch 221, Loss: 311.6796, Val Acc: 0.1012
+  Seed 44, Epoch 222, Loss: 438.7852, Val Acc: 0.1012
+  Seed 44, Epoch 223, Loss: 283.7819, Val Acc: 0.1012
+  Seed 44, Epoch 224, Loss: 562.6696, Val Acc: 0.1012
+  Seed 44, Epoch 225, Loss: 430.0783, Val Acc: 0.1012
+  Seed 44, Epoch 226, Loss: 284.9203, Val Acc: 0.1012
+  Seed 44, Epoch 227, Loss: 317.5095, Val Acc: 0.1012
+  Seed 44, Epoch 228, Loss: 374.4468, Val Acc: 0.1012
+  Seed 44, Epoch 229, Loss: 526.5075, Val Acc: 0.1012
+  Seed 44, Epoch 230, Loss: 619.4282, Val Acc: 0.1012
+  Seed 44, Epoch 231, Loss: 710.9730, Val Acc: 0.1012
+  Seed 44, Epoch 232, Loss: 740.8640, Val Acc: 0.1012
+  Seed 44, Epoch 233, Loss: 943.7093, Val Acc: 0.1012
+  Seed 44, Epoch 234, Loss: 625.3269, Val Acc: 0.1012
+  Seed 44, Epoch 235, Loss: 1012.9189, Val Acc: 0.1012
+  Seed 44, Epoch 236, Loss: 293.8995, Val Acc: 0.1012
+  Seed 44, Epoch 237, Loss: 409.7825, Val Acc: 0.1012
+  Seed 44, Epoch 238, Loss: 1112.2090, Val Acc: 0.1012
+  Seed 44, Epoch 239, Loss: 714.4471, Val Acc: 0.1012
+  Seed 44, Epoch 240, Loss: 744.4203, Val Acc: 0.1012
+  Seed 44, Epoch 241, Loss: 302.8578, Val Acc: 0.1012
+  Seed 44, Epoch 242, Loss: 704.7136, Val Acc: 0.1012
+  Seed 44, Epoch 243, Loss: 530.0825, Val Acc: 0.1012
+  Seed 44, Epoch 244, Loss: 783.2780, Val Acc: 0.1012
+  Seed 44, Epoch 245, Loss: 687.2711, Val Acc: 0.1012
+  Seed 44, Epoch 246, Loss: 686.9105, Val Acc: 0.1012
+  Seed 44, Epoch 247, Loss: 406.1907, Val Acc: 0.1012
+  Seed 44, Epoch 248, Loss: 657.7346, Val Acc: 0.1012
+  Seed 44, Epoch 249, Loss: 654.7903, Val Acc: 0.1012
+  Seed 44, Epoch 250, Loss: 283.6659, Val Acc: 0.1012
+  Seed 44, Epoch 251, Loss: 740.8761, Val Acc: 0.1012
+  Seed 44, Epoch 252, Loss: 623.8367, Val Acc: 0.1012
+  Seed 44, Epoch 253, Loss: 903.8257, Val Acc: 0.1012
+  Seed 44, Epoch 254, Loss: 910.4230, Val Acc: 0.1012
+  Seed 44, Epoch 255, Loss: 535.0624, Val Acc: 0.1012
+  Seed 44, Epoch 256, Loss: 535.1282, Val Acc: 0.1012
+  Seed 44, Epoch 257, Loss: 214.4184, Val Acc: 0.1012
+  Seed 44, Epoch 258, Loss: 337.7843, Val Acc: 0.1012
+  Seed 44, Epoch 259, Loss: 1239.1606, Val Acc: 0.1012
+  Seed 44, Epoch 260, Loss: 380.2527, Val Acc: 0.1012
+  Seed 44, Epoch 261, Loss: 655.3960, Val Acc: 0.1012
+  Seed 44, Epoch 262, Loss: 130.0254, Val Acc: 0.1012
+  Seed 44, Epoch 263, Loss: 324.2238, Val Acc: 0.1012
+  Seed 44, Epoch 264, Loss: 1205.5979, Val Acc: 0.1012
