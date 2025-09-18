@@ -1,0 +1,11 @@
+  × No solution found when resolving dependencies for split (markers:
+  │ python_full_version >= '3.12'):
+  ╰─▶ Because pyg-lib was not found in the package registry and your
+      project depends on pyg-lib>=0.3.0, we can conclude that your project's
+      requirements are unsatisfiable.
+      And because your project requires s3-gat-research[dev], we can conclude
+      that your project's requirements are unsatisfiable.
+
+      hint: While the active Python version is 3.11, the resolution failed for
+      other Python versions supported by your project. Consider limiting your
+      project's supported Python versions using `requires-python`.
