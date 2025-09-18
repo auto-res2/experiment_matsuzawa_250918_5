@@ -5,28 +5,27 @@ description = "Implementation of CERTIFIED-OFFICER for robust prompt optimizatio
 readme = "README.md"
 requires-python = ">=3.8"
 
-dependencies = [
-    "torch>=2.1.0",
-    "transformers>=4.35.0",
-    "peft>=0.8.0",
-    "bitsandbytes>=0.41.0",
-    "accelerate>=0.23.0",
-    "wandb",
-    "pandas",
-    "scikit-learn",
-    "numpy",
-    "huggingface-hub",
-    "datasets",
-    "PyYAML",
-    "ptflops",
-    "fasttext-wheel",
-    "diffusers",
-    "sentence-transformers",
-    "matplotlib",
-    "seaborn",
-    "wget",
-    "tqdm",
-]
+[project.dependencies]
+torch = ">=2.1.0"
+transformers = ">=4.35.0"
+peft = ">=0.8.0"
+bitsandbytes = ">=0.41.0"
+accelerate = ">=0.23.0"
+wandb = "*"
+pandas = "*"
+scikit-learn = "*"
+numpy = "*"
+huggingface-hub = "*"
+datasets = "*"
+PyYAML = "*"
+ptflops = "*"
+fasttext-wheel = "*"
+diffusers = "*"
+sentence-transformers = "*"
+matplotlib = "*"
+seaborn = "*"
+wget = "*"
+tqdm = "*"
 
 [build-system]
 requires = ["setuptools>=61.0"]

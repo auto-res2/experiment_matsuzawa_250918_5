@@ -21,9 +21,9 @@ from .train import RewardModel, SafetyUnifiedHead, PromptGenerator, ConformalRew
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # -------------------------------------------------------------------------
-# Mandatory research path change (iteration4)
+# Mandatory research path change (iteration5)
 # -------------------------------------------------------------------------
-RESULTS_DIR = '.research/iteration4'
+RESULTS_DIR = '.research/iteration5'
 IMAGES_DIR = os.path.join(RESULTS_DIR, 'images')
 
 
@@ -61,9 +61,9 @@ def load_models_for_evaluation(config, device):
     return safety_head, reward_model, pg, tokenizer
 
 
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────
 #  EXPERIMENT 2   (requires latent embedding datasets)
-# ────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────
 
 def run_experiment_2(config, models, device):
     logging.info("--- Experiment 2: Continual conformal updating ---")
@@ -116,7 +116,7 @@ def run_experiment_2(config, models, device):
             }
         )
 
-    # ─── Save JSON (mandatory path) ─────────────────────────────────────────
+    # ─── Save JSON (mandatory path) ────────────────────────────────────────
     out_path = os.path.join(RESULTS_DIR, 'experiment_2_results.json')
     with open(out_path, 'w') as f:
         json.dump(results, f, indent=4)
@@ -134,10 +134,9 @@ def run_experiment_2(config, models, device):
     plt.close()
 
 
-# ────────────────────────────────────────────────────────────────────────────
-#  (Experiment 1 & 3 unchanged – only path constants updated above)
-# ────────────────────────────────────────────────────────────────────────────
-
+# ──────────────────────────────────────────────────────────────────────────
+#  Evaluation entry point
+# ──────────────────────────────────────────────────────────────────────────
 
 def run_evaluation(config):
     logging.info("Evaluation stage …")

@@ -24,4 +24,4 @@ training:
   kl_lambda: 3.0
 
 evaluation:
-  results_dir: '.research/iteration4'
+  results_dir: '.research/iteration5'

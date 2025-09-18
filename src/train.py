@@ -11,6 +11,13 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 import logging
 
+# -------------------------------------------------------------------------
+# IMPORTANT: allow loading of custom Dataset objects created in preprocess.py
+# -------------------------------------------------------------------------
+from torch.serialization import add_safe_globals
+from .preprocess import PreprocessedDataset  # noqa: E402
+add_safe_globals([PreprocessedDataset])
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
@@ -102,9 +109,9 @@ class ConformalRewardWrapper:
         logging.info(f"Updated conformal calibration set. New size: {len(self.calibration_scores)}")
 
 
-# ────────────────────────────────────────────────────────────────────────────────
-#  Helper Losses / Utilities
-# ────────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────
+# Helper Losses / Utilities
+# ──────────────────────────────────────────────────────────────────────────
 
 def focal_loss(inputs, targets, alpha=0.25, gamma=2.0):
     BCE_loss = nn.CrossEntropyLoss(reduction='none')(inputs, targets)
@@ -140,9 +147,9 @@ def generate_certificate(dr_estimates, delta):
     }
 
 
-# ────────────────────────────────────────────────────────────────────────────────
-#  MAIN TRAINING FUNCTION
-# ────────────────────────────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────
+# MAIN TRAINING FUNCTION
+# ──────────────────────────────────────────────────────────────────────────
 
 def _build_latent_dataset(dataset, sbert_model, safety_head, device, batch_size):
     """Converts a PreprocessedDataset (text,reward,ℓ) → TensorDataset(latent,reward)"""
@@ -170,19 +177,18 @@ def run_training(config):
     artifacts_dir = config['training']['artifacts_dir']
     os.makedirs(artifacts_dir, exist_ok=True)
 
-    # ───── Load Pre-processed Text Data ─────
+    # ─── Load Pre-processed Text Data ────────────────────────────────────
     try:
         train_data = torch.load(os.path.join(processed_dir, 'train_data.pt'), weights_only=False)
         val_data = torch.load(os.path.join(processed_dir, 'val_data.pt'), weights_only=False)
         test_data = torch.load(os.path.join(processed_dir, 'test_data.pt'), weights_only=False)
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         logging.error("Pre-processed data not found. Run preprocess.py first.")
         sys.exit(1)
 
-    # ───── Models ─────
+    # ─── Models ──────────────────────────────────────────────────────────
     sbert_model = SentenceTransformer(config['models']['encoder_model'], device=device)
-    encoder_dim = sbert_model.get_sentence_embedding_dimension()
-    safety_head = SafetyUnifiedHead(encoder_dim=encoder_dim).to(device)
+    safety_head = SafetyUnifiedHead().to(device)
     reward_model = RewardModel().to(device)
 
     optim_safety = optim.AdamW(safety_head.parameters(), lr=config['training']['learning_rate'])
@@ -198,9 +204,7 @@ def run_training(config):
             safety_labels = safety_labels.long().to(device)
 
             with torch.no_grad():
-                emb = sbert_model.encode(list(texts), convert_to_tensor=True, device=device)
-                # encode() internally uses inference_mode; clone() turns them into regular tensors
-                emb = emb.clone()  # avoid "inference tensor" autograd issue
+                emb = sbert_model.encode(list(texts), convert_to_tensor=True, device=device).clone()
 
             # ── Safety Head ──
             optim_safety.zero_grad()
@@ -219,12 +223,12 @@ def run_training(config):
             total_reward_loss += r_loss.item()
         logging.info(f"Epoch {epoch + 1}: SafetyLoss={total_safety_loss / len(train_dl):.4f}  RewardLoss={total_reward_loss / len(train_dl):.4f}")
 
-    # ───── Persist Trained Heads ─────
+    # ─── Persist Trained Heads ───────────────────────────────────────────
     torch.save(safety_head.state_dict(), os.path.join(artifacts_dir, 'safety_head.pt'))
     torch.save(reward_model.state_dict(), os.path.join(artifacts_dir, 'reward_model.pt'))
     logging.info("Saved Safety head and Reward model weights.")
 
-    # ───── Build Latent Datasets (needed for downstream conformal evaluation) ─────
+    # ─── Build Latent Datasets (for conformal calibration & evaluation) ──
     logging.info("Building latent embedding datasets for conformal calibration & evaluation …")
     train_latent_ds = _build_latent_dataset(train_data, sbert_model, safety_head, device, config['training']['batch_size'])
     val_latent_ds = _build_latent_dataset(val_data, sbert_model, safety_head, device, config['training']['batch_size'])
@@ -235,12 +239,12 @@ def run_training(config):
     torch.save(test_latent_ds, os.path.join(processed_dir, 'test_embeddings.pt'))
     logging.info("Latent datasets saved.")
 
-    # ───── Conformal Wrapper (Jackknife+) ─────
+    # ─── Conformal Wrapper (Jackknife+) ──────────────────────────────────
     val_latent_dl = DataLoader(val_latent_ds, batch_size=config['training']['batch_size'])
     conformal_wrapper = ConformalRewardWrapper(reward_model, val_latent_dl, alpha=config['training']['conformal_alpha'])
     logging.info(f"Conformal wrapper calibrated on {len(conformal_wrapper.calibration_scores)} samples.")
 
-    # ───── Amortised Prompt Generator ─────
+    # ─── Amortised Prompt Generator ──────────────────────────────────────
     logging.info("Training amortised prompt generator g_φ …")
     qlora_conf = {
         "r": config['models']['qlora']['r'],
@@ -279,7 +283,8 @@ def run_training(config):
             kl_pen = config['training']['kl_lambda'] * kl_divergence_penalty(log_probs_q, log_probs_b, config['training']['kl_epsilon'])
             loss = dr_obj + kl_pen
             loss.backward()
-            optim_pg.step(), sched_pg.step()
+            optim_pg.step()
+            sched_pg.step()
             total_pg_loss += loss.item()
             if idx % 50 == 0:
                 logging.info(f"  PG batch {idx}/{len(train_dl)}  loss={loss.item():.4f}")
@@ -289,9 +294,8 @@ def run_training(config):
     tokenizer.save_pretrained(os.path.join(artifacts_dir, 'prompt_generator_qlora'))
     logging.info("Prompt generator saved.")
 
-    # ───── Certificate ─────
+    # ─── Certificate ─────────────────────────────────────────────────────
     logging.info("Generating empirical Bernstein certificate …")
-    test_latent_dl = DataLoader(test_latent_ds, batch_size=config['training']['batch_size'])
     dr_vals = []
     prompt_gen.eval()
     with torch.no_grad():
