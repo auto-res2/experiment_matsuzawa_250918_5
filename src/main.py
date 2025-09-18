@@ -29,19 +29,15 @@ def main():
         help="Execution mode: train the hyper-network or evaluate it (default: evaluate).",
     )
 
-    # Evaluation-specific arguments
+    # Evaluation-specific arguments (optional now)
     parser.add_argument(
         "--experiment",
         type=str,
-        choices=["exp1", "exp2", "exp3"],
-        help="Specify which experiment to run in evaluation mode.",
+        choices=["exp1", "exp2", "exp3", "all"],
+        help="Specify which experiment to run in evaluation mode. If omitted, all experiments are run.",
     )
 
     args = parser.parse_args()
-
-    # Require --experiment when evaluating
-    if args.mode == "evaluate" and not args.experiment:
-        parser.error("--experiment is required when --mode is 'evaluate'")
 
     # Determine config file path
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -66,6 +62,9 @@ def main():
     config["mode"] = args.mode
     if args.experiment:
         config.setdefault("evaluate", {})["experiment"] = args.experiment
+    else:
+        # Default: run ALL experiments
+        config.setdefault("evaluate", {})["experiment"] = "all"
 
     # Set up output directories from config
     base_dir = os.path.dirname(script_dir)
@@ -79,7 +78,7 @@ def main():
         print("--- Starting Training Phase ---")
         train(config)
     else:  # evaluate
-        print(f"--- Starting Evaluation Phase for {args.experiment} ---")
+        print(f"--- Starting Evaluation Phase ({config['evaluate']['experiment']}) ---")
         evaluate(config)
 
 

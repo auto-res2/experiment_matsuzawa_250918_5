@@ -2,6 +2,7 @@ import os
 import json
 import time
 from collections import deque
+from typing import Dict, Any
 
 import torch
 import torch.nn.functional as F
@@ -178,20 +179,28 @@ class FLASH_Adapter:
 # EXPERIMENT HELPERS & LOGGING
 # ============================================================
 
+def _get_results_dirs():
+    """Utility to obtain the iteration-7 results & image directories."""
+    base_dir = ".research/iteration7/"
+    json_dir = base_dir
+    img_dir = os.path.join(base_dir, "images")
+    os.makedirs(json_dir, exist_ok=True)
+    os.makedirs(img_dir, exist_ok=True)
+    return json_dir, img_dir
+
+
 def log_and_plot_results(results, exp_name, config, backbone):
     # ------------------------------------------------------------------
-    # Path handling (must follow iteration6 requirement)
+    # Path handling (iteration7 requirement)
     # ------------------------------------------------------------------
-    results_dir = ".research/iteration6/"
-    plots_dir = os.path.join(results_dir, "images")
-    os.makedirs(results_dir, exist_ok=True)
-    os.makedirs(plots_dir, exist_ok=True)
+    json_dir, img_dir = _get_results_dirs()
 
     safe_bb = backbone.replace("/", "_")
-    json_path = os.path.join(results_dir, f"{exp_name}_{safe_bb}.json")
+    json_path = os.path.join(json_dir, f"{exp_name}_{safe_bb}.json")
     with open(json_path, "w") as f:
         json.dump(results, f, indent=4, default=float)
 
+    # Print to STDOUT for verification (pipeline will capture)
     print(f"\n--- RESULTS ({exp_name} / {backbone}) ---")
     print(json.dumps(results, indent=4, default=str))
     print(f"Saved JSON → {json_path}")
@@ -205,7 +214,7 @@ def log_and_plot_results(results, exp_name, config, backbone):
         plt.title(f"Experiment-1 ({backbone})")
         plt.legend()
         plt.tight_layout()
-        plt.savefig(os.path.join(plots_dir, f"exp1_{safe_bb}.pdf"))
+        plt.savefig(os.path.join(img_dir, f"exp1_{safe_bb}.pdf"))
         plt.close()
     if exp_name == "experiment_3" and results.get("gate_on_acc"):
         plt.figure(figsize=(8, 5))
@@ -217,7 +226,7 @@ def log_and_plot_results(results, exp_name, config, backbone):
         plt.xlabel("Steps")
         plt.title(f"Experiment-3 ({backbone})")
         plt.tight_layout()
-        plt.savefig(os.path.join(plots_dir, f"exp3_{safe_bb}.pdf"))
+        plt.savefig(os.path.join(img_dir, f"exp3_{safe_bb}.pdf"))
         plt.close()
 
 
@@ -225,11 +234,12 @@ def log_and_plot_results(results, exp_name, config, backbone):
 # TOP-LEVEL EVALUATION ENTRY POINT
 # ============================================================
 
-def evaluate(config):
+def evaluate_single_experiment(config, exp_key):
+    """Helper: run a single experiment (exp1 / exp2 / exp3) on all backbones."""
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     for backbone in config["train"]["backbones"]:
-        print("=" * 15, "EVALUATE", backbone, "=" * 15)
+        print("=" * 15, f"EVALUATE {backbone} ‑ {exp_key}", "=" * 15)
         safe_bb = backbone.replace("/", "_")
 
         model = timm.create_model(backbone, pretrained=True).to(device)
@@ -239,8 +249,7 @@ def evaluate(config):
         out_dir = config["project"]["output_dir"]
         fisher_path = os.path.join(out_dir, f"{safe_bb}_fisher.pth")
         if not os.path.exists(fisher_path):
-            print(f"Missing Fisher file {fisher_path}. Run training first.")
-            raise FileNotFoundError(fisher_path)
+            raise FileNotFoundError(f"Missing Fisher file {fisher_path}. Run training first.")
         fisher_diagonals = torch.load(fisher_path, map_location=device)
 
         num_lora_params = sum(
@@ -254,14 +263,12 @@ def evaluate(config):
         ).to(device)
         hyper_path = os.path.join(out_dir, f"hyper_gru_{safe_bb}.pth")
         if not os.path.exists(hyper_path):
-            print(f"Missing HyperGRU weights {hyper_path} – train first.")
-            raise FileNotFoundError(hyper_path)
+            raise FileNotFoundError(f"Missing HyperGRU weights {hyper_path} – train first.")
         hyper.load_state_dict(torch.load(hyper_path, map_location=device))
         hyper.eval()
 
         adapter = FLASH_Adapter(model, hyper, fisher_diagonals, config, device)
 
-        exp_key = config["evaluate"]["experiment"]
         if exp_key == "exp1":
             _ = run_experiment_1(config, adapter, backbone)
         elif exp_key == "exp2":
@@ -271,13 +278,20 @@ def evaluate(config):
         else:
             raise ValueError(f"Unknown experiment {exp_key}")
 
+
+def evaluate(config):
+    """Public evaluation entry: runs selected or ALL experiments."""
+    exp_choice = config["evaluate"].get("experiment")
+    if exp_choice in {None, "all"}:
+        for key in ["exp1", "exp2", "exp3"]:
+            evaluate_single_experiment(config, key)
+    else:
+        evaluate_single_experiment(config, exp_choice)
+
+
 # ============================================================
 # EXPERIMENT RUNNERS (exp1 / exp2 / exp3)
 # ============================================================
-
-from typing import Dict, Any  # for type hints
-
-# (implementations unchanged apart from path updates performed by log_and_plot_results)
 
 def run_experiment_1(config, adapter: FLASH_Adapter, backbone):
     print("Running Experiment-1 (Recurring Shift)")
@@ -302,9 +316,9 @@ def run_experiment_1(config, adapter: FLASH_Adapter, backbone):
     return res
 
 
-def run_experiment_2(config, adapter, backbone):
+def run_experiment_2(config, adapter: FLASH_Adapter, backbone):
     print("Running Experiment-2 (ImageNet-C & DomainNet)")
-    res = {"experiment": 2, "backbone": backbone}
+    res: Dict[str, Any] = {"experiment": 2, "backbone": backbone}
     # ImageNet-C
     accs = []
     for corr in config["experiment_2"]["imagenet_c_corruptions"]:
@@ -337,9 +351,9 @@ def run_experiment_2(config, adapter, backbone):
     return res
 
 
-def run_experiment_3(config, adapter, backbone):
+def run_experiment_3(config, adapter: FLASH_Adapter, backbone):
     print("Running Experiment-3 (Safety Gate Stress Test)")
-    res = {
+    res: Dict[str, Any] = {
         "experiment": 3,
         "backbone": backbone,
         "gate_on_acc": [],
