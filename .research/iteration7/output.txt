@@ -1,0 +1,4 @@
+=== [PHASE 2/2] Full experiment start Thu Sep 18 05:12:35 PM UTC 2025 ===
+--- Starting Evaluation Phase (all) ---
+=============== EVALUATE timm/resnet18.a1_in1k ‑ exp1 ===============
+=== [PHASE 2/2] Full experiment end Thu Sep 18 05:12:43 PM UTC 2025 ===

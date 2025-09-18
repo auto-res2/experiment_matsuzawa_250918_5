@@ -4,11 +4,7 @@ project:
   data_dir: "data/"
 
 train:
-  backbones: [
-    "timm/resnet50.a1_in1k", 
-    "timm/convnext_tiny.fb_in22k_ft_in1k", 
-    "timm/vit_base_patch16_224.augreg2_in21k_ft_in1k"
-    ]
+  backbones: ["timm/resnet18.a1_in1k"]
   lora_rank: 4
   gru_hidden_dim: 32
   learning_rate: 0.001

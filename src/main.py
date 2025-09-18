@@ -41,7 +41,8 @@ def main():
 
     # Determine config file path
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    config_dir = os.path.join(script_dir, "config")
+    base_dir = os.path.dirname(script_dir)  # Go up one level from src to project root
+    config_dir = os.path.join(base_dir, "config")
     if args.smoke_test:
         config_path = os.path.join(config_dir, "smoke_test.yaml")
     else:
@@ -67,7 +68,7 @@ def main():
         config.setdefault("evaluate", {})["experiment"] = "all"
 
     # Set up output directories from config
-    base_dir = os.path.dirname(script_dir)
+    # base_dir already calculated above
     config["project"]["output_dir"] = os.path.join(base_dir, config["project"]["output_dir"])
     config["project"]["data_dir"] = os.path.join(base_dir, config["project"]["data_dir"])
     os.makedirs(config["project"]["output_dir"], exist_ok=True)

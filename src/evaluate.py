@@ -161,8 +161,8 @@ class FLASH_Adapter:
                 A, B = mod.get_lora_params()
                 originals[name] = [A.clone(), B.clone()]
                 n_A, n_B = A.numel(), B.numel()
-                d_A = self.ema_delta[cur : cur + n_A].view_as(A)
-                d_B = self.ema_delta[cur + n_A : cur + n_A + n_B].view_as(B)
+                d_A = self.ema_delta[cur : cur + n_A].view_as(A).to(A.device)
+                d_B = self.ema_delta[cur + n_A : cur + n_A + n_B].view_as(B).to(B.device)
                 A.add_(d_A)
                 B.add_(d_B)
                 cur += n_A + n_B

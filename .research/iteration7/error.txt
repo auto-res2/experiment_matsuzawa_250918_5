@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/main.py", line 87, in <module>
+    main()
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/main.py", line 83, in main
+    evaluate(config)
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/evaluate.py", line 287, in evaluate
+    evaluate_single_experiment(config, key)
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/evaluate.py", line 267, in evaluate_single_experiment
+    hyper.load_state_dict(torch.load(hyper_path, map_location=device))
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 2624, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for HyperGRU:
+	size mismatch for gru.weight_ih_l0: copying a param with shape torch.Size([48, 60]) from checkpoint, the shape in current model is torch.Size([96, 60]).
+	size mismatch for gru.weight_hh_l0: copying a param with shape torch.Size([48, 16]) from checkpoint, the shape in current model is torch.Size([96, 32]).
+	size mismatch for gru.bias_ih_l0: copying a param with shape torch.Size([48]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for gru.bias_hh_l0: copying a param with shape torch.Size([48]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for gru.weight_ih_l1: copying a param with shape torch.Size([48, 16]) from checkpoint, the shape in current model is torch.Size([96, 32]).
+	size mismatch for gru.weight_hh_l1: copying a param with shape torch.Size([48, 16]) from checkpoint, the shape in current model is torch.Size([96, 32]).
+	size mismatch for gru.bias_ih_l1: copying a param with shape torch.Size([48]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for gru.bias_hh_l1: copying a param with shape torch.Size([48]) from checkpoint, the shape in current model is torch.Size([96]).
+	size mismatch for head.weight: copying a param with shape torch.Size([71847, 16]) from checkpoint, the shape in current model is torch.Size([143693, 32]).
+	size mismatch for head.bias: copying a param with shape torch.Size([71847]) from checkpoint, the shape in current model is torch.Size([143693]).
