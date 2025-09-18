@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/main.py", line 10, in <module>
+    from evaluate import evaluate
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/evaluate.py", line 17, in <module>
+    from preprocess import (
+ImportError: cannot import name 'get_recurring_shift_stream' from 'preprocess' (/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/preprocess.py)
+usage: main.py [-h] (--smoke-test | --full-experiment) --mode {train,evaluate}
+               [--experiment {exp1,exp2,exp3}]
+main.py: error: the following arguments are required: --mode

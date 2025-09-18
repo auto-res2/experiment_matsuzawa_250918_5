@@ -377,7 +377,9 @@ def train(config):
         u_target = []
         for n in oracle_deltas:
             for i, d in enumerate(oracle_deltas[n]):
-                u_target.append((d * torch.sqrt(fisher_diagonals[n][i])).flatten())
+                d_device = d.to(device)
+                fisher_device = fisher_diagonals[n][i].to(device)
+                u_target.append((d_device * torch.sqrt(fisher_device)).flatten())
         u_target = torch.cat(u_target)
 
         # ------------------------------------------------
