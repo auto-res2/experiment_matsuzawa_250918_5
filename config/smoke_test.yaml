@@ -1,0 +1,29 @@
+global_settings:
+  output_dir: '.research/iteration1'
+  data_dir: 'data/'
+  seeds: [42]
+  force_preprocess: true
+
+experiment_1:
+  description: "Smoke test for Streaming-Graph Latency"
+  datasets:
+    - "Synthetic-PowerLaw-Stream"
+  dataset_params:
+    Synthetic-PowerLaw-Stream:
+      num_snapshots: 3
+      churn_rate: 0.1
+  models_and_baselines:
+    - name: "S3GAT"
+      params:
+        hidden_dim: 16
+        num_layers: 2
+        heads: 2
+        m: 32
+        dropout: 0.5
+        beta_schedule: true
+        use_24_kernel: false
+        dp_budget: null
+  training_procedure:
+    lr: 0.001
+    epochs: 2 # Per snapshot
+    patience: 10 # Not used in streaming

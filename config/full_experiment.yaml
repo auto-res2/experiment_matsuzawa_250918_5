@@ -1,0 +1,123 @@
+global_settings:
+  output_dir: '.research/iteration1'
+  data_dir: 'data/'
+  seeds: [42, 43, 44, 45, 46]
+  force_preprocess: false
+
+experiment_1:
+  description: "Streaming-Graph Latency & Energy Benchmark"
+  datasets:
+    - "Reddit-Threads"
+    # - "ogbn-products" # Monthly version not standard, omitting for runnable code
+    - "Synthetic-PowerLaw-Stream"
+  dataset_params:
+    Synthetic-PowerLaw-Stream:
+      num_snapshots: 30
+      churn_rate: 0.05
+  models_and_baselines:
+    - name: "GAT"
+      params:
+        hidden_dim: 256
+        num_layers: 2
+        heads: 8
+    - name: "S3GAT"
+      params:
+        hidden_dim: 256
+        num_layers: 2
+        heads: 8
+        m: 64
+        dropout: 0.6
+        beta_schedule: false
+        use_24_kernel: true
+        dp_budget: null
+    - name: "GraphSAINT" # Using GAT as substitute
+      params:
+        hidden_dim: 256
+        num_layers: 2
+        heads: 8
+  training_procedure:
+    lr: 0.0003
+    epochs: 1 # Incremental fine-tuning
+    patience: 20
+
+experiment_2:
+  description: "Heterophily & Signed-Edge Generalisation Test"
+  datasets:
+    - "Chameleon-S"
+    - "Squirrel-S"
+    - "Roman-Empire"
+    - "Amazon-Ratings"
+  models_and_baselines:
+    - name: "GAT"
+      params:
+        hidden_dim: 128
+        num_layers: 2
+        heads: 8
+    - name: "ASEGAT" # Using GAT as substitute
+      params:
+        hidden_dim: 128
+        num_layers: 2
+        heads: 8
+    - name: "FAGCN"
+      params:
+        K: 2
+        dropout: 0.5
+    - name: "S3GAT"
+      params:
+        hidden_dim: 128
+        num_layers: 2
+        heads: 8
+        m: 64
+        dropout: 0.5
+        beta_schedule: false
+        use_24_kernel: false
+        dp_budget: null
+  training_procedure:
+    lr: 0.001
+    epochs: 100
+    patience: 20
+
+experiment_3:
+  description: "Deep-GAT Oversmoothing & Privacy Trade-off Study"
+  datasets:
+    - "ogbn-products"
+  models_and_baselines:
+    - name: "GAT" # Vanilla 12-layer GAT-BalO
+      params:
+        hidden_dim: 256
+        num_layers: 12
+        heads: 8
+    - name: "S3GAT" # DP-BC off, beta-on
+      params:
+        hidden_dim: 256
+        num_layers: 12
+        heads: 8
+        m: 128
+        dropout: 0.6
+        beta_schedule: true
+        use_24_kernel: false
+        dp_budget: null
+    - name: "S3GAT" # beta-off variant
+      params:
+        hidden_dim: 256
+        num_layers: 12
+        heads: 8
+        m: 128
+        dropout: 0.6
+        beta_schedule: false
+        use_24_kernel: false
+        dp_budget: null
+    - name: "S3GAT" # Epsilon=3
+      params:
+        hidden_dim: 256
+        num_layers: 12
+        heads: 8
+        m: 128
+        dropout: 0.6
+        beta_schedule: true
+        use_24_kernel: false
+        dp_budget: 3.0
+  training_procedure:
+    lr: 0.0003
+    epochs: 600
+    patience: 600 # No early stopping
