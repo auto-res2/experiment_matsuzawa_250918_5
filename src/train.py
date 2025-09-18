@@ -182,7 +182,7 @@ def compute_fisher_diagonal(model: nn.Module, config, device: torch.device):
             params = mod.get_lora_params()
             for i, p in enumerate(params):
                 if p.grad is not None:
-                    fisher_diagonals[name][i] += p.grad.detach().pow(2).to(device)
+                    fisher_diagonals[name][i] += p.grad.detach().pow(2)
 
         processed += images.size(0)
         if processed >= config["train"]["fisher_samples"]:
@@ -377,8 +377,8 @@ def train(config):
         u_target = []
         for n in oracle_deltas:
             for i, d in enumerate(oracle_deltas[n]):
-                u_target.append((d.to(device) * torch.sqrt(fisher_diagonals[n][i])).flatten())
-        u_target = torch.cat(u_target).to(device)
+                u_target.append((d * torch.sqrt(fisher_diagonals[n][i])).flatten())
+        u_target = torch.cat(u_target)
 
         # ------------------------------------------------
         # 5. Optimise hyper-network

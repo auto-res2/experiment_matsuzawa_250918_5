@@ -180,7 +180,7 @@ class FLASH_Adapter:
 
 def log_and_plot_results(results, exp_name, config, backbone):
     # Required paths (specification)
-    results_dir = ".research/iteration4/"
+    results_dir = ".research/iteration5/"
     plots_dir = os.path.join(results_dir, "images")
     os.makedirs(results_dir, exist_ok=True)
     os.makedirs(plots_dir, exist_ok=True)
