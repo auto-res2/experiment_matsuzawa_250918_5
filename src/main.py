@@ -20,13 +20,12 @@ def main():
         "--full-experiment", action="store_true", help="Run with the full experiment configuration."
     )
 
-    # Execution mode (default to evaluate for convenience)
+    # Execution mode (default changes based on config type)
     parser.add_argument(
         "--mode",
         type=str,
-        default="evaluate",
         choices=["train", "evaluate"],
-        help="Execution mode: train the hyper-network or evaluate it (default: evaluate).",
+        help="Execution mode: train the hyper-network or evaluate it.",
     )
 
     # Evaluation-specific arguments
@@ -39,9 +38,19 @@ def main():
 
     args = parser.parse_args()
 
-    # Require --experiment when evaluating
+    # Set default mode based on config type
+    if not args.mode:
+        if args.smoke_test:
+            args.mode = "train"  # Smoke tests default to training
+        else:
+            args.mode = "train"  # Full experiments also default to training first
+    
+    # Set default experiment for full experiments in evaluate mode
     if args.mode == "evaluate" and not args.experiment:
-        parser.error("--experiment is required when --mode is 'evaluate'")
+        if args.full_experiment:
+            args.experiment = "exp1"  # Default to exp1 for full experiments
+        else:
+            parser.error("--experiment is required when --mode is 'evaluate'")
 
     # Determine config file path
     config_dir = os.path.join(os.path.dirname(__file__), "..", "config")

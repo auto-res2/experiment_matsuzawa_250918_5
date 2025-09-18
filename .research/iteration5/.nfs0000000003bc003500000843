@@ -1,0 +1,4 @@
+=== [PHASE 2/2] Full experiment start Thu Sep 18 04:28:23 PM UTC 2025 ===
+--- Starting Training Phase ---
+Loading backbone: timm/resnet50.a1_in1k
+Loading pre-computed Fisher from /home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/../.research/iteration1/timm_resnet50.a1_in1k_fisher.pth
