@@ -6,5 +6,82 @@
     "efficient GAT training",
     "scalable graph attention",
     "approximate attention GNN"
+  ],
+  "research_study_list": [
+    {
+      "title": "GACT: Activation Compressed Training for Generic Network Architectures"
+    },
+    {
+      "title": "GACT: Activation Compressed Training for Generic Network Architectures"
+    },
+    {
+      "title": "Generative Teaching Networks: Accelerating Neural Architecture Search by Learning to Generate Synthetic Training Data"
+    },
+    {
+      "title": "Accelerating Transformer Pre-training with 2:4 Sparsity"
+    },
+    {
+      "title": "Transformer Quality in Linear Time"
+    },
+    {
+      "title": "Are GATs Out of Balance?"
+    },
+    {
+      "title": "Bandit Samplers for Training Graph Neural Networks"
+    },
+    {
+      "title": "Dynamic Rescaling for Training GNNs"
+    },
+    {
+      "title": "Optimization of Graph Neural Networks: Implicit Acceleration by Skip Connections and More Depth"
+    },
+    {
+      "title": "Demystifying Oversmoothing in Attention-Based Graph Neural Networks"
+    },
+    {
+      "title": "Bandit Samplers for Training Graph Neural Networks"
+    },
+    {
+      "title": "Are GATs Out of Balance?"
+    },
+    {
+      "title": "Dynamic Rescaling for Training GNNs"
+    },
+    {
+      "title": "GATE: How to Keep Out Intrusive Neighbors"
+    },
+    {
+      "title": "GraphSAINT: Graph Sampling Based Inductive Learning Method"
+    },
+    {
+      "title": "GNNAutoScale: Scalable and Expressive Graph Neural Networks via Historical Embeddings"
+    },
+    {
+      "title": "GOAT: A Global Transformer on Large-scale Graphs"
+    },
+    {
+      "title": "Scalable Graph Neural Networks via Bidirectional Propagation"
+    },
+    {
+      "title": "GraphZoom: A Multi-level Spectral Approach for Accurate and Scalable Graph Embedding"
+    },
+    {
+      "title": "Dynamic Rescaling for Training GNNs"
+    },
+    {
+      "title": "Sketch-GNN: Scalable Graph Neural Networks with Sublinear Training Complexity"
+    },
+    {
+      "title": "HyperAttention: Long-context Attention in Near-Linear Time"
+    },
+    {
+      "title": "RSC: Accelerate Graph Neural Networks Training via Randomized Sparse Computations"
+    },
+    {
+      "title": "Bandit Samplers for Training Graph Neural Networks"
+    },
+    {
+      "title": "KDEformer: Accelerating Transformers via Kernel Density Estimation"
+    }
   ]
 }
