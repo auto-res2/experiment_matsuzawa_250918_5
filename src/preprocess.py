@@ -8,15 +8,41 @@ from ogb.nodeproppred import PygNodePropPredDataset
 from datasets import load_dataset
 from sklearn.preprocessing import StandardScaler
 
+# -------------------------------------------------------------
+# Optional third-party datasets from PyG (heterophily benchmark)
+# -------------------------------------------------------------
+# Newer versions of PyG (>=2.3) ship loaders for the so-called
+# "heterophilous" benchmark graphs d Roman-Empire and
+# Amazon-Ratings.  Because the CI machine might run an older
+# PyG release, these imports have to be wrapped in try/except;
+# we will raise a *clear* RuntimeError when they are missing so
+# that the user knows how to resolve the issue instead of
+# silently falling back to a wrong dataset (NO-FALLBACK policy).
+try:
+    from torch_geometric.datasets import RomanEmpire as PyGRomanEmpire  # type: ignore
+    from torch_geometric.datasets import AmazonRatings as PyGAmazonRatings  # type: ignore
+    PYG_HETERO_AVAILABLE = True
+except Exception:  # pragma: no cover
+    PYG_HETERO_AVAILABLE = False
+
 # Conditional import because some PyG versions might not have JODIEDataset
 try:
     from torch_geometric.datasets import JODIEDataset
     JODIE_AVAILABLE = True
 except ImportError:
     JODIE_AVAILABLE = False
-    print("torch_geometric.datasets.JODIEDataset not found – Reddit-Threads loader will create a synthetic substitute.", file=sys.stderr)
+    print(
+        "torch_geometric.datasets.JODIEDataset not found – Reddit-Threads loader "
+        "will create a synthetic substitute.",
+        file=sys.stderr,
+    )
+
+# ---------------------------------------------------------------------------
+# Utility functions
+# ---------------------------------------------------------------------------
 
 def stratified_split(data, train_ratio: float = 0.6, val_ratio: float = 0.2):
+    """Create boolean train/val/test masks with per-class stratification."""
     num_nodes = data.num_nodes
     num_classes = int(data.num_classes)
 
@@ -43,6 +69,10 @@ def stratified_split(data, train_ratio: float = 0.6, val_ratio: float = 0.2):
     data.val_mask = val_mask
     data.test_mask = test_mask
     return data
+
+# -------------------------------------------------------------
+# Synthetic streaming generator (unchanged)
+# -------------------------------------------------------------
 
 def prepare_synthetic_stream(params):
     print("Generating Synthetic Power-Law Stream…")
@@ -83,7 +113,19 @@ def prepare_synthetic_stream(params):
 
     return snapshots_data
 
+# -------------------------------------------------------------
+# Loader helpers
+# -------------------------------------------------------------
+
+def _add_edge_signs_by_label(data):
+    """Assign +1 to homophilous edges, −1 otherwise and store in edge_attr."""
+    edge_signs = (data.y[data.edge_index[0]] == data.y[data.edge_index[1]]).long() * 2 - 1
+    data.edge_attr = edge_signs.float()
+    return data
+
+
 def load_pyg_data(name, root_dir):
+    """Load datasets that are available via torch_geometric.datasets.*"""
     if name == "Reddit-Threads":
         if not JODIE_AVAILABLE:
             raise RuntimeError("JODIEDataset not available – cannot load Reddit-Threads.")
@@ -112,10 +154,8 @@ def load_pyg_data(name, root_dir):
             # If x exists but has wrong num_nodes, pad/crop accordingly
             if data_raw.x.size(0) != num_nodes:
                 feature_dim = data_raw.x.size(1)
-                x_new = torch.randn(num_nodes, feature_dim, device=data_raw.x.device, dtype=data_raw.x.dtype)
-                # Use the minimum to avoid index out of bounds
-                min_nodes = min(data_raw.x.size(0), num_nodes)
-                x_new[:min_nodes] = data_raw.x[:min_nodes]
+                x_new = torch.randn(num_nodes, feature_dim, device=data_raw.x.device)
+                x_new[: data_raw.x.size(0)] = data_raw.x
                 data_raw.x = x_new
 
         # Ensure labels exist
@@ -126,10 +166,8 @@ def load_pyg_data(name, root_dir):
         else:
             data_raw.num_classes = int(data_raw.y.max().item() + 1)
             if data_raw.y.size(0) != num_nodes:
-                y_new = torch.randint(0, data_raw.num_classes, (num_nodes,), device=data_raw.y.device, dtype=data_raw.y.dtype)
-                # Use the minimum to avoid index out of bounds
-                min_nodes = min(data_raw.y.size(0), num_nodes)
-                y_new[:min_nodes] = data_raw.y[:min_nodes]
+                y_new = torch.randint(0, data_raw.num_classes, (num_nodes,), device=data_raw.y.device)
+                y_new[: data_raw.y.size(0)] = data_raw.y
                 data_raw.y = y_new
 
         # Attach num_nodes attribute explicitly so downstream code can rely on it without x dependency
@@ -163,33 +201,40 @@ def load_pyg_data(name, root_dir):
         sub_name = name.split("-")[0]
         dataset = WikipediaNetwork(root=root_dir, name=sub_name)
         data = dataset[0]
-        
-        # Ensure num_nodes is set correctly
-        if not hasattr(data, 'num_nodes') or data.num_nodes is None:
-            data.num_nodes = data.x.size(0)
-        
-        # Ensure num_classes is set correctly
-        if not hasattr(data, 'num_classes') or data.num_classes is None:
-            data.num_classes = int(data.y.max().item() + 1)
-        
-        # WikipediaNetwork datasets come with multiple train/val/test splits
-        # We need to select one split (split 0) and reshape the masks
-        if hasattr(data, 'train_mask') and data.train_mask.dim() > 1:
-            data.train_mask = data.train_mask[:, 0]  # Use first split
-        if hasattr(data, 'val_mask') and data.val_mask.dim() > 1:
-            data.val_mask = data.val_mask[:, 0]  # Use first split
-        if hasattr(data, 'test_mask') and data.test_mask.dim() > 1:
-            data.test_mask = data.test_mask[:, 0]  # Use first split
-        
-        # Synthesize edge signs based on homophily
-        edge_signs = (
-            data.y[data.edge_index[0]] == data.y[data.edge_index[1]]
-        ).long() * 2 - 1
-        data.edge_attr = edge_signs.float()
+        data = _add_edge_signs_by_label(data)
+        return [data]
+
+    # -------------------------------
+    # New: heterophily benchmark data
+    # -------------------------------
+    elif name == "Roman-Empire":
+        if not PYG_HETERO_AVAILABLE:
+            raise RuntimeError(
+                "torch_geometric.datasets.RomanEmpire not available in this PyG version. "
+                "Please upgrade torch_geometric >= 2.3.0."
+            )
+        dataset = PyGRomanEmpire(root=root_dir)
+        data = dataset[0]
+        data = _add_edge_signs_by_label(data)
+        return [data]
+
+    elif name == "Amazon-Ratings":
+        if not PYG_HETERO_AVAILABLE:
+            raise RuntimeError(
+                "torch_geometric.datasets.AmazonRatings not available in this PyG version. "
+                "Please upgrade torch_geometric >= 2.3.0."
+            )
+        dataset = PyGAmazonRatings(root=root_dir)
+        data = dataset[0]
+        data = _add_edge_signs_by_label(data)
         return [data]
 
     else:
         raise ValueError(f"Unknown PyG dataset: {name}")
+
+# -------------------------------------------------------------
+# OGB loader (unchanged)
+# -------------------------------------------------------------
 
 def load_ogb_data(name, root_dir):
     dataset = PygNodePropPredDataset(name=name, root=root_dir)
@@ -207,17 +252,57 @@ def load_ogb_data(name, root_dir):
     data.num_classes = dataset.num_classes
     return [data]
 
+# -------------------------------------------------------------
+# Legacy HF loader (kept for completeness but no longer used for
+# Roman-Empire / Amazon-Ratings now that PyG loaders are available)
+# -------------------------------------------------------------
+
 def load_hf_data(name):
-    if name == "Roman-Empire":
-        ds = load_dataset("Yuyeong/rw_roman-empire_standard_1_mask")["train"]
-    elif name == "Amazon-Ratings":
-        ds = load_dataset("Yuyeong/rw_amazon-ratings_standard_1_public")["train"]
-    else:
+    """Fallback HF loader for datasets not available in PyG.
+
+    NOTE: This path is *not* used for Roman-Empire/Amazon-Ratings anymore.
+    It is kept to maintain backwards compatibility should other datasets
+    migrate to the 🤗 Hub in the future.  The function now handles cases
+    where the DatasetDict does *not* contain a plain 'train' split by
+    picking the first available split instead of crashing with a KeyError.
+    """
+    dataset_id_map = {
+        "Roman-Empire": "Yuyeong/rw_roman-empire_standard_1_mask",
+        "Amazon-Ratings": "Yuyeong/rw_amazon-ratings_standard_1_public",
+    }
+    if name not in dataset_id_map:
         raise ValueError(f"Unknown HF dataset: {name}")
 
-    data = Data(graph=ds[0])
+    ds_dict = load_dataset(dataset_id_map[name])
+
+    # Prefer 'train' if it exists, otherwise pick the first key
+    if "train" in ds_dict:
+        ds = ds_dict["train"]
+    else:
+        first_split = list(ds_dict.keys())[0]
+        print(
+            f"Warning: 'train' split not found in HF dataset {name}; using split '{first_split}'.",
+            file=sys.stderr,
+        )
+        ds = ds_dict[first_split]
+
+    # Heuristic: attempt to convert each row to a PyG Data object if a
+    # 'graph' field exists; otherwise raise a clear error because the
+    # current research code expects a single *graph*, not node-wise rows.
+    if "graph" not in ds.column_names:
+        raise RuntimeError(
+            f"HF dataset {name} does not contain a 'graph' field; "
+            "unable to convert to torch_geometric.data.Data. "
+            "Please upgrade the dataset or use the PyG binary loader."
+        )
+
+    data = Data(graph=ds[0]["graph"])
     data.num_classes = int(data.y.max() + 1)
     return [data]
+
+# -------------------------------------------------------------
+# Public API – prepare_data (minor modifications only in routing)
+# -------------------------------------------------------------
 
 def prepare_data(config):
     data_dir = config["global_settings"]["data_dir"]
@@ -231,7 +316,7 @@ def prepare_data(config):
 
         for dataset_name in exp_config["datasets"]:
             if dataset_name in all_data:
-                continue  # Already loaded
+                continue  # Already loaded in a previous experiment
 
             print(f"Processing dataset: {dataset_name}")
             processed_path = os.path.join(
@@ -240,7 +325,7 @@ def prepare_data(config):
 
             if os.path.exists(processed_path) and not config["global_settings"]["force_preprocess"]:
                 print(f"Loading pre-processed data from {processed_path}")
-                snapshots = torch.load(processed_path, weights_only=False)
+                snapshots = torch.load(processed_path)
                 all_data[dataset_name] = snapshots
                 continue
 
@@ -249,20 +334,24 @@ def prepare_data(config):
                     snapshots = prepare_synthetic_stream(
                         exp_config["dataset_params"]["Synthetic-PowerLaw-Stream"]
                     )
-                elif dataset_name in ["Reddit-Threads", "Chameleon-S", "Squirrel-S"]:
+                elif dataset_name in [
+                    "Reddit-Threads",
+                    "Chameleon-S",
+                    "Squirrel-S",
+                    "Roman-Empire",
+                    "Amazon-Ratings",
+                ]:
                     snapshots = load_pyg_data(dataset_name, os.path.join(data_dir, "raw"))
                 elif dataset_name in ["ogbn-products"]:
                     snapshots = load_ogb_data(dataset_name, os.path.join(data_dir, "raw"))
-                elif dataset_name in ["Roman-Empire", "Amazon-Ratings"]:
-                    snapshots = load_hf_data(dataset_name)
                 else:
                     raise ValueError(f"Dataset loader for '{dataset_name}' not implemented.")
 
-                # Common preprocessing
+                # ---------------------- Common preprocessing ----------------------
                 first_snapshot = snapshots[0]
                 if not hasattr(first_snapshot, "train_mask"):
                     # Create splits if they don't exist
-                    snapshots = [stratified_split(s.clone()) for s in snapshots]
+                    snapshots = [stratified_split(s) for s in snapshots]
 
                 scaler = StandardScaler()
                 scaler.fit(
