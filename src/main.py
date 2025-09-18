@@ -18,15 +18,16 @@ def main():
     config_group.add_argument('--full-experiment', action='store_true', help='Run with the full experiment configuration.')
 
     # Execution mode
-    parser.add_argument('--mode', type=str, required=True, choices=['train', 'evaluate'], help='Execution mode: train the hyper-network or evaluate it.')
+    parser.add_argument('--mode', type=str, default='train', choices=['train', 'evaluate', 'both'], help='Execution mode: train the hyper-network, evaluate it, or do both (default: train).')
     
     # Evaluation-specific arguments
     parser.add_argument('--experiment', type=str, choices=['exp1', 'exp2', 'exp3'], help='Specify which experiment to run in evaluation mode.')
 
     args = parser.parse_args()
 
-    if args.mode == 'evaluate' and not args.experiment:
-        parser.error("--experiment is required when --mode is 'evaluate'")
+    if (args.mode == 'evaluate' or args.mode == 'both') and not args.experiment:
+        # Default to exp1 if no experiment is specified
+        args.experiment = 'exp1'
 
     # Determine config file path
     config_dir = os.path.join(os.path.dirname(__file__), '..', 'config')
@@ -63,6 +64,11 @@ def main():
         print("--- Starting Training Phase ---")
         train(config)
     elif args.mode == 'evaluate':
+        print(f"--- Starting Evaluation Phase for {args.experiment} ---")
+        evaluate(config)
+    elif args.mode == 'both':
+        print("--- Starting Training Phase ---")
+        train(config)
         print(f"--- Starting Evaluation Phase for {args.experiment} ---")
         evaluate(config)
 

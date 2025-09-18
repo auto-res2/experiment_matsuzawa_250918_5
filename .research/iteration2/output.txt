@@ -1,0 +1,28 @@
+=== [PHASE 2/2] Full experiment start Thu Sep 18 03:43:15 PM UTC 2025 ===
+=== [PHASE 2/2] Full experiment end Thu Sep 18 03:43:21 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:44:29 PM UTC 2025 ===
+--- Starting Training Phase ---
+Loading backbone: timm/resnet18.a1_in1k
+Loading pre-computed Fisher from /home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/../.research/iteration1/smoke_test_outputs/timm_resnet18.a1_in1k_fisher.pth
+=== [PHASE 1/2] Smoke test PASSED Thu Sep 18 03:45:13 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:46:00 PM UTC 2025 ===
+--- Starting Training Phase ---
+Loading backbone: timm/resnet18.a1_in1k
+Loading pre-computed Fisher from /home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/../.research/iteration1/smoke_test_outputs/timm_resnet18.a1_in1k_fisher.pth
+=== [PHASE 1/2] Smoke test PASSED Thu Sep 18 03:46:12 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:47:23 PM UTC 2025 ===
+--- Starting Training Phase ---
+Loading backbone: timm/resnet18.a1_in1k
+Loading pre-computed Fisher from /home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/../.research/iteration1/smoke_test_outputs/timm_resnet18.a1_in1k_fisher.pth
+=== [PHASE 1/2] Smoke test PASSED Thu Sep 18 03:47:36 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:48:19 PM UTC 2025 ===
+--- Starting Training Phase ---
+Loading backbone: timm/resnet18.a1_in1k
+Loading pre-computed Fisher from /home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/../.research/iteration1/smoke_test_outputs/timm_resnet18.a1_in1k_fisher.pth
+=== [PHASE 1/2] Smoke test PASSED Thu Sep 18 03:48:31 PM UTC 2025 ===
+=== [PHASE 1/2] Smoke test start Thu Sep 18 03:48:46 PM UTC 2025 ===
+--- Starting Training Phase ---
+Loading backbone: timm/resnet18.a1_in1k
+Computing Fisher information diagonal … (this runs once per backbone)
+Hyper-network saved to /home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/../.research/iteration1/smoke_test_outputs/hyper_gru_timm_resnet18.a1_in1k.pth
+=== [PHASE 1/2] Smoke test PASSED Thu Sep 18 03:49:25 PM UTC 2025 ===

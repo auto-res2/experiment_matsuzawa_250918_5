@@ -80,7 +80,7 @@ class SyntheticStream(IterableDataset):
             transforms.ColorJitter(brightness=0.5, contrast=0.5, saturation=0.5, hue=0.5),
             transforms.GaussianBlur(kernel_size=5, sigma=(0.1, 2.0)),
             transforms.RandomAdjustSharpness(sharpness_factor=2),
-            transforms.RandomPosterize(bits=2)
+            transforms.RandomApply([transforms.Lambda(lambda x: x + torch.randn_like(x) * 0.1)], p=0.5)  # Replace posterize with noise
         ]
 
     def __iter__(self):

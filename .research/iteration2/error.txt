@@ -1,0 +1,90 @@
+usage: main.py [-h] (--smoke-test | --full-experiment) --mode {train,evaluate}
+               [--experiment {exp1,exp2,exp3}]
+main.py: error: the following arguments are required: --mode
+Generating validation split:   0%|          | 0/50000 [00:00<?, ? examples/s]Generating validation split:   0%|          | 100/50000 [00:00<01:17, 641.76 examples/s]Generating validation split:   1%|          | 400/50000 [00:00<00:35, 1389.54 examples/s]Generating validation split:   2%|▏         | 800/50000 [00:00<00:29, 1687.87 examples/s]Generating validation split:   2%|▏         | 1000/50000 [00:00<00:29, 1636.74 examples/s]Generating validation split:   2%|▏         | 1200/50000 [00:00<00:29, 1634.59 examples/s]Generating validation split:   3%|▎         | 1500/50000 [00:00<00:28, 1725.28 examples/s]Generating validation split:   3%|▎         | 1700/50000 [00:01<00:30, 1585.53 examples/s]Generating validation split:   4%|▍         | 1900/50000 [00:01<00:28, 1665.77 examples/s]Generating validation split:   4%|▍         | 2100/50000 [00:01<00:28, 1677.30 examples/s]Generating validation split:   5%|▌         | 2500/50000 [00:01<00:25, 1897.11 examples/s]Generating validation split:   6%|▌         | 2800/50000 [00:01<00:24, 1961.14 examples/s]Generating validation split:   6%|▋         | 3200/50000 [00:01<00:21, 2157.54 examples/s]Generating validation split:   7%|▋         | 3434/50000 [00:01<00:26, 1752.46 examples/s]Generating validation split:   8%|▊         | 4034/50000 [00:04<01:36, 476.02 examples/s] Generating validation split:  10%|█         | 5134/50000 [00:04<00:44, 1005.25 examples/s]Generating validation split:  12%|█▏        | 6034/50000 [00:04<00:29, 1466.15 examples/s]Generating validation split:  13%|█▎        | 6534/50000 [00:04<00:29, 1483.75 examples/s]Generating validation split:  14%|█▍        | 6968/50000 [00:06<00:53, 808.67 examples/s] Generating validation split:  16%|█▌        | 8068/50000 [00:06<00:30, 1380.92 examples/s]Generating validation split:  17%|█▋        | 8668/50000 [00:06<00:25, 1649.56 examples/s]Generating validation split:  18%|█▊        | 9168/50000 [00:06<00:24, 1696.96 examples/s]Generating validation split:  19%|█▉        | 9568/50000 [00:07<00:23, 1692.84 examples/s]Generating validation split:  20%|██        | 10002/50000 [00:07<00:20, 1960.34 examples/s]Generating validation split:  21%|██        | 10402/50000 [00:07<00:21, 1866.18 examples/s]Generating validation split:  22%|██▏       | 11102/50000 [00:08<00:36, 1063.04 examples/s]Generating validation split:  25%|██▍       | 12302/50000 [00:08<00:20, 1833.61 examples/s]Generating validation split:  26%|██▌       | 12802/50000 [00:08<00:19, 1880.72 examples/s]Generating validation split:  26%|██▋       | 13202/50000 [00:09<00:19, 1910.08 examples/s]Generating validation split:  27%|██▋       | 13536/50000 [00:09<00:20, 1808.42 examples/s]Generating validation split:  28%|██▊       | 13936/50000 [00:09<00:19, 1874.39 examples/s]Generating validation split:  28%|██▊       | 14236/50000 [00:09<00:18, 1908.08 examples/s]Generating validation split:  30%|██▉       | 14936/50000 [00:10<00:32, 1073.29 examples/s]Generating validation split:  32%|███▏      | 16136/50000 [00:10<00:17, 1947.22 examples/s]Generating validation split:  34%|███▎      | 16770/50000 [00:11<00:17, 1916.37 examples/s]Generating validation split:  35%|███▍      | 17270/50000 [00:11<00:16, 1956.78 examples/s]Generating validation split:  35%|███▌      | 17670/50000 [00:11<00:16, 2019.72 examples/s]Generating validation split:  36%|███▌      | 17970/50000 [00:12<00:28, 1131.70 examples/s]Generating validation split:  38%|███▊      | 18770/50000 [00:12<00:18, 1734.92 examples/s]Generating validation split:  38%|███▊      | 19170/50000 [00:12<00:18, 1700.56 examples/s]Generating validation split:  39%|███▉      | 19570/50000 [00:12<00:17, 1703.40 examples/s]Generating validation split:  40%|███▉      | 19970/50000 [00:13<00:17, 1759.17 examples/s]Generating validation split:  41%|████      | 20303/50000 [00:13<00:18, 1635.77 examples/s]Generating validation split:  41%|████▏     | 20703/50000 [00:13<00:16, 1782.30 examples/s]Generating validation split:  42%|████▏     | 21103/50000 [00:13<00:14, 1994.15 examples/s]Generating validation split:  43%|████▎     | 21503/50000 [00:13<00:13, 2097.96 examples/s]Generating validation split:  44%|████▎     | 21803/50000 [00:14<00:13, 2092.34 examples/s]Generating validation split:  45%|████▌     | 22503/50000 [00:15<00:24, 1142.78 examples/s]Generating validation split:  47%|████▋     | 23436/50000 [00:15<00:15, 1684.82 examples/s]Generating validation split:  48%|████▊     | 23936/50000 [00:15<00:13, 1906.05 examples/s]Generating validation split:  49%|████▊     | 24336/50000 [00:15<00:12, 2019.92 examples/s]Generating validation split:  49%|████▉     | 24636/50000 [00:15<00:12, 2084.50 examples/s]Generating validation split:  50%|████▉     | 24936/50000 [00:15<00:12, 2040.32 examples/s]Generating validation split:  50%|█████     | 25236/50000 [00:16<00:12, 1975.61 examples/s]Generating validation split:  51%|█████▏    | 25636/50000 [00:16<00:11, 2066.00 examples/s]Generating validation split:  53%|█████▎    | 26436/50000 [00:17<00:17, 1370.20 examples/s]Generating validation split:  54%|█████▎    | 26769/50000 [00:17<00:15, 1523.29 examples/s]Generating validation split:  54%|█████▍    | 27069/50000 [00:17<00:14, 1626.65 examples/s]Generating validation split:  55%|█████▌    | 27569/50000 [00:17<00:11, 1983.92 examples/s]Generating validation split:  56%|█████▌    | 27969/50000 [00:17<00:11, 1869.14 examples/s]Generating validation split:  57%|█████▋    | 28369/50000 [00:17<00:10, 2044.43 examples/s]Generating validation split:  57%|█████▋    | 28669/50000 [00:17<00:10, 2018.64 examples/s]Generating validation split:  58%|█████▊    | 28969/50000 [00:18<00:11, 1904.67 examples/s]Generating validation split:  59%|█████▊    | 29369/50000 [00:18<00:09, 2082.55 examples/s]Generating validation split:  60%|█████▉    | 29769/50000 [00:19<00:20, 991.40 examples/s] Generating validation split:  60%|██████    | 30102/50000 [00:19<00:17, 1165.63 examples/s]Generating validation split:  61%|██████    | 30402/50000 [00:19<00:14, 1326.39 examples/s]Generating validation split:  61%|██████▏   | 30702/50000 [00:19<00:13, 1409.96 examples/s]Generating validation split:  62%|██████▏   | 31102/50000 [00:19<00:11, 1702.68 examples/s]Generating validation split:  63%|██████▎   | 31402/50000 [00:19<00:10, 1807.60 examples/s]Generating validation split:  63%|██████▎   | 31702/50000 [00:20<00:09, 1948.63 examples/s]Generating validation split:  64%|██████▍   | 32002/50000 [00:20<00:09, 1957.47 examples/s]Generating validation split:  65%|██████▍   | 32302/50000 [00:20<00:08, 2077.84 examples/s]Generating validation split:  65%|██████▌   | 32602/50000 [00:20<00:09, 1932.61 examples/s]Generating validation split:  66%|██████▌   | 33002/50000 [00:20<00:08, 2038.11 examples/s]Generating validation split:  67%|██████▋   | 33435/50000 [00:20<00:06, 2386.84 examples/s]Generating validation split:  67%|██████▋   | 33735/50000 [00:21<00:17, 928.64 examples/s] Generating validation split:  70%|██████▉   | 34935/50000 [00:21<00:07, 2065.01 examples/s]Generating validation split:  71%|███████   | 35535/50000 [00:22<00:06, 2172.32 examples/s]Generating validation split:  72%|███████▏  | 36135/50000 [00:22<00:06, 2288.09 examples/s]Generating validation split:  73%|███████▎  | 36535/50000 [00:22<00:05, 2394.66 examples/s]Generating validation split:  74%|███████▍  | 37068/50000 [00:22<00:05, 2178.05 examples/s]Generating validation split:  75%|███████▍  | 37368/50000 [00:22<00:05, 2292.80 examples/s]Generating validation split:  75%|███████▌  | 37668/50000 [00:22<00:05, 2358.28 examples/s]Generating validation split:  77%|███████▋  | 38268/50000 [00:24<00:11, 999.22 examples/s] Generating validation split:  79%|███████▊  | 39368/50000 [00:24<00:05, 1817.68 examples/s]Generating validation split:  80%|████████  | 40101/50000 [00:24<00:04, 2357.43 examples/s]Generating validation split:  82%|████████▏ | 40801/50000 [00:24<00:03, 2409.01 examples/s]Generating validation split:  83%|████████▎ | 41401/50000 [00:24<00:03, 2616.04 examples/s]Generating validation split:  84%|████████▍ | 42201/50000 [00:25<00:05, 1549.57 examples/s]Generating validation split:  87%|████████▋ | 43434/50000 [00:25<00:02, 2330.90 examples/s]Generating validation split:  88%|████████▊ | 43934/50000 [00:26<00:02, 2418.48 examples/s]Generating validation split:  89%|████████▊ | 44334/50000 [00:26<00:02, 2381.48 examples/s]Generating validation split:  90%|████████▉ | 44834/50000 [00:26<00:02, 2461.10 examples/s]Generating validation split:  90%|█████████ | 45234/50000 [00:26<00:01, 2643.82 examples/s]Generating validation split:  91%|█████████▏| 45634/50000 [00:27<00:03, 1120.17 examples/s]Generating validation split:  94%|█████████▎| 46767/50000 [00:27<00:01, 1892.86 examples/s]Generating validation split:  94%|█████████▍| 47167/50000 [00:27<00:01, 2020.87 examples/s]Generating validation split:  95%|█████████▌| 47667/50000 [00:27<00:01, 2240.22 examples/s]Generating validation split:  96%|█████████▋| 48167/50000 [00:28<00:00, 2331.04 examples/s]Generating validation split:  97%|█████████▋| 48667/50000 [00:28<00:00, 2473.37 examples/s]Generating validation split:  98%|█████████▊| 49067/50000 [00:28<00:00, 2329.27 examples/s]Generating validation split: 100%|█████████▉| 49767/50000 [00:29<00:00, 1253.13 examples/s]Generating validation split: 100%|██████████| 50000/50000 [00:29<00:00, 1682.41 examples/s]
+  0%|          | 0/10 [00:00<?, ?it/s]  0%|          | 0/10 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/main.py", line 76, in <module>
+    main()
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/main.py", line 65, in main
+    train(config)
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/train.py", line 247, in train
+    sequence_data = next(synthetic_stream)
+                    ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/preprocess.py", line 99, in __next__
+    aug_images = aug(images)
+                 ^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/torchvision/transforms/transforms.py", line 1908, in forward
+    return F.posterize(img, self.bits)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/torchvision/transforms/functional.py", line 1428, in posterize
+    return F_t.posterize(img, bits)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/torchvision/transforms/_functional_tensor.py", line 786, in posterize
+    raise TypeError(f"Only torch.uint8 image tensors are supported, but found {img.dtype}")
+TypeError: Only torch.uint8 image tensors are supported, but found torch.float32
+  0%|          | 0/10 [00:00<?, ?it/s]  0%|          | 0/10 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/main.py", line 76, in <module>
+    main()
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/main.py", line 65, in main
+    train(config)
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/train.py", line 263, in train
+    initial_outputs = model(images)
+                      ^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/timm/models/resnet.py", line 724, in forward
+    x = self.forward_features(x)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/timm/models/resnet.py", line 693, in forward_features
+    x = self.conv1(x)
+        ^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/train.py", line 91, in forward
+    weight = self.base_weight + delta_w
+             ~~~~~~~~~~~~~~~~~^~~~~~~~~
+RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!
+  0%|          | 0/10 [00:00<?, ?it/s]  0%|          | 0/10 [00:01<?, ?it/s]
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/main.py", line 76, in <module>
+    main()
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/main.py", line 65, in main
+    train(config)
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/train.py", line 277, in train
+    p.sub_(p.grad / fisher_diagonals[name][i])
+RuntimeError: output with shape [2, 147] doesn't match the broadcast shape [2, 3, 2, 147]
+  0%|          | 0/10 [00:00<?, ?it/s]  0%|          | 0/10 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/main.py", line 76, in <module>
+    main()
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/main.py", line 65, in main
+    train(config)
+  File "/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/src/train.py", line 279, in train
+    p.sub_(p.grad * fisher_inv)
+RuntimeError: output with shape [2, 147] doesn't match the broadcast shape [2, 3, 2, 147]
+Fisher batches:   0%|          | 0/6250 [00:00<?, ?it/s]Fisher batches:   0%|          | 1/6250 [00:01<2:16:42,  1.31s/it]Fisher batches:   0%|          | 3/6250 [00:01<51:53,  2.01it/s]  
+  0%|          | 0/10 [00:00<?, ?it/s]Step 1/10  Loss: nan:   0%|          | 0/10 [00:03<?, ?it/s]Step 1/10  Loss: nan:  10%|█         | 1/10 [00:03<00:35,  3.98s/it]Step 2/10  Loss: nan:  10%|█         | 1/10 [00:06<00:35,  3.98s/it]Step 2/10  Loss: nan:  20%|██        | 2/10 [00:06<00:25,  3.13s/it]Step 3/10  Loss: nan:  20%|██        | 2/10 [00:08<00:25,  3.13s/it]Step 3/10  Loss: nan:  30%|███       | 3/10 [00:08<00:19,  2.72s/it]Step 4/10  Loss: nan:  30%|███       | 3/10 [00:11<00:19,  2.72s/it]Step 4/10  Loss: nan:  40%|████      | 4/10 [00:11<00:15,  2.55s/it]Step 5/10  Loss: nan:  40%|████      | 4/10 [00:13<00:15,  2.55s/it]Step 5/10  Loss: nan:  50%|█████     | 5/10 [00:13<00:11,  2.34s/it]Step 6/10  Loss: nan:  50%|█████     | 5/10 [00:15<00:11,  2.34s/it]Step 6/10  Loss: nan:  60%|██████    | 6/10 [00:15<00:09,  2.36s/it]Step 7/10  Loss: nan:  60%|██████    | 6/10 [00:17<00:09,  2.36s/it]Step 7/10  Loss: nan:  70%|███████   | 7/10 [00:17<00:06,  2.23s/it]Step 8/10  Loss: nan:  70%|███████   | 7/10 [00:19<00:06,  2.23s/it]Step 8/10  Loss: nan:  80%|████████  | 8/10 [00:19<00:04,  2.12s/it]Step 9/10  Loss: nan:  80%|████████  | 8/10 [00:21<00:04,  2.12s/it]Step 9/10  Loss: nan:  90%|█████████ | 9/10 [00:21<00:02,  2.07s/it]Step 10/10  Loss: nan:  90%|█████████ | 9/10 [00:23<00:02,  2.07s/it]Step 10/10  Loss: nan: 100%|██████████| 10/10 [00:23<00:00,  2.00s/it]Step 10/10  Loss: nan: 100%|██████████| 10/10 [00:23<00:00,  2.31s/it]

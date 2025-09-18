@@ -27,17 +27,19 @@ class LoRALinear(nn.Module):
         self.out_features = linear_layer.out_features
         self.rank = rank
 
-        # Low-rank factors – initialised to zero so the network is unchanged at start
-        self.lora_A = nn.Parameter(torch.zeros(rank, self.in_features))  # (r,  in)
-        self.lora_B = nn.Parameter(torch.zeros(self.out_features, rank))  # (out, r)
-        nn.init.kaiming_uniform_(self.lora_B, a=math.sqrt(5))
-        nn.init.zeros_(self.lora_A)
-
         # Keep a frozen copy of the original weight for efficient inference
         self.register_buffer("base_weight", linear_layer.weight.detach().clone())
         self.has_bias = linear_layer.bias is not None
         if self.has_bias:
             self.register_buffer("base_bias", linear_layer.bias.detach().clone())
+
+        # Low-rank factors – initialised to zero so the network is unchanged at start
+        # Create on same device as base weight
+        device = self.base_weight.device
+        self.lora_A = nn.Parameter(torch.zeros(rank, self.in_features, device=device))  # (r,  in)
+        self.lora_B = nn.Parameter(torch.zeros(self.out_features, rank, device=device))  # (out, r)
+        nn.init.kaiming_uniform_(self.lora_B, a=math.sqrt(5))
+        nn.init.zeros_(self.lora_A)
 
     def forward(self, x):
         # Equivalent to W + ΔW where ΔW = B@A (low rank)
@@ -71,17 +73,18 @@ class LoRAConv2d(nn.Module):
         k_h, k_w = self.kernel_size
         in_dim = self.in_channels * k_h * k_w
 
-        # Low-rank factors (initial ΔW = 0)
-        self.lora_A = nn.Parameter(torch.zeros(rank, in_dim))           # (r,  in_dim)
-        self.lora_B = nn.Parameter(torch.zeros(self.out_channels, rank))  # (out, r)
-        nn.init.kaiming_uniform_(self.lora_B, a=math.sqrt(5))
-        nn.init.zeros_(self.lora_A)
-
         # Frozen copy of original weight / bias
         self.register_buffer("base_weight", conv_layer.weight.detach().clone())
         self.has_bias = conv_layer.bias is not None
         if self.has_bias:
             self.register_buffer("base_bias", conv_layer.bias.detach().clone())
+
+        # Low-rank factors (initial ΔW = 0) - create on same device as base weight
+        device = self.base_weight.device
+        self.lora_A = nn.Parameter(torch.zeros(rank, in_dim, device=device))           # (r,  in_dim)
+        self.lora_B = nn.Parameter(torch.zeros(self.out_channels, rank, device=device))  # (out, r)
+        nn.init.kaiming_uniform_(self.lora_B, a=math.sqrt(5))
+        nn.init.zeros_(self.lora_A)
 
     def forward(self, x):
         # ΔW = B @ A  then reshape to (out, in, k_h, k_w)
@@ -271,7 +274,9 @@ def train(config):
                 for name, m in model.named_modules():
                     if isinstance(m, (LoRALinear, LoRAConv2d)):
                         for i, p in enumerate(m.get_lora_params()):
-                            p.sub_(p.grad / fisher_diagonals[name][i])
+                            if p.grad is not None:
+                                fisher_inv = 1.0 / (fisher_diagonals[name][i] + 1e-8)
+                                p.sub_(p.grad * fisher_inv)
 
         final_entropy = -(F.softmax(model(images), 1) * F.log_softmax(model(images), 1)).sum(1).mean()
         oracle_entropy_drop = initial_entropy - final_entropy
