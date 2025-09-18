@@ -142,8 +142,8 @@ def run_training(config):
     # Load data
     logging.info("Loading preprocessed data.")
     try:
-        train_data = torch.load(os.path.join(processed_dir, 'train_data.pt'))
-        val_data = torch.load(os.path.join(processed_dir, 'val_data.pt'))
+        train_data = torch.load(os.path.join(processed_dir, 'train_data.pt'), weights_only=False)
+        val_data = torch.load(os.path.join(processed_dir, 'val_data.pt'), weights_only=False)
     except FileNotFoundError as e:
         logging.error(f"Preprocessed data not found. Please run preprocess.py first. Error: {e}")
         sys.exit(1)
@@ -169,8 +169,8 @@ def run_training(config):
             texts, rewards, safety_labels = batch
             rewards, safety_labels = rewards.to(device), safety_labels.to(device).long()
 
-            with torch.no_grad():
-                embeddings = sbert_model.encode(texts, convert_to_tensor=True, device=device)
+            # Don't use no_grad for training phase since we need gradients for safety_head
+            embeddings = sbert_model.encode(texts, convert_to_tensor=True, device=device)
             
             # Safety Head Training
             optimizer_safety.zero_grad()
@@ -266,7 +266,7 @@ def run_training(config):
 
     # Phase 4: Generate Certificate
     logging.info("Phase 4: Generating final certificate.")
-    test_data = torch.load(os.path.join(processed_dir, 'test_data.pt'))
+    test_data = torch.load(os.path.join(processed_dir, 'test_data.pt'), weights_only=False)
     test_dataloader = DataLoader(test_data, batch_size=config['training']['batch_size'])
     dr_estimates_for_cert = []
     prompt_generator.eval()

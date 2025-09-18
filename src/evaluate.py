@@ -159,14 +159,14 @@ def run_experiment_2(config, models, device):
     logging.info("--- Running Experiment 2: Continual Conformal Updating ---")
     _, reward_model, _, _ = models
     # Load val data to create conformal wrapper
-    val_data = torch.load(os.path.join(config['data']['processed_dir'], 'val_data.pt'))
+    val_data = torch.load(os.path.join(config['data']['processed_dir'], 'val_data.pt'), weights_only=False)
     val_dataloader = torch.utils.data.DataLoader(val_data, batch_size=config['training']['batch_size'])
 
     conformal_wrapper = ConformalRewardWrapper(reward_model, val_dataloader, alpha=config['training']['conformal_alpha'])
     
     # Simulate distribution shifts
     # Here we use parts of the test data as 'shifts'
-    test_data = torch.load(os.path.join(config['data']['processed_dir'], 'test_data.pt'))
+    test_data = torch.load(os.path.join(config['data']['processed_dir'], 'test_data.pt'), weights_only=False)
     shift_size = 500 if not config.get('smoke_test', False) else 50
     num_shifts = 5
 

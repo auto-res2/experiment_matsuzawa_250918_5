@@ -113,10 +113,11 @@ def run_preprocessing(config):
         if max_samples:
             d3 = d3.select(range(min(len(d3), max_samples // 3)))
         for item in d3:
-            text = normalize_text(item['text'])
-            # Reward is inversely proportional to toxicity
-            reward = 1.0 - item['toxic']
-            safety_label = 1 if item['toxic'] > 0.5 else 0
+            # Join the list of texts into a single string
+            text = normalize_text(' '.join(item['texts']))
+            # Reward is inversely proportional to toxicity score (avg_score is toxicity)
+            reward = 1.0 - item['avg_score']
+            safety_label = 1 if item['avg_score'] > 0.5 else 0
             all_data.append((text, reward, safety_label))
     except Exception as e:
         logging.error(f"Failed to load DETOX dataset. Aborting. Error: {e}")
@@ -137,7 +138,7 @@ def run_preprocessing(config):
             final_labeled_data.append((final_text, reward, safety_label))
         except Exception:
             # Fallback if language ID fails
-            final_labeled_data.append((f"<LID:unk}> {text}", reward, safety_label))
+            final_labeled_data.append((f"<LID:unk> {text}", reward, safety_label))
 
     logging.info(f"Total examples with language ID: {len(final_labeled_data)}")
 
