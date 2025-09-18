@@ -1,0 +1,26 @@
+=== [PHASE 2/2] Full experiment start Thu Sep 18 04:55:10 PM UTC 2025 ===
+--- Stage 1: Data Preprocessing ---
+Processing dataset: Reddit-Threads
+Loading pre-processed data from data/processed/reddit_threads.pt
+Processing dataset: Synthetic-PowerLaw-Stream
+Loading pre-processed data from data/processed/synthetic_powerlaw_stream.pt
+Processing dataset: Chameleon-S
+Loading pre-processed data from data/processed/chameleon_s.pt
+Processing dataset: Squirrel-S
+Loading pre-processed data from data/processed/squirrel_s.pt
+Processing dataset: Roman-Empire
+Loading pre-processed data from data/processed/roman_empire.pt
+Processing dataset: Amazon-Ratings
+Loading pre-processed data from data/processed/amazon_ratings.pt
+Processing dataset: ogbn-products
+ogbn-products has been updated.
+Will you update the dataset now? (y/N)
+This will download 1.38GB. Will you proceed? (y/N)
+Downloading http://snap.stanford.edu/ogb/data/nodeproppred/products.zip
+Extracting data/raw/products.zip
+Loading necessary files...
+This might take a while.
+Processing graphs...
+Converting graphs into PyG objects...
+Saving...
+=== [PHASE 2/2] Full experiment end Thu Sep 18 04:58:08 PM UTC 2025 ===
