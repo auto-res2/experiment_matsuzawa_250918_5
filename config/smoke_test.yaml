@@ -1,0 +1,38 @@
+project:
+  seed: 42
+  output_dir: ".research/iteration1/smoke_test_outputs"
+  data_dir: "data/"
+
+train:
+  backbones: ["timm/resnet18.a1_in1k"]
+  lora_rank: 2
+  gru_hidden_dim: 16
+  learning_rate: 0.005
+  training_steps: 10
+  oracle_steps: 2
+  batch_size: 8
+  kl_weight: 0.1
+  fisher_samples: 32 # Number of samples to compute fisher info
+
+evaluate:
+  batch_size: 16
+  ema_decay: 0.9
+  gate_threshold: 0.1
+  experiment: None # This is set by the command line
+
+experiment_1:
+  total_samples: 500
+  corruption_change_freq: 50
+  recurrence_freq: 200
+  eta_values: [1, 0.5]
+
+experiment_2:
+  imagenet_c_corruptions: ["gaussian_noise", "shot_noise"]
+  domainnet_source: "real"
+  domainnet_target: "sketch"
+
+experiment_3:
+  total_samples: 200
+  clean_ratio: 0.7
+  noise_ratio: 0.2
+  adv_ratio: 0.1

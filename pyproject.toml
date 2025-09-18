@@ -1,1 +1,22 @@
-# Please list the required python packages.
+[project]
+name = "flash-tta"
+version = "0.1.0"
+description = "FLASH: Feature-Linearised, Adaptive, Safety-aware Hyper-network for Test-Time Adaptation"
+requires-python = ">=3.9"
+
+dependencies = [
+    "torch>=2.0.0",
+    "torchvision>=0.15.0",
+    "timm>=0.9.0",
+    "datasets>=2.14.0",
+    "transformers>=4.30.0",
+    "pyyaml>=6.0",
+    "fvcore>=0.1.5",
+    "scikit-learn>=1.3.0",
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "Pillow>=9.5.0",
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "tqdm>=4.65.0"
+]

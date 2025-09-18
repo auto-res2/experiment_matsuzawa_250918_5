@@ -1,0 +1,46 @@
+project:
+  seed: 42
+  output_dir: ".research/iteration1"
+  data_dir: "data/"
+
+train:
+  backbones: [
+    "timm/resnet50.a1_in1k", 
+    "timm/convnext_tiny.fb_in22k_ft_in1k", 
+    "timm/vit_base_patch16_224.augreg2_in21k_ft_in1k"
+    ]
+  lora_rank: 4
+  gru_hidden_dim: 32
+  learning_rate: 0.001
+  training_steps: 5000
+  oracle_steps: 5
+  batch_size: 32
+  kl_weight: 0.05
+  fisher_samples: 1024
+
+evaluate:
+  batch_size: 32
+  ema_decay: 0.9
+  gate_threshold: 0.1
+  experiment: None # This is set by the command line
+
+experiment_1:
+  total_samples: 200000
+  corruption_change_freq: 250
+  recurrence_freq: 4000
+  eta_values: [1, 0.5, 0.25]
+
+experiment_2:
+  imagenet_c_corruptions: [
+    "gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur",
+    "glass_blur", "motion_blur", "zoom_blur", "snow", "frost", "fog",
+    "brightness", "contrast", "elastic_transform", "pixelate", "jpeg_compression"
+  ]
+  domainnet_source: "real"
+  domainnet_target: "sketch"
+
+experiment_3:
+  total_samples: 50000
+  clean_ratio: 0.7
+  noise_ratio: 0.2
+  adv_ratio: 0.1
