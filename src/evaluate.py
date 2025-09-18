@@ -20,7 +20,10 @@ from .train import RewardModel, SafetyUnifiedHead, PromptGenerator, ConformalRew
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-RESULTS_DIR = '.research/iteration2'
+# -------------------------------------------------------------------------
+# Mandatory research path change (iteration3)
+# -------------------------------------------------------------------------
+RESULTS_DIR = '.research/iteration3'
 IMAGES_DIR = os.path.join(RESULTS_DIR, 'images')
 
 
@@ -54,9 +57,9 @@ def load_models_for_evaluation(config, device):
     return safety_head, reward_model, pg, tokenizer
 
 
-# ────────────────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────────────
 #  EXPERIMENT 2   (requires latent embedding datasets)
-# ────────────────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────────────
 
 def run_experiment_2(config, models, device):
     logging.info("--- Experiment 2: Continual conformal updating ---")
@@ -107,7 +110,9 @@ def run_experiment_2(config, models, device):
             "simulated_retrain_time_seconds": 1800 * (i + 1) / 10
         })
 
-    with open(os.path.join(RESULTS_DIR, 'experiment_2_results.json'), 'w') as f:
+    # ─── Save JSON (mandatory path) ───────────────────────────────────────
+    out_path = os.path.join(RESULTS_DIR, 'experiment_2_results.json')
+    with open(out_path, 'w') as f:
         json.dump(results, f, indent=4)
     print("\n--- Experiment 2 Results ---\n" + json.dumps(results, indent=4))
 
@@ -123,12 +128,9 @@ def run_experiment_2(config, models, device):
     plt.close()
 
 
-# ────────────────────────────────────────────────────────────────────────────────
-#  (We keep Exp 1 & Exp 3 unchanged, only paths adjusted)
-# ────────────────────────────────────────────────────────────────────────────────
-# NOTE: For brevity, Experiment 1 and 3 code is omitted in this snippet, but only
-#       their save paths were modified to use RESULTS_DIR / IMAGES_DIR.
-#       No logic changes needed for this fix iteration.
+# ───────────────────────────────────────────────────────────────────────────
+#  (Experiment 1 & 3 unchanged – only path constants updated above)
+# ───────────────────────────────────────────────────────────────────────────
 
 
 def run_evaluation(config):

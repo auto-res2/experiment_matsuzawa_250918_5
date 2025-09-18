@@ -22,9 +22,9 @@ class PreprocessedDataset(Dataset):
         return self.data[idx]
 
 
-# ────────────────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────────────
 #  Helpers
-# ────────────────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────────────
 
 def normalize_text(text: str):
     if not isinstance(text, str):
@@ -36,6 +36,7 @@ def normalize_text(text: str):
 
 
 def download_fasttext_model(model_path='lid.176.bin'):
+    """Download fastText LID model if missing (≈126 MB)."""
     if not os.path.exists(model_path):
         logging.info("Downloading fastText LID model …")
         try:
@@ -47,9 +48,9 @@ def download_fasttext_model(model_path='lid.176.bin'):
     return fasttext.load_model(model_path)
 
 
-# ────────────────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────────────
 #  Main Pre-processing
-# ────────────────────────────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────────────────
 
 def run_preprocessing(config):
     logging.info("Pre-processing …")
@@ -60,7 +61,7 @@ def run_preprocessing(config):
     ft_model = download_fasttext_model()
     all_data = []
 
-    # 1. Alpaca
+    # 1. Alpaca ----------------------------------------------------------------
     try:
         ds = load_dataset("tatsu-lab/alpaca", split='train')
         if max_samples:
@@ -73,7 +74,7 @@ def run_preprocessing(config):
         logging.error("Failed to load Alpaca: %s", e)
         sys.exit(1)
 
-    # 2. LAION caption proxy
+    # 2. LAION caption proxy ----------------------------------------------------
     try:
         ds = load_dataset("ChristophSchuhmann/MS_COCO_2017_URL_TEXT", split='train')
         if max_samples:
@@ -86,15 +87,21 @@ def run_preprocessing(config):
         logging.error("Failed to load COCO caption proxy: %s", e)
         sys.exit(1)
 
-    # 3. Detoxify dataset
+    # 3. Detoxify dataset -------------------------------------------------------
     try:
         ds = load_dataset("tomekkorbak/pile-detoxify", split='train')
         if max_samples:
             ds = ds.select(range(min(len(ds), max_samples // 3)))
+
+        # the dataset contains a list of sentences per entry under key 'texts'
         for itm in ds:
-            text = normalize_text(itm['text'])
-            reward = 1.0 - itm['toxic']
-            safety_label = 1 if itm['toxic'] > 0.5 else 0
+            if 'texts' not in itm or 'avg_score' not in itm:
+                continue  # skip malformed rows
+            joined_text = " ".join(itm['texts'])
+            text = normalize_text(joined_text)
+            toxicity = float(itm['avg_score'])
+            reward = 1.0 - min(1.0, toxicity)  # higher reward for lower toxicity
+            safety_label = 1 if toxicity > 0.5 else 0
             all_data.append((text, reward, safety_label))
     except Exception as e:
         logging.error("Failed to load DETOX: %s", e)
@@ -102,6 +109,9 @@ def run_preprocessing(config):
 
     logging.info(f"Total raw examples: {len(all_data)}")
 
+    # -------------------------------------------------------------------------
+    # Language-ID tagging + shuffle
+    # -------------------------------------------------------------------------
     final_data = []
     for txt, rew, lab in all_data:
         if not txt:
