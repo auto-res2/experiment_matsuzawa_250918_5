@@ -6,5 +6,82 @@
     "meta-prompt learning",
     "reinforcement learning prompt optimization",
     "prompt engineering automation"
+  ],
+  "research_study_list": [
+    {
+      "title": "Hard Prompts Made Easy: Gradient-Based Discrete Optimization for Prompt Tuning and Discovery"
+    },
+    {
+      "title": "Localized Zeroth-Order Prompt Optimization"
+    },
+    {
+      "title": "Large Language Models as Optimizers"
+    },
+    {
+      "title": "Connecting Large Language Models with Evolutionary Algorithms Yields Powerful Prompt Optimizers"
+    },
+    {
+      "title": "On Discrete Prompt Optimization for Diffusion Models"
+    },
+    {
+      "title": "Evoke: Evoking Critical Thinking Abilities in LLMs via Reviewer-Author Prompt Editing"
+    },
+    {
+      "title": "Localized Zeroth-Order Prompt Optimization"
+    },
+    {
+      "title": "Black-Box Tuning for Language-Model-as-a-Service"
+    },
+    {
+      "title": "Black-Box Tuning for Language-Model-as-a-Service"
+    },
+    {
+      "title": "Two-stage LLM Fine-tuning with Less Specialization and More Generalization"
+    },
+    {
+      "title": "Effective Structured Prompting by Meta-Learning and Representative Verbalizer"
+    },
+    {
+      "title": "Prompt Learning via Meta-Regularization"
+    },
+    {
+      "title": "Multitask Prompt Tuning Enables Parameter-Efficient Transfer Learning"
+    },
+    {
+      "title": "One Prompt is not Enough: Automated Construction of a Mixture-of-Expert Prompts"
+    },
+    {
+      "title": "Meta Learning to Bridge Vision and Language Models for Multimodal Few-Shot Learning"
+    },
+    {
+      "title": "Optimizing Prompts for Text-to-Image Generation"
+    },
+    {
+      "title": "TEMPERA: Test-Time Prompt Editing via Reinforcement Learning"
+    },
+    {
+      "title": "Confronting Reward Model Overoptimization with Constrained RLHF"
+    },
+    {
+      "title": "Query-Dependent Prompt Evaluation and Optimization with Offline Inverse RL"
+    },
+    {
+      "title": "Large Language Models as Optimizers"
+    },
+    {
+      "title": "Large Language Models are Human-Level Prompt Engineers"
+    },
+    {
+      "title": "PromptAgent: Strategic Planning with Language Models Enables Expert-level Prompt Optimization"
+    },
+    {
+      "title": "Optimizing Prompts for Text-to-Image Generation"
+    },
+    {
+      "title": "Connecting Large Language Models with Evolutionary Algorithms Yields Powerful Prompt Optimizers"
+    },
+    {
+      "title": "Hard Prompts Made Easy: Gradient-Based Discrete Optimization for Prompt Tuning and Discovery"
+    }
   ]
 }
