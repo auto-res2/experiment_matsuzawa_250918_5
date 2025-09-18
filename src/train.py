@@ -377,8 +377,7 @@ def train(config):
         u_target = []
         for n in oracle_deltas:
             for i, d in enumerate(oracle_deltas[n]):
-                fisher_diag = fisher_diagonals[n][i].to(d.device)
-                u_target.append((d * torch.sqrt(fisher_diag)).flatten())
+                u_target.append((d * torch.sqrt(fisher_diagonals[n][i])).flatten())
         u_target = torch.cat(u_target)
 
         # ------------------------------------------------
@@ -387,7 +386,6 @@ def train(config):
         optimizer.zero_grad()
         u_pred_vec, g_pred = hyper_network(s_sequence_tensor.to(device))
         u_pred_vec = u_pred_vec.squeeze(0)
-        u_target = u_target.to(device)
         loss_mse = F.mse_loss(u_pred_vec, u_target)
         loss_kl = F.kl_div(g_pred.log(), target_gate.detach().unsqueeze(0), reduction="batchmean")
         loss = loss_mse + config["train"]["kl_weight"] * loss_kl

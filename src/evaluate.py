@@ -179,8 +179,10 @@ class FLASH_Adapter:
 # ============================================================
 
 def log_and_plot_results(results, exp_name, config, backbone):
-    # Required paths (specification)
-    results_dir = ".research/iteration5/"
+    # ------------------------------------------------------------------
+    # Path handling (must follow iteration6 requirement)
+    # ------------------------------------------------------------------
+    results_dir = ".research/iteration6/"
     plots_dir = os.path.join(results_dir, "images")
     os.makedirs(results_dir, exist_ok=True)
     os.makedirs(plots_dir, exist_ok=True)
@@ -202,6 +204,7 @@ def log_and_plot_results(results, exp_name, config, backbone):
         plt.ylabel("Accuracy")
         plt.title(f"Experiment-1 ({backbone})")
         plt.legend()
+        plt.tight_layout()
         plt.savefig(os.path.join(plots_dir, f"exp1_{safe_bb}.pdf"))
         plt.close()
     if exp_name == "experiment_3" and results.get("gate_on_acc"):
@@ -213,6 +216,7 @@ def log_and_plot_results(results, exp_name, config, backbone):
         plt.ylabel("Running Top-1")
         plt.xlabel("Steps")
         plt.title(f"Experiment-3 ({backbone})")
+        plt.tight_layout()
         plt.savefig(os.path.join(plots_dir, f"exp3_{safe_bb}.pdf"))
         plt.close()
 
@@ -259,11 +263,11 @@ def evaluate(config):
 
         exp_key = config["evaluate"]["experiment"]
         if exp_key == "exp1":
-            results = run_experiment_1(config, adapter, backbone)
+            _ = run_experiment_1(config, adapter, backbone)
         elif exp_key == "exp2":
-            results = run_experiment_2(config, adapter, backbone)
+            _ = run_experiment_2(config, adapter, backbone)
         elif exp_key == "exp3":
-            results = run_experiment_3(config, adapter, backbone)
+            _ = run_experiment_3(config, adapter, backbone)
         else:
             raise ValueError(f"Unknown experiment {exp_key}")
 

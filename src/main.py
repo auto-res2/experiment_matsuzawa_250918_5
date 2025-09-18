@@ -20,12 +20,13 @@ def main():
         "--full-experiment", action="store_true", help="Run with the full experiment configuration."
     )
 
-    # Execution mode (default changes based on config type)
+    # Execution mode (default to evaluate for convenience)
     parser.add_argument(
         "--mode",
         type=str,
+        default="evaluate",
         choices=["train", "evaluate"],
-        help="Execution mode: train the hyper-network or evaluate it.",
+        help="Execution mode: train the hyper-network or evaluate it (default: evaluate).",
     )
 
     # Evaluation-specific arguments
@@ -38,22 +39,13 @@ def main():
 
     args = parser.parse_args()
 
-    # Set default mode based on config type
-    if not args.mode:
-        if args.smoke_test:
-            args.mode = "train"  # Smoke tests default to training
-        else:
-            args.mode = "train"  # Full experiments also default to training first
-    
-    # Set default experiment for full experiments in evaluate mode
+    # Require --experiment when evaluating
     if args.mode == "evaluate" and not args.experiment:
-        if args.full_experiment:
-            args.experiment = "exp1"  # Default to exp1 for full experiments
-        else:
-            parser.error("--experiment is required when --mode is 'evaluate'")
+        parser.error("--experiment is required when --mode is 'evaluate'")
 
     # Determine config file path
-    config_dir = os.path.join(os.path.dirname(__file__), "..", "config")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    config_dir = os.path.join(script_dir, "config")
     if args.smoke_test:
         config_path = os.path.join(config_dir, "smoke_test.yaml")
     else:
@@ -76,7 +68,7 @@ def main():
         config.setdefault("evaluate", {})["experiment"] = args.experiment
 
     # Set up output directories from config
-    base_dir = os.path.join(os.path.dirname(__file__), "..")
+    base_dir = os.path.dirname(script_dir)
     config["project"]["output_dir"] = os.path.join(base_dir, config["project"]["output_dir"])
     config["project"]["data_dir"] = os.path.join(base_dir, config["project"]["data_dir"])
     os.makedirs(config["project"]["output_dir"], exist_ok=True)
