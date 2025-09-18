@@ -46,9 +46,16 @@ def stratified_split(data, train_ratio: float = 0.6, val_ratio: float = 0.2):
     num_nodes = data.num_nodes
     num_classes = int(data.num_classes)
 
+    # Handle case where labels might be 2D (e.g., one-hot encoded) - convert to 1D
+    y_labels = data.y
+    print(f"DEBUG: stratified_split y_labels shape: {y_labels.shape}")
+    if y_labels.dim() > 1:
+        print(f"DEBUG: stratified_split converting 2D labels")
+        y_labels = y_labels.argmax(dim=1)
+
     indices_per_class = []
     for i in range(num_classes):
-        index = (data.y == i).nonzero(as_tuple=False).view(-1)
+        index = (y_labels == i).nonzero(as_tuple=False).view(-1)
         index = index[torch.randperm(index.size(0))]
         indices_per_class.append(index)
 
@@ -119,7 +126,12 @@ def prepare_synthetic_stream(params):
 
 def _add_edge_signs_by_label(data):
     """Assign +1 to homophilous edges, −1 otherwise and store in edge_attr."""
-    edge_signs = (data.y[data.edge_index[0]] == data.y[data.edge_index[1]]).long() * 2 - 1
+    # Handle case where labels might be 2D (e.g., one-hot encoded) - convert to 1D
+    y_labels = data.y
+    if y_labels.dim() > 1:
+        y_labels = y_labels.argmax(dim=1)
+    
+    edge_signs = (y_labels[data.edge_index[0]] == y_labels[data.edge_index[1]]).long() * 2 - 1
     data.edge_attr = edge_signs.float()
     return data
 
@@ -155,7 +167,9 @@ def load_pyg_data(name, root_dir):
             if data_raw.x.size(0) != num_nodes:
                 feature_dim = data_raw.x.size(1)
                 x_new = torch.randn(num_nodes, feature_dim, device=data_raw.x.device)
-                x_new[: data_raw.x.size(0)] = data_raw.x
+                # Handle size mismatch: only copy up to the minimum of the two sizes
+                copy_size = min(data_raw.x.size(0), num_nodes)
+                x_new[:copy_size] = data_raw.x[:copy_size]
                 data_raw.x = x_new
 
         # Ensure labels exist
@@ -167,7 +181,9 @@ def load_pyg_data(name, root_dir):
             data_raw.num_classes = int(data_raw.y.max().item() + 1)
             if data_raw.y.size(0) != num_nodes:
                 y_new = torch.randint(0, data_raw.num_classes, (num_nodes,), device=data_raw.y.device)
-                y_new[: data_raw.y.size(0)] = data_raw.y
+                # Handle size mismatch: only copy up to the minimum of the two sizes
+                copy_size = min(data_raw.y.size(0), num_nodes)
+                y_new[:copy_size] = data_raw.y[:copy_size]
                 data_raw.y = y_new
 
         # Attach num_nodes attribute explicitly so downstream code can rely on it without x dependency
@@ -201,6 +217,17 @@ def load_pyg_data(name, root_dir):
         sub_name = name.split("-")[0]
         dataset = WikipediaNetwork(root=root_dir, name=sub_name)
         data = dataset[0]
+        
+        # Handle 2D labels by converting to 1D if necessary
+        print(f"DEBUG: Original y shape: {data.y.shape}")
+        if data.y.dim() > 1:
+            print(f"DEBUG: Converting 2D labels to 1D")
+            data.y = data.y.argmax(dim=1)
+        
+        # Ensure num_classes is set correctly
+        data.num_classes = int(data.y.max().item() + 1)
+        print(f"DEBUG: Final y shape: {data.y.shape}, num_classes: {data.num_classes}")
+        
         data = _add_edge_signs_by_label(data)
         return [data]
 
@@ -325,7 +352,7 @@ def prepare_data(config):
 
             if os.path.exists(processed_path) and not config["global_settings"]["force_preprocess"]:
                 print(f"Loading pre-processed data from {processed_path}")
-                snapshots = torch.load(processed_path)
+                snapshots = torch.load(processed_path, weights_only=False)
                 all_data[dataset_name] = snapshots
                 continue
 
@@ -349,9 +376,29 @@ def prepare_data(config):
 
                 # ---------------------- Common preprocessing ----------------------
                 first_snapshot = snapshots[0]
+                print(f"DEBUG: Pre-split check for {dataset_name}")
+                print(f"DEBUG: First snapshot has train_mask: {hasattr(first_snapshot, 'train_mask')}")
+                if hasattr(first_snapshot, 'train_mask'):
+                    print(f"DEBUG: Existing train_mask shape: {first_snapshot.train_mask.shape}")
+                    print(f"DEBUG: Existing train_mask type: {type(first_snapshot.train_mask)}")
+                if hasattr(first_snapshot, 'y'):
+                    print(f"DEBUG: First snapshot y shape: {first_snapshot.y.shape}")
                 if not hasattr(first_snapshot, "train_mask"):
                     # Create splits if they don't exist
+                    print(f"DEBUG: Creating new splits for {dataset_name}")
                     snapshots = [stratified_split(s) for s in snapshots]
+                else:
+                    print(f"DEBUG: Using existing splits for {dataset_name}")
+                    # Handle the case where existing masks are 2D (multiple splits)
+                    for snapshot in snapshots:
+                        if hasattr(snapshot, 'train_mask') and snapshot.train_mask.dim() > 1:
+                            print(f"DEBUG: Converting 2D mask to 1D by selecting first split")
+                            # Use the first split (index 0)
+                            snapshot.train_mask = snapshot.train_mask[:, 0]
+                        if hasattr(snapshot, 'val_mask') and snapshot.val_mask.dim() > 1:
+                            snapshot.val_mask = snapshot.val_mask[:, 0]  
+                        if hasattr(snapshot, 'test_mask') and snapshot.test_mask.dim() > 1:
+                            snapshot.test_mask = snapshot.test_mask[:, 0]
 
                 scaler = StandardScaler()
                 scaler.fit(

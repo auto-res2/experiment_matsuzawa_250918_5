@@ -1,0 +1,28 @@
+=== [PHASE 2/2] Full experiment start Thu Sep 18 04:41:38 PM UTC 2025 ===
+--- Stage 1: Data Preprocessing ---
+Processing dataset: Reddit-Threads
+Loading pre-processed data from data/processed/reddit_threads.pt
+Processing dataset: Synthetic-PowerLaw-Stream
+Loading pre-processed data from data/processed/synthetic_powerlaw_stream.pt
+Processing dataset: Chameleon-S
+DEBUG: Original y shape: torch.Size([2277])
+DEBUG: Final y shape: torch.Size([2277]), num_classes: 5
+DEBUG: Pre-split check for Chameleon-S
+DEBUG: First snapshot has train_mask: True
+DEBUG: Existing train_mask shape: torch.Size([2277, 10])
+DEBUG: Existing train_mask type: <class 'torch.Tensor'>
+DEBUG: First snapshot y shape: torch.Size([2277])
+DEBUG: Using existing splits for Chameleon-S
+DEBUG: Converting 2D mask to 1D by selecting first split
+Processing dataset: Squirrel-S
+DEBUG: Original y shape: torch.Size([5201])
+DEBUG: Final y shape: torch.Size([5201]), num_classes: 5
+DEBUG: Pre-split check for Squirrel-S
+DEBUG: First snapshot has train_mask: True
+DEBUG: Existing train_mask shape: torch.Size([5201, 10])
+DEBUG: Existing train_mask type: <class 'torch.Tensor'>
+DEBUG: First snapshot y shape: torch.Size([5201])
+DEBUG: Using existing splits for Squirrel-S
+DEBUG: Converting 2D mask to 1D by selecting first split
+Processing dataset: Roman-Empire
+=== [PHASE 2/2] Full experiment end Thu Sep 18 04:41:52 PM UTC 2025 ===

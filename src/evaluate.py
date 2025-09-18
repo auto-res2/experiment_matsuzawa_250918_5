@@ -172,7 +172,7 @@ def run_evaluation(config, experiment_id, data_snapshots):
                 continue
 
             # IMPORTANT: weights_only=False is required to load the entire model object
-            model = torch.load(model_path, map_location=device)
+            model = torch.load(model_path, map_location=device, weights_only=False)
             model.eval()
 
             # --- Metric Calculation ---
