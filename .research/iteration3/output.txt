@@ -1,0 +1,10 @@
+=== [PHASE 2/2] Full experiment start Thu Sep 18 04:08:45 PM UTC 2025 ===
+--- Stage 1: Data Preprocessing ---
+Processing dataset: Reddit-Threads
+Loading pre-processed data from data/processed/reddit_threads.pt
+Processing dataset: Synthetic-PowerLaw-Stream
+Loading pre-processed data from data/processed/synthetic_powerlaw_stream.pt
+Processing dataset: Chameleon-S
+Processing dataset: Squirrel-S
+Processing dataset: Roman-Empire
+=== [PHASE 2/2] Full experiment end Thu Sep 18 04:12:47 PM UTC 2025 ===

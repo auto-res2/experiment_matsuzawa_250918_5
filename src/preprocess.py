@@ -112,8 +112,10 @@ def load_pyg_data(name, root_dir):
             # If x exists but has wrong num_nodes, pad/crop accordingly
             if data_raw.x.size(0) != num_nodes:
                 feature_dim = data_raw.x.size(1)
-                x_new = torch.randn(num_nodes, feature_dim, device=data_raw.x.device)
-                x_new[: data_raw.x.size(0)] = data_raw.x
+                x_new = torch.randn(num_nodes, feature_dim, device=data_raw.x.device, dtype=data_raw.x.dtype)
+                # Use the minimum to avoid index out of bounds
+                min_nodes = min(data_raw.x.size(0), num_nodes)
+                x_new[:min_nodes] = data_raw.x[:min_nodes]
                 data_raw.x = x_new
 
         # Ensure labels exist
@@ -124,8 +126,10 @@ def load_pyg_data(name, root_dir):
         else:
             data_raw.num_classes = int(data_raw.y.max().item() + 1)
             if data_raw.y.size(0) != num_nodes:
-                y_new = torch.randint(0, data_raw.num_classes, (num_nodes,), device=data_raw.y.device)
-                y_new[: data_raw.y.size(0)] = data_raw.y
+                y_new = torch.randint(0, data_raw.num_classes, (num_nodes,), device=data_raw.y.device, dtype=data_raw.y.dtype)
+                # Use the minimum to avoid index out of bounds
+                min_nodes = min(data_raw.y.size(0), num_nodes)
+                y_new[:min_nodes] = data_raw.y[:min_nodes]
                 data_raw.y = y_new
 
         # Attach num_nodes attribute explicitly so downstream code can rely on it without x dependency
@@ -159,6 +163,24 @@ def load_pyg_data(name, root_dir):
         sub_name = name.split("-")[0]
         dataset = WikipediaNetwork(root=root_dir, name=sub_name)
         data = dataset[0]
+        
+        # Ensure num_nodes is set correctly
+        if not hasattr(data, 'num_nodes') or data.num_nodes is None:
+            data.num_nodes = data.x.size(0)
+        
+        # Ensure num_classes is set correctly
+        if not hasattr(data, 'num_classes') or data.num_classes is None:
+            data.num_classes = int(data.y.max().item() + 1)
+        
+        # WikipediaNetwork datasets come with multiple train/val/test splits
+        # We need to select one split (split 0) and reshape the masks
+        if hasattr(data, 'train_mask') and data.train_mask.dim() > 1:
+            data.train_mask = data.train_mask[:, 0]  # Use first split
+        if hasattr(data, 'val_mask') and data.val_mask.dim() > 1:
+            data.val_mask = data.val_mask[:, 0]  # Use first split
+        if hasattr(data, 'test_mask') and data.test_mask.dim() > 1:
+            data.test_mask = data.test_mask[:, 0]  # Use first split
+        
         # Synthesize edge signs based on homophily
         edge_signs = (
             data.y[data.edge_index[0]] == data.y[data.edge_index[1]]
@@ -218,7 +240,7 @@ def prepare_data(config):
 
             if os.path.exists(processed_path) and not config["global_settings"]["force_preprocess"]:
                 print(f"Loading pre-processed data from {processed_path}")
-                snapshots = torch.load(processed_path)
+                snapshots = torch.load(processed_path, weights_only=False)
                 all_data[dataset_name] = snapshots
                 continue
 
