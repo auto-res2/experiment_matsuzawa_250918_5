@@ -114,8 +114,8 @@ def calculate_attention_sign_confusion(model, data):
         return confusion
 
 def generate_plots(results: dict, experiment_id: int):
-    """Save plots to the mandatory path `.research/iteration5/images`."""
-    images_dir = os.path.join(".research/iteration5", "images")
+    """Save plots to the mandatory path `.research/iteration6/images`."""
+    images_dir = os.path.join(".research/iteration6", "images")
     os.makedirs(images_dir, exist_ok=True)
 
     if experiment_id == 3:
@@ -172,7 +172,7 @@ def run_evaluation(config, experiment_id, data_snapshots):
                 continue
 
             # IMPORTANT: weights_only=False is required to load the entire model object
-            model = torch.load(model_path, map_location=device, weights_only=False)
+            model = torch.load(model_path, map_location=device)
             model.eval()
 
             # --- Metric Calculation ---
@@ -233,7 +233,7 @@ def run_evaluation(config, experiment_id, data_snapshots):
         results[model_name] = model_results
 
     # ---------- Save & Print Results ----------
-    json_base_dir = os.path.join(".research", "iteration5")
+    json_base_dir = os.path.join(".research", "iteration6")
     os.makedirs(json_base_dir, exist_ok=True)
     results_path = os.path.join(json_base_dir, f"experiment_{experiment_id}_results.json")
 
