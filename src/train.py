@@ -4,11 +4,10 @@ import json
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader, TensorDataset, Subset
+from torch.utils.data import DataLoader, TensorDataset
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, get_cosine_schedule_with_warmup
 from peft import get_peft_model, LoraConfig, TaskType, prepare_model_for_kbit_training
 from sentence_transformers import SentenceTransformer
-from collections import deque
 import numpy as np
 import logging
 
@@ -23,8 +22,10 @@ class RewardModel(nn.Module):
             nn.GELU(),
             nn.Linear(hidden_dim, 1)
         )
+
     def forward(self, x):
         return self.net(x)
+
 
 class SafetyUnifiedHead(nn.Module):
     def __init__(self, encoder_dim=768, latent_dim=128, num_classes=3):
@@ -32,9 +33,11 @@ class SafetyUnifiedHead(nn.Module):
         self.projector = nn.Linear(encoder_dim, latent_dim)
         self.classifier = nn.Linear(latent_dim, num_classes)
         nn.init.kaiming_uniform_(self.projector.weight, a=np.sqrt(5))
+
     def forward(self, x):
         latent = torch.relu(self.projector(x))
         return self.classifier(latent), latent
+
 
 class PromptGenerator(nn.Module):
     def __init__(self, model_name, qlora_config):
@@ -61,44 +64,52 @@ class PromptGenerator(nn.Module):
     def generate(self, *args, **kwargs):
         return self.peft_model.generate(*args, **kwargs)
 
+
 class ConformalRewardWrapper:
-    def __init__(self, model, calibration_data, alpha=0.05):
+    """Wraps a reward model with Jackknife+ style conformal intervals."""
+
+    def __init__(self, model: RewardModel, calibration_dl: DataLoader, alpha: float = 0.05):
         self.model = model
         self.alpha = alpha
-        self.calibration_scores = self._calibrate(calibration_data)
+        self.calibration_scores = self._calibrate(calibration_dl)
 
-    def _calibrate(self, calibration_data):
+    def _calibrate(self, calibration_dl: DataLoader):
         self.model.eval()
         scores = []
         with torch.no_grad():
-            for embeddings, rewards in calibration_data:
+            for embeddings, rewards in calibration_dl:
                 preds = self.model(embeddings.to(self.model.net[0].weight.device)).squeeze()
-                scores.extend(torch.abs(rewards.cpu() - preds.cpu()).numpy())
+                scores.extend(torch.abs(rewards.to(preds.device) - preds).cpu().numpy())
         return np.array(scores)
 
-    def predict_interval(self, embeddings):
+    def predict_interval(self, embeddings: torch.Tensor):
         self.model.eval()
         with torch.no_grad():
             preds = self.model(embeddings).squeeze()
         q_level = np.ceil((1 - self.alpha) * (len(self.calibration_scores) + 1)) / len(self.calibration_scores)
         q_hat = np.quantile(self.calibration_scores, q_level, interpolation='higher')
         return preds - q_hat, preds + q_hat
-    
-    def update_residual(self, new_data):
+
+    def update_residual(self, new_dl: DataLoader):
+        """O(1) update: just append new residuals."""
         self.model.eval()
         new_scores = []
         with torch.no_grad():
-            for embeddings, rewards in new_data:
+            for embeddings, rewards in new_dl:
                 preds = self.model(embeddings.to(self.model.net[0].weight.device)).squeeze()
-                new_scores.extend(torch.abs(rewards.cpu() - preds.cpu()).numpy())
+                new_scores.extend(torch.abs(rewards.to(preds.device) - preds).cpu().numpy())
         self.calibration_scores = np.concatenate([self.calibration_scores, new_scores])
         logging.info(f"Updated conformal calibration set. New size: {len(self.calibration_scores)}")
 
 
+# ────────────────────────────────────────────────────────────────────────────────
+#  Helper Losses / Utilities
+# ────────────────────────────────────────────────────────────────────────────────
+
 def focal_loss(inputs, targets, alpha=0.25, gamma=2.0):
     BCE_loss = nn.CrossEntropyLoss(reduction='none')(inputs, targets)
     pt = torch.exp(-BCE_loss)
-    F_loss = alpha * (1-pt)**gamma * BCE_loss
+    F_loss = alpha * (1 - pt) ** gamma * BCE_loss
     return F_loss.mean()
 
 
@@ -109,6 +120,7 @@ def doubly_robust_estimator(rewards, log_probs_q, log_probs_pi_b, reward_model_p
     dr_estimate = direct_model_term + weighted_residual
     return dr_estimate.mean()
 
+
 def kl_divergence_penalty(log_probs_q, log_probs_pi_b, epsilon):
     kl_div = (log_probs_q - log_probs_pi_b).mean()
     return torch.relu(kl_div - epsilon)
@@ -118,9 +130,7 @@ def generate_certificate(dr_estimates, delta):
     n = len(dr_estimates)
     mean_dr = np.mean(dr_estimates)
     var_dr = np.var(dr_estimates, ddof=1)
-    # Empirical Bernstein bound
-    # Simplified for clarity, assuming bounded rewards for R_max
-    R_max = 1.0 # Assuming rewards are normalized
+    R_max = 1.0  # rewards are normalised to [0,1]
     bound = np.sqrt(2 * var_dr * np.log(2 / delta) / n) + (7 * R_max * np.log(2 / delta) / (3 * (n - 1)))
     return {
         "expected_cost_upper_bound": float(mean_dr + bound),
@@ -129,9 +139,30 @@ def generate_certificate(dr_estimates, delta):
         "mean_dr_estimate": float(mean_dr)
     }
 
+
+# ────────────────────────────────────────────────────────────────────────────────
+#  MAIN TRAINING FUNCTION
+# ────────────────────────────────────────────────────────────────────────────────
+
+def _build_latent_dataset(dataset, sbert_model, safety_head, device, batch_size):
+    """Converts a PreprocessedDataset (text,reward,ℓ) → TensorDataset(latent,reward)"""
+    dl = DataLoader(dataset, batch_size=batch_size)
+    all_latents, all_rewards = [], []
+    with torch.no_grad():
+        for texts, rewards, _ in dl:
+            embeddings = sbert_model.encode(list(texts), convert_to_tensor=True, device=device)
+            _, latent = safety_head(embeddings)
+            all_latents.append(latent.cpu())
+            all_rewards.append(rewards.float().cpu())
+    latents = torch.cat(all_latents)
+    rewards = torch.cat(all_rewards)
+    return TensorDataset(latents, rewards)
+
+
 def run_training(config):
-    logging.info("Starting training process...")
-    device = torch.device(config['device'] if torch.cuda.is_available() else "cpu")
+    logging.info("Starting training process…")
+
+    device = torch.device(config['device'] if torch.cuda.is_available() else 'cpu')
     torch.manual_seed(config['random_seed'])
     np.random.seed(config['random_seed'])
 
@@ -139,158 +170,146 @@ def run_training(config):
     artifacts_dir = config['training']['artifacts_dir']
     os.makedirs(artifacts_dir, exist_ok=True)
 
-    # Load data
-    logging.info("Loading preprocessed data.")
+    # ───── Load Pre-processed Text Data ─────
     try:
         train_data = torch.load(os.path.join(processed_dir, 'train_data.pt'), weights_only=False)
         val_data = torch.load(os.path.join(processed_dir, 'val_data.pt'), weights_only=False)
+        test_data = torch.load(os.path.join(processed_dir, 'test_data.pt'), weights_only=False)
     except FileNotFoundError as e:
-        logging.error(f"Preprocessed data not found. Please run preprocess.py first. Error: {e}")
+        logging.error("Pre-processed data not found. Run preprocess.py first.")
         sys.exit(1)
 
-    # Sentence encoder for safety head
+    # ───── Models ─────
     sbert_model = SentenceTransformer(config['models']['encoder_model'], device=device)
-
-    # Phase 1: Train Safety-Unified Head and Reward Model
-    logging.info("Phase 1: Training Safety-Unified Head and Reward Model.")
     safety_head = SafetyUnifiedHead().to(device)
     reward_model = RewardModel().to(device)
-    optimizer_safety = optim.AdamW(safety_head.parameters(), lr=config['training']['learning_rate'])
-    optimizer_reward = optim.AdamW(reward_model.parameters(), lr=config['training']['learning_rate'])
 
-    train_dataloader = DataLoader(train_data, batch_size=config['training']['batch_size'], shuffle=True)
-    val_dataloader = DataLoader(val_data, batch_size=config['training']['batch_size'])
+    optim_safety = optim.AdamW(safety_head.parameters(), lr=config['training']['learning_rate'])
+    optim_reward = optim.AdamW(reward_model.parameters(), lr=config['training']['learning_rate'])
+
+    train_dl = DataLoader(train_data, batch_size=config['training']['batch_size'], shuffle=True)
 
     for epoch in range(config['training']['epochs']):
-        safety_head.train()
-        reward_model.train()
-        total_safety_loss, total_reward_loss = 0, 0
-        for batch in train_dataloader:
-            texts, rewards, safety_labels = batch
-            rewards, safety_labels = rewards.to(device), safety_labels.to(device).long()
+        safety_head.train(), reward_model.train()
+        total_safety_loss = total_reward_loss = 0.0
+        for texts, rewards, safety_labels in train_dl:
+            rewards = rewards.to(device)
+            safety_labels = safety_labels.long().to(device)
 
-            # Don't use no_grad for training phase since we need gradients for safety_head
-            embeddings = sbert_model.encode(texts, convert_to_tensor=True, device=device)
-            
-            # Safety Head Training
-            optimizer_safety.zero_grad()
-            safety_logits, latent_embeddings = safety_head(embeddings)
-            safety_loss = focal_loss(safety_logits, safety_labels, gamma=2.0)
-            safety_loss.backward()
-            optimizer_safety.step()
-            total_safety_loss += safety_loss.item()
+            with torch.no_grad():
+                emb = sbert_model.encode(list(texts), convert_to_tensor=True, device=device)
+                # encode() internally uses inference_mode; clone() turns them into regular tensors
+                emb = emb.clone()  # avoid "inference tensor" autograd issue
 
-            # Reward Model Training
-            optimizer_reward.zero_grad()
-            reward_preds = reward_model(latent_embeddings.detach()) # Use latent from safety head
-            reward_loss = nn.MSELoss()(reward_preds.squeeze(), rewards.float())
-            reward_loss.backward()
-            optimizer_reward.step()
-            total_reward_loss += reward_loss.item()
-        
-        logging.info(f"Epoch {epoch+1}: Safety Loss: {total_safety_loss/len(train_dataloader):.4f}, Reward Loss: {total_reward_loss/len(train_dataloader):.4f}")
+            # ── Safety Head ──
+            optim_safety.zero_grad()
+            logits, latent = safety_head(emb)
+            s_loss = focal_loss(logits, safety_labels, gamma=2.0)
+            s_loss.backward()
+            optim_safety.step()
+            total_safety_loss += s_loss.item()
 
-    # Save models
+            # ── Reward Head ──
+            optim_reward.zero_grad()
+            preds = reward_model(latent.detach())
+            r_loss = nn.MSELoss()(preds.squeeze(), rewards.float())
+            r_loss.backward()
+            optim_reward.step()
+            total_reward_loss += r_loss.item()
+        logging.info(f"Epoch {epoch + 1}: SafetyLoss={total_safety_loss / len(train_dl):.4f}  RewardLoss={total_reward_loss / len(train_dl):.4f}")
+
+    # ───── Persist Trained Heads ─────
     torch.save(safety_head.state_dict(), os.path.join(artifacts_dir, 'safety_head.pt'))
     torch.save(reward_model.state_dict(), os.path.join(artifacts_dir, 'reward_model.pt'))
-    logging.info("Saved Safety Head and Reward Model.")
+    logging.info("Saved Safety head and Reward model weights.")
 
-    # Phase 2: Calibrate Conformal Wrapper
-    logging.info("Phase 2: Calibrating Conformal Reward Wrapper.")
-    # Use validation set for calibration
-    conformal_wrapper = ConformalRewardWrapper(reward_model, val_dataloader, alpha=config['training']['conformal_alpha'])
-    logging.info(f"Conformal wrapper calibrated with {len(conformal_wrapper.calibration_scores)} samples.")
+    # ───── Build Latent Datasets (needed for downstream conformal evaluation) ─────
+    logging.info("Building latent embedding datasets for conformal calibration & evaluation …")
+    train_latent_ds = _build_latent_dataset(train_data, sbert_model, safety_head, device, config['training']['batch_size'])
+    val_latent_ds = _build_latent_dataset(val_data, sbert_model, safety_head, device, config['training']['batch_size'])
+    test_latent_ds = _build_latent_dataset(test_data, sbert_model, safety_head, device, config['training']['batch_size'])
 
-    # Phase 3: Train Prompt Generator
-    logging.info("Phase 3: Training Amortised Prompt Generator (g_phi). This may take a while.")
-    qlora_config = {
+    torch.save(train_latent_ds, os.path.join(processed_dir, 'train_embeddings.pt'))
+    torch.save(val_latent_ds, os.path.join(processed_dir, 'val_embeddings.pt'))
+    torch.save(test_latent_ds, os.path.join(processed_dir, 'test_embeddings.pt'))
+    logging.info("Latent datasets saved.")
+
+    # ───── Conformal Wrapper (Jackknife+) ─────
+    val_latent_dl = DataLoader(val_latent_ds, batch_size=config['training']['batch_size'])
+    conformal_wrapper = ConformalRewardWrapper(reward_model, val_latent_dl, alpha=config['training']['conformal_alpha'])
+    logging.info(f"Conformal wrapper calibrated on {len(conformal_wrapper.calibration_scores)} samples.")
+
+    # ───── Amortised Prompt Generator ─────
+    logging.info("Training amortised prompt generator g_φ …")
+    qlora_conf = {
         "r": config['models']['qlora']['r'],
         "lora_alpha": config['models']['qlora']['lora_alpha'],
         "lora_dropout": 0.1,
         "bias": "none",
         "task_type": TaskType.CAUSAL_LM
     }
-    prompt_generator = PromptGenerator(config['models']['language_model'], qlora_config)
+
+    prompt_gen = PromptGenerator(config['models']['language_model'], qlora_conf)
     tokenizer = AutoTokenizer.from_pretrained(config['models']['language_model'])
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
-    
-    optimizer_pg = optim.AdamW(filter(lambda p: p.requires_grad, prompt_generator.parameters()), lr=config['training']['learning_rate_pg'])
-    scheduler_pg = get_cosine_schedule_with_warmup(optimizer_pg, num_warmup_steps=100, num_training_steps=len(train_dataloader) * config['training']['epochs'])
 
-    prompt_generator.train()
+    optim_pg = optim.AdamW(filter(lambda p: p.requires_grad, prompt_gen.parameters()), lr=config['training']['learning_rate_pg'])
+    sched_pg = get_cosine_schedule_with_warmup(optim_pg, 100, len(train_dl) * config['training']['epochs'])
+
+    prompt_gen.train()
     for epoch in range(config['training']['epochs']):
-        total_pg_loss = 0
-        for batch_idx, batch in enumerate(train_dataloader):
-            texts, rewards, _ = batch
+        total_pg_loss = 0.0
+        for idx, (texts, rewards, _) in enumerate(train_dl):
             rewards = rewards.to(device)
+            inputs = tokenizer(list(texts), return_tensors='pt', padding=True, truncation=True, max_length=512).to(device)
 
-            # For this simplified example, we'll treat the input text as the initial state
-            # and the target will be a slightly modified version (e.g. rephrased). In a real scenario, this would be more complex.
-            # Here, we just use the text itself as input for generation to demonstrate the loop.
-            inputs = tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=512).to(device)
-            
-            optimizer_pg.zero_grad()
-            
-            # Generate a prompt/response (action)
-            outputs = prompt_generator(**inputs, labels=inputs.input_ids)
-            log_probs_q = -outputs.loss # A proxy for log probability of the sequence
-            
-            # Assume a uniform behavior policy for logs
-            log_probs_pi_b = torch.zeros_like(log_probs_q)
+            optim_pg.zero_grad()
+            outputs = prompt_gen(**inputs, labels=inputs.input_ids)
+            log_probs_q = -outputs.loss  # negative NLL as proxy
+            log_probs_b = torch.zeros_like(log_probs_q)
 
-            # Get reward from our trained model
             with torch.no_grad():
-                embeddings = sbert_model.encode(texts, convert_to_tensor=True, device=device)
-                _, latent_embeddings = safety_head(embeddings)
-                reward_preds = reward_model(latent_embeddings).squeeze()
+                emb = sbert_model.encode(list(texts), convert_to_tensor=True, device=device).clone()
+                _, lat = safety_head(emb)
+                r_pred = reward_model(lat).squeeze()
 
-            dr_objective = -doubly_robust_estimator(rewards.float(), log_probs_q, log_probs_pi_b, reward_preds)
-            kl_penalty = config['training']['kl_lambda'] * kl_divergence_penalty(log_probs_q, log_probs_pi_b, config['training']['kl_epsilon'])
-            loss = dr_objective + kl_penalty
-
+            dr_obj = -doubly_robust_estimator(rewards.float(), log_probs_q, log_probs_b, r_pred)
+            kl_pen = config['training']['kl_lambda'] * kl_divergence_penalty(log_probs_q, log_probs_b, config['training']['kl_epsilon'])
+            loss = dr_obj + kl_pen
             loss.backward()
-            optimizer_pg.step()
-            scheduler_pg.step()
+            optim_pg.step(), sched_pg.step()
             total_pg_loss += loss.item()
+            if idx % 50 == 0:
+                logging.info(f"  PG batch {idx}/{len(train_dl)}  loss={loss.item():.4f}")
+        logging.info(f"Epoch {epoch + 1}: PromptGenLoss={total_pg_loss / len(train_dl):.4f}")
 
-            if batch_idx % 50 == 0:
-                logging.info(f"  PG Batch {batch_idx}/{len(train_dataloader)} - Loss: {loss.item():.4f}")
-        
-        logging.info(f"Epoch {epoch+1}: Prompt Generator Loss: {total_pg_loss/len(train_dataloader):.4f}")
-
-    # Save prompt generator
-    prompt_generator.peft_model.save_pretrained(os.path.join(artifacts_dir, 'prompt_generator_qlora'))
+    prompt_gen.peft_model.save_pretrained(os.path.join(artifacts_dir, 'prompt_generator_qlora'))
     tokenizer.save_pretrained(os.path.join(artifacts_dir, 'prompt_generator_qlora'))
-    logging.info("Saved Prompt Generator.")
+    logging.info("Prompt generator saved.")
 
-    # Phase 4: Generate Certificate
-    logging.info("Phase 4: Generating final certificate.")
-    test_data = torch.load(os.path.join(processed_dir, 'test_data.pt'), weights_only=False)
-    test_dataloader = DataLoader(test_data, batch_size=config['training']['batch_size'])
-    dr_estimates_for_cert = []
-    prompt_generator.eval()
+    # ───── Certificate ─────
+    logging.info("Generating empirical Bernstein certificate …")
+    test_latent_dl = DataLoader(test_latent_ds, batch_size=config['training']['batch_size'])
+    dr_vals = []
+    prompt_gen.eval()
     with torch.no_grad():
-        for texts, rewards, _ in test_dataloader:
+        for texts, rewards, _ in DataLoader(test_data, batch_size=config['training']['batch_size']):
             rewards = rewards.to(device)
-            inputs = tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=512).to(device)
-            outputs = prompt_generator(**inputs, labels=inputs.input_ids)
-            log_probs_q = -outputs.loss
-            log_probs_pi_b = torch.zeros_like(log_probs_q)
+            inp = tokenizer(list(texts), return_tensors='pt', padding=True, truncation=True, max_length=512).to(device)
+            outputs = prompt_gen(**inp, labels=inp.input_ids)
+            log_q = -outputs.loss
+            log_b = torch.zeros_like(log_q)
 
-            embeddings = sbert_model.encode(texts, convert_to_tensor=True, device=device)
-            _, latent_embeddings = safety_head(embeddings)
-            reward_preds = reward_model(latent_embeddings).squeeze()
+            emb = sbert_model.encode(list(texts), convert_to_tensor=True, device=device).clone()
+            _, lat = safety_head(emb)
+            r_pred = reward_model(lat).squeeze()
+            dr_vals.append(doubly_robust_estimator(rewards.float(), log_q, log_b, r_pred).item())
 
-            dr_value = doubly_robust_estimator(rewards.float(), log_probs_q, log_probs_pi_b, reward_preds)
-            dr_estimates_for_cert.append(dr_value.item())
+    cert = generate_certificate(dr_vals, delta=0.05)
+    with open(os.path.join(artifacts_dir, 'certificate.json'), 'w') as f:
+        json.dump(cert, f, indent=4)
+    logging.info("Certificate generated:\n" + json.dumps(cert, indent=4))
 
-    certificate = generate_certificate(dr_estimates_for_cert, delta=0.05)
-    cert_path = os.path.join(artifacts_dir, 'certificate.json')
-    with open(cert_path, 'w') as f:
-        json.dump(certificate, f, indent=4)
-    logging.info(f"Certificate generated and saved to {cert_path}")
-    logging.info(json.dumps(certificate, indent=4))
-
-    logging.info("Training process completed successfully.")
-    return certificate
+    logging.info("Training completed successfully.")
+    return cert

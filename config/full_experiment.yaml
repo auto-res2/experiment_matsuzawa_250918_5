@@ -1,10 +1,10 @@
 project_name: 'certified-officer-full-experiment'
-random_seed: 11 # First of the five specified seeds
+random_seed: 11
 device: 'cuda:0'
 
 data:
   processed_dir: 'data/processed/full'
-  max_samples: 90000 # Full 90k dataset
+  max_samples: 90000
 
 models:
   language_model: 'NousResearch/Llama-2-13b-chat-hf'
@@ -16,12 +16,12 @@ models:
 training:
   artifacts_dir: 'artifacts/full'
   epochs: 3
-  batch_size: 32 # Smaller than 128 to fit on a single A100 with 13B model
+  batch_size: 32
   learning_rate: 5.0e-05
-  learning_rate_pg: 2.0e-05 # For prompt generator
+  learning_rate_pg: 2.0e-05
   conformal_alpha: 0.05
   kl_epsilon: 0.1
   kl_lambda: 3.0
 
 evaluation:
-  results_dir: '.research/iteration1'
+  results_dir: '.research/iteration2'
