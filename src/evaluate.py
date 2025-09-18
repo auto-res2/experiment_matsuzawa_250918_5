@@ -21,9 +21,9 @@ from .train import RewardModel, SafetyUnifiedHead, PromptGenerator, ConformalRew
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # -------------------------------------------------------------------------
-# Mandatory research path change (iteration3)
+# Mandatory research path change (iteration4)
 # -------------------------------------------------------------------------
-RESULTS_DIR = '.research/iteration3'
+RESULTS_DIR = '.research/iteration4'
 IMAGES_DIR = os.path.join(RESULTS_DIR, 'images')
 
 
@@ -36,11 +36,15 @@ def load_models_for_evaluation(config, device):
     art_dir = config['training']['artifacts_dir']
 
     safety_head = SafetyUnifiedHead().to(device)
-    safety_head.load_state_dict(torch.load(os.path.join(art_dir, 'safety_head.pt'), map_location=device, weights_only=False))
+    safety_head.load_state_dict(
+        torch.load(os.path.join(art_dir, 'safety_head.pt'), map_location=device, weights_only=False)
+    )
     safety_head.eval()
 
     reward_model = RewardModel().to(device)
-    reward_model.load_state_dict(torch.load(os.path.join(art_dir, 'reward_model.pt'), map_location=device, weights_only=False))
+    reward_model.load_state_dict(
+        torch.load(os.path.join(art_dir, 'reward_model.pt'), map_location=device, weights_only=False)
+    )
     reward_model.eval()
 
     q_conf = {
@@ -48,7 +52,7 @@ def load_models_for_evaluation(config, device):
         "lora_alpha": config['models']['qlora']['lora_alpha'],
         "lora_dropout": 0.1,
         "bias": "none",
-        "task_type": 'CAUSAL_LM'
+        "task_type": 'CAUSAL_LM',
     }
     base_pg = PromptGenerator(config['models']['language_model'], q_conf)
     pg = PeftModel.from_pretrained(base_pg.peft_model, os.path.join(art_dir, 'prompt_generator_qlora')).to(device)
@@ -57,9 +61,9 @@ def load_models_for_evaluation(config, device):
     return safety_head, reward_model, pg, tokenizer
 
 
-# ───────────────────────────────────────────────────────────────────────────
+# ────────────────────────────────────────────────────────────────────────────
 #  EXPERIMENT 2   (requires latent embedding datasets)
-# ───────────────────────────────────────────────────────────────────────────
+# ────────────────────────────────────────────────────────────────────────────
 
 def run_experiment_2(config, models, device):
     logging.info("--- Experiment 2: Continual conformal updating ---")
@@ -102,15 +106,17 @@ def run_experiment_2(config, models, device):
                 widths_after.extend((hi - lo).cpu().numpy())
         fin_w = float(np.mean(widths_after))
 
-        results.append({
-            "shift": i + 1,
-            "update_time_seconds": upd_time,
-            "initial_certificate_width": init_w,
-            "final_certificate_width": fin_w,
-            "simulated_retrain_time_seconds": 1800 * (i + 1) / 10
-        })
+        results.append(
+            {
+                "shift": i + 1,
+                "update_time_seconds": upd_time,
+                "initial_certificate_width": init_w,
+                "final_certificate_width": fin_w,
+                "simulated_retrain_time_seconds": 1800 * (i + 1) / 10,
+            }
+        )
 
-    # ─── Save JSON (mandatory path) ───────────────────────────────────────
+    # ─── Save JSON (mandatory path) ─────────────────────────────────────────
     out_path = os.path.join(RESULTS_DIR, 'experiment_2_results.json')
     with open(out_path, 'w') as f:
         json.dump(results, f, indent=4)
@@ -128,9 +134,9 @@ def run_experiment_2(config, models, device):
     plt.close()
 
 
-# ───────────────────────────────────────────────────────────────────────────
+# ────────────────────────────────────────────────────────────────────────────
 #  (Experiment 1 & 3 unchanged – only path constants updated above)
-# ───────────────────────────────────────────────────────────────────────────
+# ────────────────────────────────────────────────────────────────────────────
 
 
 def run_evaluation(config):

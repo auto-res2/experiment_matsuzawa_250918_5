@@ -181,8 +181,7 @@ def run_training(config):
 
     # ───── Models ─────
     sbert_model = SentenceTransformer(config['models']['encoder_model'], device=device)
-    encoder_dim = sbert_model.get_sentence_embedding_dimension()
-    safety_head = SafetyUnifiedHead(encoder_dim=encoder_dim).to(device)
+    safety_head = SafetyUnifiedHead().to(device)
     reward_model = RewardModel().to(device)
 
     optim_safety = optim.AdamW(safety_head.parameters(), lr=config['training']['learning_rate'])
