@@ -1,0 +1,11 @@
+=== [PHASE 2/2] Full experiment start Thu Sep 18 03:54:31 PM UTC 2025 ===
+--- Stage 1: Data Preprocessing ---
+Processing dataset: Reddit-Threads
+Loading pre-processed data from data/processed/reddit_threads.pt
+Processing dataset: Synthetic-PowerLaw-Stream
+Loading pre-processed data from data/processed/synthetic_powerlaw_stream.pt
+Processing dataset: Chameleon-S
+Loading pre-processed data from data/processed/chameleon_s.pt
+Processing dataset: Squirrel-S
+Loading pre-processed data from data/processed/squirrel_s.pt
+Processing dataset: Roman-Empire

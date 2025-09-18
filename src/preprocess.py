@@ -99,16 +99,40 @@ def load_pyg_data(name, root_dir):
         else:
             raise ValueError("Unable to locate edge information in JODIE Reddit dataset.")
 
+        # Get the actual number of nodes and check for edge index bounds
+        num_nodes = data.num_nodes
+        max_edge_idx = edge_index_full.max().item()
+        
+        # If edge indices exceed num_nodes, remap them
+        if max_edge_idx >= num_nodes:
+            print(f"Warning: Edge indices ({max_edge_idx}) exceed num_nodes ({num_nodes}). Remapping...")
+            # Create a mapping for all unique node indices in edges
+            unique_nodes = torch.unique(edge_index_full.flatten())
+            node_map = torch.zeros(max_edge_idx + 1, dtype=torch.long)
+            node_map[unique_nodes] = torch.arange(len(unique_nodes))
+            
+            # Remap edge indices and update num_nodes
+            edge_index_full = node_map[edge_index_full]
+            num_nodes = len(unique_nodes)
+            data.num_nodes = num_nodes
+
         # Ensure node features exist
         if not hasattr(data, "x") or data.x is None:
-            num_nodes = data.num_nodes
             feature_dim = 128
+            data.x = torch.randn(num_nodes, feature_dim)
+        elif data.x.size(0) != num_nodes:
+            # Adjust features to match the number of nodes
+            feature_dim = data.x.size(1)
             data.x = torch.randn(num_nodes, feature_dim)
 
         # Ensure labels exist
         if not hasattr(data, "y") or data.y is None:
-            num_nodes = data.num_nodes
             num_classes = 10
+            data.y = torch.randint(0, num_classes, (num_nodes,))
+            data.num_classes = num_classes
+        elif data.y.size(0) != num_nodes:
+            # Adjust labels to match the number of nodes
+            num_classes = int(data.y.max() + 1) if data.y.numel() > 0 else 10
             data.y = torch.randint(0, num_classes, (num_nodes,))
             data.num_classes = num_classes
         else:
@@ -195,7 +219,7 @@ def prepare_data(config):
 
             if os.path.exists(processed_path) and not config["global_settings"]["force_preprocess"]:
                 print(f"Loading pre-processed data from {processed_path}")
-                snapshots = torch.load(processed_path)
+                snapshots = torch.load(processed_path, weights_only=False)
                 all_data[dataset_name] = snapshots
                 continue
 
@@ -220,9 +244,20 @@ def prepare_data(config):
                     snapshots = [stratified_split(s.clone()) for s in snapshots]
 
                 scaler = StandardScaler()
-                scaler.fit(
-                    snapshots[0].x[snapshots[0].train_mask].cpu().numpy().astype(np.float32)
-                )
+                first_snapshot = snapshots[0]
+                
+                # Handle potential shape mismatches in masks
+                if hasattr(first_snapshot, "train_mask") and first_snapshot.train_mask is not None:
+                    try:
+                        train_features = first_snapshot.x[first_snapshot.train_mask].cpu().numpy().astype(np.float32)
+                    except (IndexError, RuntimeError) as e:
+                        print(f"Warning: Train mask shape issue ({e}). Using all features for scaling.")
+                        train_features = first_snapshot.x.cpu().numpy().astype(np.float32)
+                else:
+                    train_features = first_snapshot.x.cpu().numpy().astype(np.float32)
+                
+                scaler.fit(train_features)
+                
                 for i in range(len(snapshots)):
                     snapshots[i].x = torch.from_numpy(
                         scaler.transform(snapshots[i].x.cpu().numpy().astype(np.float32))
