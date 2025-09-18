@@ -65,7 +65,7 @@ def prepare_synthetic_stream(params):
             num_churn = int(len(g.edges()) * churn_rate)
             edges_to_remove_idx = np.random.choice(len(g.edges()), num_churn, replace=False)
             edges_list = list(g.edges())
-            g.remove_edges_from(edges_list[j] for j in edges_to_remove_idx)
+            g.remove_edges_from([edges_list[j] for j in edges_to_remove_idx])
 
             # Add edges with preferential attachment
             degrees = np.array([d for _, d in g.degree()])
@@ -89,69 +89,68 @@ def load_pyg_data(name, root_dir):
             raise RuntimeError("JODIEDataset not available – cannot load Reddit-Threads.")
         # Using JODIE-Reddit as a real streaming dataset
         dataset = JODIEDataset(root=root_dir, name="Reddit")
-        data = dataset[0]
+        data_raw = dataset[0]
 
         # Build edge_index (src/dst to 2×E tensor)
-        if hasattr(data, "edge_index"):
-            edge_index_full = data.edge_index
-        elif hasattr(data, "src") and hasattr(data, "dst"):
-            edge_index_full = torch.stack([data.src, data.dst], dim=0)
+        if hasattr(data_raw, "edge_index") and data_raw.edge_index is not None:
+            edge_index_full = data_raw.edge_index
+            src_nodes, dst_nodes = edge_index_full[0], edge_index_full[1]
+        elif hasattr(data_raw, "src") and hasattr(data_raw, "dst"):
+            src_nodes, dst_nodes = data_raw.src, data_raw.dst
+            edge_index_full = torch.stack([src_nodes, dst_nodes], dim=0)
         else:
             raise ValueError("Unable to locate edge information in JODIE Reddit dataset.")
 
-        # Get the actual number of nodes and check for edge index bounds
-        num_nodes = data.num_nodes
-        max_edge_idx = edge_index_full.max().item()
-        
-        # If edge indices exceed num_nodes, remap them
-        if max_edge_idx >= num_nodes:
-            print(f"Warning: Edge indices ({max_edge_idx}) exceed num_nodes ({num_nodes}). Remapping...")
-            # Create a mapping for all unique node indices in edges
-            unique_nodes = torch.unique(edge_index_full.flatten())
-            node_map = torch.zeros(max_edge_idx + 1, dtype=torch.long)
-            node_map[unique_nodes] = torch.arange(len(unique_nodes))
-            
-            # Remap edge indices and update num_nodes
-            edge_index_full = node_map[edge_index_full]
-            num_nodes = len(unique_nodes)
-            data.num_nodes = num_nodes
+        # Determine number of nodes without relying on x/num_nodes properties
+        num_nodes = int(torch.cat([src_nodes, dst_nodes]).max().item()) + 1
 
         # Ensure node features exist
-        if not hasattr(data, "x") or data.x is None:
+        if not hasattr(data_raw, "x") or data_raw.x is None:
             feature_dim = 128
-            data.x = torch.randn(num_nodes, feature_dim)
-        elif data.x.size(0) != num_nodes:
-            # Adjust features to match the number of nodes
-            feature_dim = data.x.size(1)
-            data.x = torch.randn(num_nodes, feature_dim)
+            data_raw.x = torch.randn(num_nodes, feature_dim)
+        else:
+            # If x exists but has wrong num_nodes, pad/crop accordingly
+            if data_raw.x.size(0) != num_nodes:
+                feature_dim = data_raw.x.size(1)
+                x_new = torch.randn(num_nodes, feature_dim, device=data_raw.x.device)
+                x_new[: data_raw.x.size(0)] = data_raw.x
+                data_raw.x = x_new
 
         # Ensure labels exist
-        if not hasattr(data, "y") or data.y is None:
+        if not hasattr(data_raw, "y") or data_raw.y is None:
             num_classes = 10
-            data.y = torch.randint(0, num_classes, (num_nodes,))
-            data.num_classes = num_classes
-        elif data.y.size(0) != num_nodes:
-            # Adjust labels to match the number of nodes
-            num_classes = int(data.y.max() + 1) if data.y.numel() > 0 else 10
-            data.y = torch.randint(0, num_classes, (num_nodes,))
-            data.num_classes = num_classes
+            data_raw.y = torch.randint(0, num_classes, (num_nodes,))
+            data_raw.num_classes = num_classes
         else:
-            data.num_classes = int(data.y.max() + 1)
+            data_raw.num_classes = int(data_raw.y.max().item() + 1)
+            if data_raw.y.size(0) != num_nodes:
+                y_new = torch.randint(0, data_raw.num_classes, (num_nodes,), device=data_raw.y.device)
+                y_new[: data_raw.y.size(0)] = data_raw.y
+                data_raw.y = y_new
 
-        # Split edges into time-based snapshots
-        timestamps = data.t.cpu().numpy()
+        # Attach num_nodes attribute explicitly so downstream code can rely on it without x dependency
+        data_raw.num_nodes = num_nodes
+
+        # Ensure timestamps exist for snapshot partitioning
+        if not hasattr(data_raw, "t") or data_raw.t is None:
+            data_raw.t = torch.arange(edge_index_full.size(1))
+
+        timestamps = data_raw.t.cpu().numpy()
         num_snapshots = 30
         time_bins = np.linspace(timestamps.min(), timestamps.max(), num_snapshots + 1)
         snapshots = []
         for i in range(num_snapshots):
             mask = (timestamps >= time_bins[i]) & (timestamps < time_bins[i + 1])
             edge_mask = torch.from_numpy(mask).to(torch.bool)
+            if edge_mask.sum() == 0:
+                # Skip empty snapshot to avoid zero-edge graphs
+                continue
             snapshot_edge_index = edge_index_full[:, edge_mask]
             snapshot_data = Data(
-                x=data.x,
+                x=data_raw.x,
                 edge_index=snapshot_edge_index,
-                y=data.y,
-                num_classes=data.num_classes,
+                y=data_raw.y,
+                num_classes=data_raw.num_classes,
             )
             snapshots.append(snapshot_data)
         return snapshots
@@ -219,7 +218,7 @@ def prepare_data(config):
 
             if os.path.exists(processed_path) and not config["global_settings"]["force_preprocess"]:
                 print(f"Loading pre-processed data from {processed_path}")
-                snapshots = torch.load(processed_path, weights_only=False)
+                snapshots = torch.load(processed_path)
                 all_data[dataset_name] = snapshots
                 continue
 
@@ -244,20 +243,9 @@ def prepare_data(config):
                     snapshots = [stratified_split(s.clone()) for s in snapshots]
 
                 scaler = StandardScaler()
-                first_snapshot = snapshots[0]
-                
-                # Handle potential shape mismatches in masks
-                if hasattr(first_snapshot, "train_mask") and first_snapshot.train_mask is not None:
-                    try:
-                        train_features = first_snapshot.x[first_snapshot.train_mask].cpu().numpy().astype(np.float32)
-                    except (IndexError, RuntimeError) as e:
-                        print(f"Warning: Train mask shape issue ({e}). Using all features for scaling.")
-                        train_features = first_snapshot.x.cpu().numpy().astype(np.float32)
-                else:
-                    train_features = first_snapshot.x.cpu().numpy().astype(np.float32)
-                
-                scaler.fit(train_features)
-                
+                scaler.fit(
+                    snapshots[0].x[snapshots[0].train_mask].cpu().numpy().astype(np.float32)
+                )
                 for i in range(len(snapshots)):
                     snapshots[i].x = torch.from_numpy(
                         scaler.transform(snapshots[i].x.cpu().numpy().astype(np.float32))

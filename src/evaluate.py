@@ -114,8 +114,8 @@ def calculate_attention_sign_confusion(model, data):
         return confusion
 
 def generate_plots(results: dict, experiment_id: int):
-    """Save plots to the mandatory path `.research/iteration2/images`."""
-    images_dir = os.path.join(".research/iteration2", "images")
+    """Save plots to the mandatory path `.research/iteration3/images`."""
+    images_dir = os.path.join(".research/iteration3", "images")
     os.makedirs(images_dir, exist_ok=True)
 
     if experiment_id == 3:
@@ -231,7 +231,7 @@ def run_evaluation(config, experiment_id, data_snapshots):
         results[model_name] = model_results
 
     # ---------- Save & Print Results ----------
-    json_base_dir = os.path.join(".research", "iteration2")
+    json_base_dir = os.path.join(".research", "iteration3")
     os.makedirs(json_base_dir, exist_ok=True)
     results_path = os.path.join(json_base_dir, f"experiment_{experiment_id}_results.json")
 
