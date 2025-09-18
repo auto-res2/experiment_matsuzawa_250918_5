@@ -1,0 +1,8 @@
+/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/torch/cuda/__init__.py:63: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/home/toma/pt80-1-a-28/_work/experiment_matsuzawa_250918_5/experiment_matsuzawa_250918_5/.venv/lib/python3.11/site-packages/outdated/__init__.py:36: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import parse_version
+Processing...
+Done!
+ERROR: Failed to download or process dataset Reddit-Threads. Reason: 'GlobalStorage' object has no attribute 'x'
+Aborting due to NO-FALLBACK policy.

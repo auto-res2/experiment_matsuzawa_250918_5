@@ -58,11 +58,16 @@ def prepare_synthetic_stream(config):
         if i > 0: # Apply churn
             num_churn = int(len(g.edges()) * churn_rate)
             # Remove edges
-            edges_to_remove = np.random.choice(len(g.edges()), num_churn, replace=False)
-            g.remove_edges_from(list(g.edges())[j] for j in edges_to_remove)
+            edges_list = list(g.edges())
+            if len(edges_list) > 0:
+                edges_to_remove = np.random.choice(len(edges_list), min(num_churn, len(edges_list)), replace=False)
+                g.remove_edges_from([edges_list[j] for j in edges_to_remove])
             # Add edges with preferential attachment
             degrees = np.array([d for n, d in g.degree()])
-            probs = degrees / degrees.sum()
+            if degrees.sum() > 0:
+                probs = degrees / degrees.sum()
+            else:
+                probs = np.ones(num_nodes) / num_nodes  # Uniform if all nodes have 0 degree
             new_sources = np.random.choice(num_nodes, num_churn, p=probs)
             new_targets = np.random.choice(num_nodes, num_churn, p=probs)
             g.add_edges_from(zip(new_sources, new_targets))
@@ -80,17 +85,32 @@ def load_pyg_data(name, root_dir):
     if name == 'Reddit-Threads':
         # Using JODIE-Reddit as a real streaming dataset
         dataset = JODIEDataset(root=root_dir, name='Reddit')
-        data = dataset[0]
-        # Process into snapshots
-        timestamps = data.t.numpy()
+        temporal_data = dataset[0]
+        
+        # Create edge_index from src and dst
+        edge_index = torch.stack([temporal_data.src, temporal_data.dst], dim=0)
+        timestamps = temporal_data.t.numpy()
         num_snapshots = 30
         time_bins = np.linspace(timestamps.min(), timestamps.max(), num_snapshots + 1)
         snapshots = []
+        
+        # Determine the number of unique nodes from src and dst
+        max_node_id = int(max(temporal_data.src.max(), temporal_data.dst.max()))
+        num_nodes = max_node_id + 1
+        
+        # Create synthetic node features and labels
+        node_features = torch.randn(num_nodes, 128)
+        node_labels = torch.randint(0, 10, (num_nodes,))
+        num_classes = 10
+        
         for i in range(num_snapshots):
             mask = (timestamps >= time_bins[i]) & (timestamps < time_bins[i+1])
-            snapshot_edge_index = data.edge_index[:, mask]
-            snapshot_data = Data(x=data.x, edge_index=snapshot_edge_index, y=data.y, num_classes=data.num_classes)
-            snapshots.append(snapshot_data)
+            if mask.sum() > 0:  # Only process if there are events in this time window
+                snapshot_edge_index = edge_index[:, mask]
+                if snapshot_edge_index.numel() > 0:  # Only add snapshots with edges
+                    snapshot_data = Data(x=node_features, edge_index=snapshot_edge_index, y=node_labels)
+                    snapshot_data.num_classes = num_classes
+                    snapshots.append(snapshot_data)
         return snapshots
     elif name in ['Chameleon-S', 'Squirrel-S']:
         sub_name = name.split('-')[0]
@@ -145,7 +165,7 @@ def prepare_data(config):
 
             if os.path.exists(processed_path) and not config['global_settings']['force_preprocess']:
                 print(f"Loading preprocessed data from {processed_path}")
-                snapshots = torch.load(processed_path)
+                snapshots = torch.load(processed_path, weights_only=False)
                 all_data[dataset_name] = snapshots
                 continue
 
@@ -171,9 +191,15 @@ def prepare_data(config):
                        snapshots[i] = stratified_split(snapshots[i])
                 
                 scaler = StandardScaler()
-                scaler.fit(snapshots[0].x[snapshots[0].train_mask].numpy())
+                # Ensure train_mask is 1D
+                train_mask = snapshots[0].train_mask
+                if train_mask.dim() > 1:
+                    train_mask = train_mask.any(dim=1)  # Convert multi-dimensional mask to 1D
+                train_features = snapshots[0].x[train_mask].numpy()
+                scaler.fit(train_features)
                 for i in range(len(snapshots)):
-                    snapshots[i].x = torch.from_numpy(scaler.transform(snapshots[i].x.numpy())).float()
+                    transformed = scaler.transform(snapshots[i].x.numpy())
+                    snapshots[i].x = torch.from_numpy(transformed).float()
 
                 torch.save(snapshots, processed_path)
                 all_data[dataset_name] = snapshots

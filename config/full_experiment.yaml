@@ -2,7 +2,7 @@ global_settings:
   output_dir: '.research/iteration1'
   data_dir: 'data/'
   seeds: [42, 43, 44, 45, 46]
-  force_preprocess: false
+  force_preprocess: true
 
 experiment_1:
   description: "Streaming-Graph Latency & Energy Benchmark"
