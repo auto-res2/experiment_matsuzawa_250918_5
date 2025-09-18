@@ -119,15 +119,6 @@ def prepare_synthetic_stream(params):
 
 def _add_edge_signs_by_label(data):
     """Assign +1 to homophilous edges, −1 otherwise and store in edge_attr."""
-    # Ensure edge indices are within bounds for y tensor
-    max_node_idx = data.y.size(0) - 1
-    valid_edges = (data.edge_index[0] <= max_node_idx) & (data.edge_index[1] <= max_node_idx)
-    
-    if not valid_edges.all():
-        # Filter edges to only include valid indices
-        valid_edge_mask = valid_edges
-        data.edge_index = data.edge_index[:, valid_edge_mask]
-    
     edge_signs = (data.y[data.edge_index[0]] == data.y[data.edge_index[1]]).long() * 2 - 1
     data.edge_attr = edge_signs.float()
     return data
@@ -164,9 +155,7 @@ def load_pyg_data(name, root_dir):
             if data_raw.x.size(0) != num_nodes:
                 feature_dim = data_raw.x.size(1)
                 x_new = torch.randn(num_nodes, feature_dim, device=data_raw.x.device)
-                # Only copy as many nodes as we have and that fit
-                copy_nodes = min(data_raw.x.size(0), num_nodes)
-                x_new[:copy_nodes] = data_raw.x[:copy_nodes]
+                x_new[: data_raw.x.size(0)] = data_raw.x
                 data_raw.x = x_new
 
         # Ensure labels exist
@@ -178,9 +167,7 @@ def load_pyg_data(name, root_dir):
             data_raw.num_classes = int(data_raw.y.max().item() + 1)
             if data_raw.y.size(0) != num_nodes:
                 y_new = torch.randint(0, data_raw.num_classes, (num_nodes,), device=data_raw.y.device)
-                # Only copy as many labels as we have and that fit
-                copy_nodes = min(data_raw.y.size(0), num_nodes)
-                y_new[:copy_nodes] = data_raw.y[:copy_nodes]
+                y_new[: data_raw.y.size(0)] = data_raw.y
                 data_raw.y = y_new
 
         # Attach num_nodes attribute explicitly so downstream code can rely on it without x dependency
@@ -338,7 +325,7 @@ def prepare_data(config):
 
             if os.path.exists(processed_path) and not config["global_settings"]["force_preprocess"]:
                 print(f"Loading pre-processed data from {processed_path}")
-                snapshots = torch.load(processed_path, weights_only=False)
+                snapshots = torch.load(processed_path)
                 all_data[dataset_name] = snapshots
                 continue
 
