@@ -1,0 +1,27 @@
+project_name: 'certified-officer-smoke-test'
+random_seed: 42
+device: 'cuda:0'
+
+data:
+  processed_dir: 'data/processed/smoke_test'
+  max_samples: 768 # Small subset for quick run
+
+models:
+  language_model: 'NousResearch/Llama-2-7b-chat-hf' # Smaller model for speed
+  encoder_model: 'sentence-transformers/all-MiniLM-L6-v2'
+  qlora:
+    r: 8
+    lora_alpha: 16
+
+training:
+  artifacts_dir: 'artifacts/smoke_test'
+  epochs: 1 # Minimal epochs
+  batch_size: 4 # Small batch size
+  learning_rate: 5.0e-05
+  learning_rate_pg: 2.0e-05 # For prompt generator
+  conformal_alpha: 0.1
+  kl_epsilon: 0.1
+  kl_lambda: 3.0
+
+evaluation:
+  results_dir: '.research/iteration1'
