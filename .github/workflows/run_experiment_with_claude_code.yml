@@ -82,6 +82,7 @@ jobs:
             Scope: Do not perform any Git operations like commit or push. Your sole responsibility is to make the code runnable.
             Method: When fixing errors, you MUST only modify existing files. Do not create any new script files.
             Autonomy: Execute all steps autonomously. Do not ask for permission.
+            Long-Running Tasks: Be aware that the full experiment can take many hours. You MUST set tool execution timeouts appropriately to avoid premature failures.
 
             Procedure:
             1.  Initial Setup: First, run `bash -c "$SYNC_COMMAND"` to install dependencies.
