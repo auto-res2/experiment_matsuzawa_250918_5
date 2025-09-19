@@ -256,7 +256,7 @@ def run_training(config):
     }
 
     prompt_gen = PromptGenerator(config['models']['language_model'], qlora_conf)
-    tokenizer = AutoTokenizer.from_pretrained(config['models']['language_model'])
+    tokenizer = AutoTokenizer.from_pretrained(config['models']['language_model'], use_fast=False)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 

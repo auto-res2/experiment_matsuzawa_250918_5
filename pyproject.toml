@@ -25,7 +25,10 @@ dependencies = [
     "matplotlib",
     "seaborn",
     "wget",
-    "tqdm"
+    "tqdm",
+    "tiktoken",
+    "blobfile",
+    "sentencepiece"
 ]
 
 [build-system]
